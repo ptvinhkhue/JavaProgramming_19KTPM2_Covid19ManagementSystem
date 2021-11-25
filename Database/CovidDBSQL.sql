@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `covid_management` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `covid_management`;
 -- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
 --
 -- Host: localhost    Database: coviddb
