@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `covid_management` /*!40100 DEFAULT CHARACTER SET
 USE `covid_management`;
 -- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
 --
--- Host: localhost    Database: coviddb
+-- Host: localhost    Database: covid_management
 -- ------------------------------------------------------
 -- Server version	8.0.27
 
@@ -80,7 +80,6 @@ CREATE TABLE `acc_covid` (
   `username` varchar(30) NOT NULL,
   `password` varchar(30) DEFAULT NULL,
   `type` int DEFAULT NULL,
-  `loggedIn` tinyint DEFAULT '0',
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -91,6 +90,7 @@ CREATE TABLE `acc_covid` (
 
 LOCK TABLES `acc_covid` WRITE;
 /*!40000 ALTER TABLE `acc_covid` DISABLE KEYS */;
+INSERT INTO `acc_covid` VALUES ('ptvkhue','191201',2),('tdhtrung','2709010',2);
 /*!40000 ALTER TABLE `acc_covid` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,7 +133,7 @@ CREATE TABLE `acc_manager` (
   PRIMARY KEY (`managerID`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   CONSTRAINT `fk_acc_covid_username_acc_manager` FOREIGN KEY (`username`) REFERENCES `acc_covid` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -142,6 +142,7 @@ CREATE TABLE `acc_manager` (
 
 LOCK TABLES `acc_manager` WRITE;
 /*!40000 ALTER TABLE `acc_manager` DISABLE KEYS */;
+INSERT INTO `acc_manager` VALUES (1,'ptvkhue'),(2,'tdhtrung');
 /*!40000 ALTER TABLE `acc_manager` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -187,6 +188,7 @@ CREATE TABLE `acc_user` (
   `status` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `placeID` int DEFAULT NULL,
   `debt` int DEFAULT NULL,
+  `loggedIn` tinyint DEFAULT '0',
   PRIMARY KEY (`userID`),
   KEY `idx_fk_placeID` (`placeID`) /*!80000 INVISIBLE */,
   KEY `idx_fk_addressID` (`addressID`) /*!80000 INVISIBLE */,
@@ -218,7 +220,8 @@ CREATE TABLE `address` (
   `province` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `district` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `ward` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  PRIMARY KEY (`addressID`)
+  PRIMARY KEY (`addressID`),
+  UNIQUE KEY `addressID_UNIQUE` (`addressID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -228,6 +231,7 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
+INSERT INTO `address` VALUES (1,'Bình Thuận','Phan Thiết','Xuân An'),(2,'Bình Thuận','Phan Thiết','Phú Trinh'),(3,'Bình Thuận','Tuy Phong','Bình Thạnh'),(4,'Bình Thuận','Tuy Phong','Phan Rí Cửa'),(5,'Hồ Chí Minh','Quận 8','Phường 4'),(6,'Hồ Chí Minh','Quận 7','Phường 5'),(7,'Hồ Chí Minh','Bình Chánh','Bình Hưng');
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -413,7 +417,7 @@ CREATE TABLE `place` (
   `current` int DEFAULT '0',
   PRIMARY KEY (`placeID`),
   UNIQUE KEY `id_UNIQUE` (`placeID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -422,6 +426,7 @@ CREATE TABLE `place` (
 
 LOCK TABLES `place` WRITE;
 /*!40000 ALTER TABLE `place` DISABLE KEYS */;
+INSERT INTO `place` VALUES (1,'Bệnh viện đa khoa tỉnh Bình Thuận',1000,500),(2,'Trường THPT chuyên Trần Hưng Đạo',100,30);
 /*!40000 ALTER TABLE `place` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -434,4 +439,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-25 19:22:27
+-- Dump completed on 2021-11-26  0:08:51
