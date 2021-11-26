@@ -66,6 +66,7 @@ CREATE TABLE `acc_bank` (
 
 LOCK TABLES `acc_bank` WRITE;
 /*!40000 ALTER TABLE `acc_bank` DISABLE KEYS */;
+INSERT INTO `acc_bank` VALUES (261548596,500000,2),(261548924,2000000,2);
 /*!40000 ALTER TABLE `acc_bank` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -78,7 +79,7 @@ DROP TABLE IF EXISTS `acc_covid`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `acc_covid` (
   `username` varchar(30) NOT NULL,
-  `password` varchar(30) DEFAULT NULL,
+  `password` varchar(100) DEFAULT NULL,
   `type` int DEFAULT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -90,7 +91,7 @@ CREATE TABLE `acc_covid` (
 
 LOCK TABLES `acc_covid` WRITE;
 /*!40000 ALTER TABLE `acc_covid` DISABLE KEYS */;
-INSERT INTO `acc_covid` VALUES ('ptvkhue','191201',2),('tdhtrung','2709010',2);
+INSERT INTO `acc_covid` VALUES ('261548596',NULL,3),('261548924',NULL,3),('ptvkhue','fd3283d2b3b14e5f0944bac9c6165c796bee86acf924aa954e3fc7bd46bf7641',2),('tdhtrung','5db9e5f14a52696e69a7b3577c475dbac623255d004e6f06410688b1189b7650',2);
 /*!40000 ALTER TABLE `acc_covid` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -168,6 +169,7 @@ CREATE TABLE `acc_normal` (
 
 LOCK TABLES `acc_normal` WRITE;
 /*!40000 ALTER TABLE `acc_normal` DISABLE KEYS */;
+INSERT INTO `acc_normal` VALUES (2,261548596),(1,261548924);
 /*!40000 ALTER TABLE `acc_normal` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -196,7 +198,7 @@ CREATE TABLE `acc_user` (
   CONSTRAINT `fk_acc_covid_username_acc_user` FOREIGN KEY (`username`) REFERENCES `acc_covid` (`username`),
   CONSTRAINT `fk_address_addressID_acc_user` FOREIGN KEY (`addressID`) REFERENCES `address` (`addressID`),
   CONSTRAINT `fk_place_placeID_acc_user` FOREIGN KEY (`placeID`) REFERENCES `place` (`placeID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -205,6 +207,7 @@ CREATE TABLE `acc_user` (
 
 LOCK TABLES `acc_user` WRITE;
 /*!40000 ALTER TABLE `acc_user` DISABLE KEYS */;
+INSERT INTO `acc_user` VALUES (1,'261548924','Phạm Trọng Vinh Khuê',261548924,2001,1,'F4',2,0,0),(2,'261548596','Phạm Hoàng Anh',261548596,1996,3,'F2',1,0,0);
 /*!40000 ALTER TABLE `acc_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -311,7 +314,7 @@ CREATE TABLE `necessity` (
   `price` int DEFAULT NULL,
   PRIMARY KEY (`necessityID`),
   UNIQUE KEY `id_UNIQUE` (`necessityID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -320,6 +323,7 @@ CREATE TABLE `necessity` (
 
 LOCK TABLES `necessity` WRITE;
 /*!40000 ALTER TABLE `necessity` DISABLE KEYS */;
+INSERT INTO `necessity` VALUES (1,'Gạo (1kg)',50,NULL,12000),(2,'Muối (1kg)',10,'2022-06-24 00:00:00',8000);
 /*!40000 ALTER TABLE `necessity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -417,7 +421,7 @@ CREATE TABLE `place` (
   `current` int DEFAULT '0',
   PRIMARY KEY (`placeID`),
   UNIQUE KEY `id_UNIQUE` (`placeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -426,7 +430,7 @@ CREATE TABLE `place` (
 
 LOCK TABLES `place` WRITE;
 /*!40000 ALTER TABLE `place` DISABLE KEYS */;
-INSERT INTO `place` VALUES (1,'Bệnh viện đa khoa tỉnh Bình Thuận',1000,500),(2,'Trường THPT chuyên Trần Hưng Đạo',100,30);
+INSERT INTO `place` VALUES (1,'Bệnh viện đa khoa tỉnh Bình Thuận',1000,500),(2,'Trường THPT chuyên Trần Hưng Đạo',100,30),(3,'Bệnh viện 7A  ',1500,700),(4,'Nhà thi đấu Phú Thọ',300,75);
 /*!40000 ALTER TABLE `place` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -439,4 +443,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-26  0:08:51
+-- Dump completed on 2021-11-26 15:51:56
