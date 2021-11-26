@@ -66,7 +66,7 @@ CREATE TABLE `acc_bank` (
 
 LOCK TABLES `acc_bank` WRITE;
 /*!40000 ALTER TABLE `acc_bank` DISABLE KEYS */;
-INSERT INTO `acc_bank` VALUES (261548596,500000,2),(261548924,2000000,2);
+INSERT INTO `acc_bank` VALUES (261547286,1000000,2),(261547311,1500000,2),(261548596,500000,2),(261548924,2000000,2);
 /*!40000 ALTER TABLE `acc_bank` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,7 +91,7 @@ CREATE TABLE `acc_covid` (
 
 LOCK TABLES `acc_covid` WRITE;
 /*!40000 ALTER TABLE `acc_covid` DISABLE KEYS */;
-INSERT INTO `acc_covid` VALUES ('261548596',NULL,3),('261548924',NULL,3),('ptvkhue','fd3283d2b3b14e5f0944bac9c6165c796bee86acf924aa954e3fc7bd46bf7641',2),('tdhtrung','5db9e5f14a52696e69a7b3577c475dbac623255d004e6f06410688b1189b7650',2);
+INSERT INTO `acc_covid` VALUES ('261547286',NULL,3),('261547311',NULL,3),('261548596',NULL,3),('261548924',NULL,3),('ptvkhue','fd3283d2b3b14e5f0944bac9c6165c796bee86acf924aa954e3fc7bd46bf7641',2),('tdhtrung','5db9e5f14a52696e69a7b3577c475dbac623255d004e6f06410688b1189b7650',2),('tttung','f4dd2271ece91a96fca6c3d835af614a5f8cf631fce5c291dfaf9b57931cfe0a',2);
 /*!40000 ALTER TABLE `acc_covid` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -134,7 +134,7 @@ CREATE TABLE `acc_manager` (
   PRIMARY KEY (`managerID`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   CONSTRAINT `fk_acc_covid_username_acc_manager` FOREIGN KEY (`username`) REFERENCES `acc_covid` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -143,7 +143,7 @@ CREATE TABLE `acc_manager` (
 
 LOCK TABLES `acc_manager` WRITE;
 /*!40000 ALTER TABLE `acc_manager` DISABLE KEYS */;
-INSERT INTO `acc_manager` VALUES (1,'ptvkhue'),(2,'tdhtrung');
+INSERT INTO `acc_manager` VALUES (1,'ptvkhue'),(2,'tdhtrung'),(3,'tttung');
 /*!40000 ALTER TABLE `acc_manager` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,7 +169,7 @@ CREATE TABLE `acc_normal` (
 
 LOCK TABLES `acc_normal` WRITE;
 /*!40000 ALTER TABLE `acc_normal` DISABLE KEYS */;
-INSERT INTO `acc_normal` VALUES (2,261548596),(1,261548924);
+INSERT INTO `acc_normal` VALUES (3,261547286),(4,261547311),(2,261548596),(1,261548924);
 /*!40000 ALTER TABLE `acc_normal` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,7 +198,7 @@ CREATE TABLE `acc_user` (
   CONSTRAINT `fk_acc_covid_username_acc_user` FOREIGN KEY (`username`) REFERENCES `acc_covid` (`username`),
   CONSTRAINT `fk_address_addressID_acc_user` FOREIGN KEY (`addressID`) REFERENCES `address` (`addressID`),
   CONSTRAINT `fk_place_placeID_acc_user` FOREIGN KEY (`placeID`) REFERENCES `place` (`placeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +207,7 @@ CREATE TABLE `acc_user` (
 
 LOCK TABLES `acc_user` WRITE;
 /*!40000 ALTER TABLE `acc_user` DISABLE KEYS */;
-INSERT INTO `acc_user` VALUES (1,'261548924','Phạm Trọng Vinh Khuê',261548924,2001,1,'F4',2,0,0),(2,'261548596','Phạm Hoàng Anh',261548596,1996,3,'F2',1,0,0);
+INSERT INTO `acc_user` VALUES (1,'261548924','Phạm Trọng Vinh Khuê',261548924,2001,1,'F4',2,0,0),(2,'261548596','Phạm Hoàng Anh',261548596,1996,3,'F2',1,0,0),(3,'261547286','Trần Đại Hoàng Trung',261547286,2001,2,'F3',2,0,0),(4,'261547311','Trần Thanh Tùng',261547311,2001,8,'F1',4,0,0);
 /*!40000 ALTER TABLE `acc_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,7 +234,7 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `address` VALUES (1,'Bình Thuận','Phan Thiết','Xuân An'),(2,'Bình Thuận','Phan Thiết','Phú Trinh'),(3,'Bình Thuận','Tuy Phong','Bình Thạnh'),(4,'Bình Thuận','Tuy Phong','Phan Rí Cửa'),(5,'Hồ Chí Minh','Quận 8','Phường 4'),(6,'Hồ Chí Minh','Quận 7','Phường 5'),(7,'Hồ Chí Minh','Bình Chánh','Bình Hưng');
+INSERT INTO `address` VALUES (1,'Bình Thuận','Phan Thiết','Xuân An'),(2,'Bình Thuận','Phan Thiết','Phú Trinh'),(3,'Bình Thuận','Tuy Phong','Bình Thạnh'),(4,'Bình Thuận','Tuy Phong','Phan Rí Cửa'),(5,'Hồ Chí Minh','Quận 8','Phường 4'),(6,'Hồ Chí Minh','Quận 7','Phường 5'),(7,'Hồ Chí Minh','Bình Chánh','Bình Hưng'),(8,'Hồ Chí Minh ','Quận 1','Phường 2');
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -314,7 +314,7 @@ CREATE TABLE `necessity` (
   `price` int DEFAULT NULL,
   PRIMARY KEY (`necessityID`),
   UNIQUE KEY `id_UNIQUE` (`necessityID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -323,7 +323,7 @@ CREATE TABLE `necessity` (
 
 LOCK TABLES `necessity` WRITE;
 /*!40000 ALTER TABLE `necessity` DISABLE KEYS */;
-INSERT INTO `necessity` VALUES (1,'Gạo (1kg)',50,NULL,12000),(2,'Muối (1kg)',10,'2022-06-24 00:00:00',8000);
+INSERT INTO `necessity` VALUES (1,'Gạo (1kg)',50,NULL,10000),(2,'Muối (1kg)',10,'2022-06-24 00:00:00',10000),(3,'Dầu ăn (1l)',20,NULL,50000),(4,'Nước rửa tay (1 chai)',50,NULL,30000);
 /*!40000 ALTER TABLE `necessity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -350,6 +350,7 @@ CREATE TABLE `order` (
 
 LOCK TABLES `order` WRITE;
 /*!40000 ALTER TABLE `order` DISABLE KEYS */;
+INSERT INTO `order` VALUES (1,1,90000),(2,2,50000);
 /*!40000 ALTER TABLE `order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -362,9 +363,9 @@ DROP TABLE IF EXISTS `order_detail`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order_detail` (
   `orderID` int NOT NULL,
-  `necessityID` int DEFAULT NULL,
+  `necessityID` int NOT NULL,
   `amount` int DEFAULT NULL,
-  PRIMARY KEY (`orderID`),
+  PRIMARY KEY (`orderID`,`necessityID`),
   KEY `fk_necessity_necessityID_order_detail_idx` (`necessityID`),
   CONSTRAINT `fk_necessity_necessityID_order_detail` FOREIGN KEY (`necessityID`) REFERENCES `necessity` (`necessityID`),
   CONSTRAINT `fk_order_orderID_order_detail` FOREIGN KEY (`orderID`) REFERENCES `order` (`orderID`)
@@ -377,6 +378,7 @@ CREATE TABLE `order_detail` (
 
 LOCK TABLES `order_detail` WRITE;
 /*!40000 ALTER TABLE `order_detail` DISABLE KEYS */;
+INSERT INTO `order_detail` VALUES (1,1,1),(1,3,1),(1,4,1),(2,1,1),(2,2,1),(2,4,1);
 /*!40000 ALTER TABLE `order_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -404,6 +406,7 @@ CREATE TABLE `payment` (
 
 LOCK TABLES `payment` WRITE;
 /*!40000 ALTER TABLE `payment` DISABLE KEYS */;
+INSERT INTO `payment` VALUES (1,1,90000,'2021-11-26 00:00:00'),(2,2,50000,'2021-11-25 00:00:00');
 /*!40000 ALTER TABLE `payment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -421,7 +424,7 @@ CREATE TABLE `place` (
   `current` int DEFAULT '0',
   PRIMARY KEY (`placeID`),
   UNIQUE KEY `id_UNIQUE` (`placeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -430,8 +433,35 @@ CREATE TABLE `place` (
 
 LOCK TABLES `place` WRITE;
 /*!40000 ALTER TABLE `place` DISABLE KEYS */;
-INSERT INTO `place` VALUES (1,'Bệnh viện đa khoa tỉnh Bình Thuận',1000,500),(2,'Trường THPT chuyên Trần Hưng Đạo',100,30),(3,'Bệnh viện 7A  ',1500,700),(4,'Nhà thi đấu Phú Thọ',300,75);
+INSERT INTO `place` VALUES (1,'Bệnh viện đa khoa tỉnh Bình Thuận',1000,500),(2,'Trường THPT chuyên Trần Hưng Đạo',100,30),(3,'Bệnh viện 7A  ',1500,700),(4,'Nhà thi đấu Phú Thọ',300,75),(5,'Kí túc xá ĐHQG TP. Hồ Chí Minh',5000,3000);
 /*!40000 ALTER TABLE `place` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `relation`
+--
+
+DROP TABLE IF EXISTS `relation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `relation` (
+  `userID` int NOT NULL,
+  `relatedID` int NOT NULL,
+  PRIMARY KEY (`userID`,`relatedID`),
+  KEY `fk_acc_user_relatedID_relation_idx` (`relatedID`),
+  CONSTRAINT `fk_acc_user_relatedID_relation` FOREIGN KEY (`relatedID`) REFERENCES `acc_user` (`userID`),
+  CONSTRAINT `fk_acc_user_userID_relation` FOREIGN KEY (`userID`) REFERENCES `acc_user` (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `relation`
+--
+
+LOCK TABLES `relation` WRITE;
+/*!40000 ALTER TABLE `relation` DISABLE KEYS */;
+INSERT INTO `relation` VALUES (3,1),(4,1),(1,3),(1,4);
+/*!40000 ALTER TABLE `relation` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -443,4 +473,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-26 15:51:56
+-- Dump completed on 2021-11-26 21:03:39
