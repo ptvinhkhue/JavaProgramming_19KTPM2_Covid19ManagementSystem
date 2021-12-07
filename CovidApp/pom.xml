@@ -11,4 +11,12 @@
         <maven.compiler.target>14</maven.compiler.target>
     </properties>
     <name>CovidApp</name>
+    
+    <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.27</version>
+        </dependency>
+    </dependencies>
 </project>

@@ -91,7 +91,7 @@ CREATE TABLE `acc_covid` (
 
 LOCK TABLES `acc_covid` WRITE;
 /*!40000 ALTER TABLE `acc_covid` DISABLE KEYS */;
-INSERT INTO `acc_covid` VALUES ('261547286',NULL,3),('261547311',NULL,3),('261548596',NULL,3),('261548924',NULL,3),('ptvkhue','fd3283d2b3b14e5f0944bac9c6165c796bee86acf924aa954e3fc7bd46bf7641',2),('tdhtrung','5db9e5f14a52696e69a7b3577c475dbac623255d004e6f06410688b1189b7650',2),('tttung','f4dd2271ece91a96fca6c3d835af614a5f8cf631fce5c291dfaf9b57931cfe0a',2);
+INSERT INTO `acc_covid` VALUES ('261547286',NULL,3),('261547311',NULL,3),('261548596',NULL,3),('261548924',NULL,3),('ptvkhue','fd3283d2b3b14e5f0944bac9c6165c796bee86acf924aa954e3fc7bd46bf7641',2),('tdhtrung','5db9e5f14a52696e69a7b3577c475dbac623255d004e6f06410688b1189b7650',2),('test','123',2),('tttung','f4dd2271ece91a96fca6c3d835af614a5f8cf631fce5c291dfaf9b57931cfe0a',2);
 /*!40000 ALTER TABLE `acc_covid` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -184,10 +184,10 @@ CREATE TABLE `acc_user` (
   `userID` int NOT NULL AUTO_INCREMENT,
   `username` varchar(30) DEFAULT NULL,
   `fullname` varchar(45) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
-  `personalID` int DEFAULT NULL,
+  `personalID` varchar(10) DEFAULT NULL,
   `yob` int DEFAULT NULL,
   `addressID` int DEFAULT NULL,
-  `status` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `status` int DEFAULT NULL,
   `placeID` int DEFAULT NULL,
   `debt` int DEFAULT NULL,
   `loggedIn` tinyint DEFAULT '0',
@@ -207,7 +207,7 @@ CREATE TABLE `acc_user` (
 
 LOCK TABLES `acc_user` WRITE;
 /*!40000 ALTER TABLE `acc_user` DISABLE KEYS */;
-INSERT INTO `acc_user` VALUES (1,'261548924','Phạm Trọng Vinh Khuê',261548924,2001,1,'F4',2,0,0),(2,'261548596','Phạm Hoàng Anh',261548596,1996,3,'F2',1,0,0),(3,'261547286','Trần Đại Hoàng Trung',261547286,2001,2,'F3',2,0,0),(4,'261547311','Trần Thanh Tùng',261547311,2001,8,'F1',4,0,0);
+INSERT INTO `acc_user` VALUES (1,'261548924','Phạm Trọng Vinh Khuê','261548924',2001,1,4,2,0,0),(2,'261548596','Phạm Hoàng Anh','261548596',1996,3,2,1,0,0),(3,'261547286','Trần Đại Hoàng Trung','261547286',2001,2,3,2,0,0),(4,'261547311','Trần Thanh Tùng','261547311',2001,8,1,4,0,0);
 /*!40000 ALTER TABLE `acc_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -473,4 +473,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-26 21:03:39
+-- Dump completed on 2021-12-07 22:31:37
