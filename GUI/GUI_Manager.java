@@ -7,19 +7,21 @@ public class GUI_Manager {
     int marginUnit = 4;
 
     private JFrame fMain;
-    private JPanel pUsername, pPassword, pMain, pAdd, pChange, pChart, pInfo;
+    private JPanel pMain, pAdd, pChange, pChart, pInfo;
     private Font font;
+    private final GUI_Login gui_login;
 
     // info panel
     JLabel lv_fullname, lv_yob, lv_id, lv_address;
     JLabel lv_change;
 
-    GUI_Manager() {
+    GUI_Manager(GUI_Login gui_login) {
         initFont();
         initPanels();
         initFMain();
 
-        fMain.setVisible(true);
+        this.gui_login = gui_login;
+        this.fMain = gui_login.getfMain();
     }
 
     // initiate components
@@ -32,78 +34,6 @@ public class GUI_Manager {
     }
     void initFont() {
         font = new Font("San-Serif", Font.PLAIN, 16);
-    }
-    void initPUsername() {
-        // initiate panel
-        pUsername = new JPanel();
-        SpringLayout layout = new SpringLayout();
-        pUsername.setLayout(layout);
-
-        // initiate components
-        JLabel l_sub = new JLabel("Please enter your Username");
-        JLabelTextField tf_username = new JLabelTextField("Username", 15);
-        JButton btn_continue = new JButton("Continue");
-
-        // components settings
-        tf_username.setFont(font);
-
-        // set layout
-        layout.putConstraint(SpringLayout.SOUTH, l_sub, -marginUnit * 2,
-                SpringLayout.VERTICAL_CENTER, pUsername);
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, l_sub, 0,
-                SpringLayout.HORIZONTAL_CENTER, pUsername);
-        layout.putConstraint(SpringLayout.NORTH, tf_username, marginUnit * 2,
-                SpringLayout.VERTICAL_CENTER, pUsername);
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tf_username, 0,
-                SpringLayout.HORIZONTAL_CENTER, pUsername);
-        layout.putConstraint(SpringLayout.NORTH, btn_continue, marginUnit * 4,
-                SpringLayout.SOUTH, tf_username);
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, btn_continue, 0,
-                SpringLayout.HORIZONTAL_CENTER, pUsername);
-
-        // action listeners
-        btn_continue.addActionListener(e -> changePanel(pPassword));
-
-        // add components
-        pUsername.add(l_sub);
-        pUsername.add(tf_username);
-        pUsername.add(btn_continue);
-    }
-    void initPPassword() {
-        // initiate panel
-        pPassword = new JPanel();
-        SpringLayout layout = new SpringLayout();
-        pPassword.setLayout(layout);
-
-        // initiate components
-        JLabel l_sub = new JLabel("Welcome back! Please enter your password");
-        JLabelPasswordField tf_password = new JLabelPasswordField("Username", 15);
-        JButton btn_login = new JButton("Login");
-
-        // components settings
-        tf_password.setFont(font);
-
-        // set layout
-        layout.putConstraint(SpringLayout.SOUTH, l_sub, -marginUnit * 2,
-                SpringLayout.VERTICAL_CENTER, pPassword);
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, l_sub, 0,
-                SpringLayout.HORIZONTAL_CENTER, pPassword);
-        layout.putConstraint(SpringLayout.NORTH, tf_password, marginUnit * 2,
-                SpringLayout.VERTICAL_CENTER, pPassword);
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tf_password, 0,
-                SpringLayout.HORIZONTAL_CENTER, pPassword);
-        layout.putConstraint(SpringLayout.NORTH, btn_login, marginUnit * 4,
-                SpringLayout.SOUTH, tf_password);
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, btn_login, 0,
-                SpringLayout.HORIZONTAL_CENTER, pPassword);
-
-        // action listeners
-        btn_login.addActionListener(e -> changePanel(pMain));
-
-        // add components
-        pPassword.add(l_sub);
-        pPassword.add(tf_password);
-        pPassword.add(btn_login);
     }
     void initPMain() {
 
@@ -147,7 +77,7 @@ public class GUI_Manager {
                 SpringLayout.SOUTH, title);
 
         // action listeners
-        miLogout.addActionListener(e -> changePanel(pUsername));
+        miLogout.addActionListener(e -> changePanel(gui_login.getpUsername()));
         miAdd.addActionListener(e -> changePanel(pAdd));
         miStats.addActionListener(e -> changePanel(pChart));
         for (PatientListItem pli: pl.pli) {
@@ -266,7 +196,7 @@ public class GUI_Manager {
                 SpringLayout.SOUTH, cb_address);
 
         // action listeners
-        miLogout.addActionListener(e -> changePanel(pUsername));
+        miLogout.addActionListener(e -> changePanel(gui_login.getpUsername()));
         miList.addActionListener(e -> changePanel(pMain));
         miStats.addActionListener(e -> changePanel(pChart));
 
@@ -352,7 +282,7 @@ public class GUI_Manager {
                 SpringLayout.SOUTH, tf_location);
 
         // action listeners
-        miLogout.addActionListener(e -> changePanel(pUsername));
+        miLogout.addActionListener(e -> changePanel(gui_login.getpUsername()));
         miAdd.addActionListener(e -> changePanel(pAdd));
         miList.addActionListener(e -> changePanel(pMain));
         btn_update.addActionListener(e -> changePanel(pMain));
@@ -458,7 +388,7 @@ public class GUI_Manager {
                 SpringLayout.SOUTH, pInfo);
 
         // action listeners
-        miLogout.addActionListener(e -> changePanel(pUsername));
+        miLogout.addActionListener(e -> changePanel(gui_login.getpUsername()));
         miList.addActionListener(e -> changePanel(pMain));
         miStats.addActionListener(e -> changePanel(pChart));
 
@@ -513,7 +443,7 @@ public class GUI_Manager {
                 SpringLayout.SOUTH, title);
 
         // action listeners
-        miLogout.addActionListener(e -> changePanel(pUsername));
+        miLogout.addActionListener(e -> changePanel(gui_login.getpUsername()));
         miAdd.addActionListener(e -> changePanel(pAdd));
         miList.addActionListener(e -> changePanel(pMain));
 
@@ -526,12 +456,29 @@ public class GUI_Manager {
         pChart.add(btn_people);
     }
     void initPanels() {
-        initPUsername();
-        initPPassword();
         initPMain();
         initPAdd();
         initPChange();
         initPInfo();
+    }
+
+    // get panels
+
+
+    public JPanel getpAdd() {
+        return pAdd;
+    }
+
+    public JPanel getpChange() {
+        return pChange;
+    }
+
+    public JPanel getpInfo() {
+        return pInfo;
+    }
+
+    public JPanel getpMain() {
+        return pMain;
     }
 
     // master panel
@@ -540,10 +487,5 @@ public class GUI_Manager {
         fMain.getContentPane().add(p);
         fMain.getContentPane().repaint();
         fMain.revalidate();
-    }
-
-    public static void main(String[] args) {
-        GUI_Manager gui = new GUI_Manager();
-        gui.changePanel(gui.pUsername);
     }
 }
