@@ -1,10 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class GUI_Login {
+public class GUI_Master {
 
     public static JFrame fMain;
-    PaneUsername pUsername;
+    static PaneUsername pUsername;
 
     void initPane() {
         pUsername = new PaneUsername();
@@ -30,11 +30,21 @@ public class GUI_Login {
         fMain.setVisible(true);
     }
 
+    public static void changePanel(JPanel p) {
+        fMain.getContentPane().removeAll();
+        fMain.getContentPane().add(p);
+        fMain.getContentPane().repaint();
+        fMain.revalidate();
+    }
+
+    public static PaneUsername getPUsername() { return pUsername; }
+
     public static void main(String[] args) {
         (new Global()).init();
 
         SwingUtilities.invokeLater(() -> {
-            GUI_Login gui = new GUI_Login();
+            GUI_Master gui = new GUI_Master();
+            GUI_Manager gui_manager = new GUI_Manager();
             gui.init();
         });
     }
@@ -80,7 +90,8 @@ class PaneUsername extends JPanel {
 
     void addAllActionListener() {
         btn_continue.addActionListener(e -> {
-            tf_username.showHint(); // Show hint/error below if false
+            PanePassword.resetSubtitle(tf_username.getText());
+            GUI_Master.changePanel(GUI_Manager.getPPassword()); // Show hint/error below if false
         });
         btn_exit.addActionListener(e -> System.exit(0));
     }

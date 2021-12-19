@@ -11,6 +11,7 @@ import java.util.Objects;
 public class JNeoTextField extends Container {
 
     private final JNeoLabel hint;
+    private final JTextField tf;
 
     JNeoTextField(String str, int col, boolean isPassword, String iconName, String hintStr) {
         super();
@@ -30,7 +31,7 @@ public class JNeoTextField extends Container {
             ex.printStackTrace();
         }
 
-        JTextField tf = isPassword ? new JPasswordField(str, col) : new JTextField(str, col);
+        tf = isPassword ? new JPasswordField(str, col) : new JTextField(str, col);
         tf.setFont(Global.fntPrimary);
         tf.setBorder(new BubbleBorder());
 
@@ -45,6 +46,10 @@ public class JNeoTextField extends Container {
     }
 
     void showHint() { hint.setForeground(Global.colError); }
+
+    String getText() {
+        return tf.getText();
+    }
 }
 
 class BubbleBorder extends AbstractBorder {
