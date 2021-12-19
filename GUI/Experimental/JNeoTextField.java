@@ -1,14 +1,41 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Objects;
 
-public class JNeoTextField extends JTextField {
-    JNeoTextField(int col) {
-        super(col);
-        setBorder(new BubbleBorder());
+public class JNeoTextField extends Container {
+
+    private final JTextField tf;
+
+    JNeoTextField(String str, int col, boolean isPassword, String iconName) {
+        super();
+        setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
+
+        // icon
+        JLabel lb_icon = new JLabel("");
+        try {
+            BufferedImage icon = ImageIO.read(
+                    Objects.requireNonNull(getClass().getResource(
+                            Global.pathIcon + "ic_" + iconName + ".png")));
+            lb_icon.setIcon(new ImageIcon(icon));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        tf = isPassword ? new JPasswordField(str, col) : new JTextField(str, col);
+        tf.setFont(Global.fntPrimary);
+        tf.setBorder(new BubbleBorder());
+
+        add(lb_icon);
+        add(tf);
     }
+
+    String getText() { return tf.getText(); }
 }
 
 class BubbleBorder extends AbstractBorder {

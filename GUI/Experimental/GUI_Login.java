@@ -41,21 +41,34 @@ public class GUI_Login {
 
 class PaneUsername extends JPanel {
 
-    private JNeoButton btn_continue;
+    private JNeoButton btn_continue, btn_exit;
+    private Container btnContainer;
     private JNeoTextField tf_username;
 
     PaneUsername() {
         super();
         init();
         organize();
+        addActionListener();
         addAll();
     }
 
     void init() {
         this.setBackground(Color.WHITE);
+
+        // buttons
         btn_continue = new JNeoButton("Continue");
+        btn_exit = new JNeoButton("Exit");
+        btnContainer = new Container();
+        btnContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
+        btnContainer.add(btn_continue); btnContainer.add(btn_exit);
+
+        tf_username = new JNeoTextField("Username", 16, false, "account");
+    }
+
+    void addActionListener() {
         btn_continue.addActionListener(e -> System.out.println("Continue pressed!"));
-        tf_username = new JNeoTextField(25);
+        btn_exit.addActionListener(e -> System.exit(0));
     }
 
     void organize() {
@@ -63,9 +76,9 @@ class PaneUsername extends JPanel {
         this.setLayout(layout);
 
         // btn_continue
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, btn_continue, 0,
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, btnContainer, 0,
                 SpringLayout.HORIZONTAL_CENTER, this);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, btn_continue, 32,
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, btnContainer, 32,
                 SpringLayout.VERTICAL_CENTER, this);
 
         // tf_username
@@ -76,9 +89,11 @@ class PaneUsername extends JPanel {
     }
 
     void addAll() {
-        this.add(btn_continue);
+        this.add(btnContainer);
         this.add(tf_username);
     }
 
     JNeoButton getBtnContinue() { return btn_continue;}
+
+    JNeoButton getBtnExit() { return btn_exit;}
 }

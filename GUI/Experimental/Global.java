@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Global {
 
     // Path
-    public static String pathFont;
+    public static String pathFont, pathIcon;
 
     // Color
     public static Color colPrimary, colSecond;
@@ -26,6 +26,7 @@ public class Global {
     void init() {
         // Path
         pathFont = "\\resources\\font\\";
+        pathIcon = "\\resources\\image\\icon\\";
 
         // Color
         colPrimary = new Color(99, 214, 179);
@@ -50,7 +51,7 @@ public class Global {
         fntButton = fntButton.deriveFont(18f);
 
         // Integers - Button
-        btnRadius = 32;
+        btnRadius = 8;
 
         // Integers - Text field
         tfThickness = 2;
