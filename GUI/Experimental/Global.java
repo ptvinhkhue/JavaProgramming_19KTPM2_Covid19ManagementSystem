@@ -8,10 +8,10 @@ public class Global {
     public static String pathFont, pathIcon, pathImage;
 
     // Color
-    public static Color colPrimary, colPrimaryMild, colSecond, colSubtle;
+    public static Color colPrimary, colPrimaryMild, colSecond, colSubtle, colError;
 
     // Font
-    public static Font fntPrimary, fntSecond, fntButton, fntTitle, fntSub;
+    public static Font fntPrimary, fntSecond, fntButton, fntTitle, fntSub, fntSubtitle, fntHint;
 
     // Integer - Button
     public static int btnRadius;
@@ -34,9 +34,10 @@ public class Global {
         colPrimaryMild = new Color(130, 220, 178);
         colSecond = new Color(78, 96, 88);
         colSubtle = new Color(200, 200, 200);
+        colError = new Color(240, 60, 36);
 
         // Font
-        fntPrimary = createFont("Quicksand-Regular.ttf");
+        fntPrimary = fntHint = createFont("Quicksand-Regular.ttf");
         fntSecond = fntButton = fntSub = createFont("Quicksand-Medium.ttf");
         fntTitle = createFont("iCielPanton-Black.otf");
 
@@ -47,9 +48,10 @@ public class Global {
         // Font derivation
         fntPrimary = fntPrimary.deriveFont(14f);
         fntSecond = fntSecond.deriveFont(12f);
-        fntButton = fntButton.deriveFont(16f);
-        fntTitle = fntTitle.deriveFont(72f);
-        fntSub = fntSub.deriveFont(26f);
+        fntButton = fntButton.deriveFont(16f); // Also, for: Subtitle
+        fntTitle = fntTitle.deriveFont(72f); // Logo title
+        fntSub = fntSub.deriveFont(26f); // Logo subtitle
+        fntHint = fntHint.deriveFont(12f);
 
         // Integers - Button
         btnRadius = 8;

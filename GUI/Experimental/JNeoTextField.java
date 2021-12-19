@@ -10,11 +10,14 @@ import java.util.Objects;
 
 public class JNeoTextField extends Container {
 
-    private final JTextField tf;
+    private final JNeoLabel hint;
 
-    JNeoTextField(String str, int col, boolean isPassword, String iconName) {
+    JNeoTextField(String str, int col, boolean isPassword, String iconName, String hintStr) {
         super();
-        setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
+
+        // text field container (icon + tf)
+        Container ctn_tf = new Container();
+        ctn_tf.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
 
         // icon
         JLabel lb_icon = new JLabel("");
@@ -27,15 +30,21 @@ public class JNeoTextField extends Container {
             ex.printStackTrace();
         }
 
-        tf = isPassword ? new JPasswordField(str, col) : new JTextField(str, col);
+        JTextField tf = isPassword ? new JPasswordField(str, col) : new JTextField(str, col);
         tf.setFont(Global.fntPrimary);
         tf.setBorder(new BubbleBorder());
 
-        add(lb_icon);
-        add(tf);
+        ctn_tf.add(lb_icon);
+        ctn_tf.add(tf);
+
+        // master container
+        hint = new JNeoLabel(hintStr, Global.fntHint, Global.colError);
+        hint.setForeground(Color.WHITE);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        add(ctn_tf); add(Box.createRigidArea(new Dimension(0, 4))); add(hint);
     }
 
-    String getText() { return tf.getText(); }
+    void showHint() { hint.setForeground(Global.colError); }
 }
 
 class BubbleBorder extends AbstractBorder {

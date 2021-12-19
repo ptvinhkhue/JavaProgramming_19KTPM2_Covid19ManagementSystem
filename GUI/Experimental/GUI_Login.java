@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class GUI_Login {
 
-    JFrame fMain;
+    public static JFrame fMain;
     PaneUsername pUsername;
 
     GUI_Login() {
@@ -70,20 +70,24 @@ class PaneUsername extends JPanel {
         btnContainer.add(btn_continue); btnContainer.add(btn_exit);
 
         // text fields
-        tf_username = new JNeoTextField("Username", 16, false, "account");
+        tf_username = new JNeoTextField("Username", 16, false, "account", "Account does not exist.");
 
         // labels
         lb_credit = new JNeoLabel("Developed by Cookies", Global.fntSecond, Global.colSecond);
 
-        lb_subtitle = new JNeoLabel("Please enter your username", Global.fntSecond, Global.colSecond);
+        lb_subtitle = new JNeoLabel("Please enter your username", Global.fntButton, Global.colSecond);
 
         // logo
         logo = new Logo();
     }
 
     void addActionListener() {
-        btn_continue.addActionListener(e -> System.out.println("Continue pressed!"));
-        btn_exit.addActionListener(e -> System.exit(0));
+        btn_continue.addActionListener(e -> {
+            tf_username.showHint(); // Show hint/error below if false
+        });
+        btn_exit.addActionListener(e -> {
+            System.exit(0);
+        });
     }
 
     void organize() {
@@ -93,7 +97,7 @@ class PaneUsername extends JPanel {
         // tf_username
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tf_username, 0,
                 SpringLayout.HORIZONTAL_CENTER, this);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, tf_username, 16,
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, tf_username, 32,
                 SpringLayout.VERTICAL_CENTER, this);
 
         // btn_continue
@@ -108,23 +112,25 @@ class PaneUsername extends JPanel {
         layout.putConstraint(SpringLayout.SOUTH, lb_credit, -8,
                 SpringLayout.SOUTH, this);
 
+        // lb_subtitle
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, lb_subtitle, 0,
+                SpringLayout.HORIZONTAL_CENTER, this);
+        layout.putConstraint(SpringLayout.SOUTH, lb_subtitle, -12,
+                SpringLayout.NORTH, tf_username);
+
         // lb_logo
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, logo, 0,
                 SpringLayout.HORIZONTAL_CENTER, this);
-        layout.putConstraint(SpringLayout.SOUTH, logo, -32,
-                SpringLayout.NORTH, tf_username);
+        layout.putConstraint(SpringLayout.SOUTH, logo, -24,
+                SpringLayout.NORTH, lb_subtitle);
     }
 
     void addAll() {
-        this.add(btnContainer);
-        this.add(tf_username);
-        this.add(lb_credit);
-        this.add(logo);
+        add(btnContainer);
+        add(tf_username);
+        add(lb_credit); add(lb_subtitle);
+        add(logo);
     }
-
-    JNeoButton getBtnContinue() { return btn_continue;}
-
-    JNeoButton getBtnExit() { return btn_exit;}
 }
 
 class Logo extends Container {
