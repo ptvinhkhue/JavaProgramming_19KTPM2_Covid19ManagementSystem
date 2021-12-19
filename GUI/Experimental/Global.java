@@ -8,13 +8,16 @@ public class Global {
     public static String pathFont;
 
     // Color
-    public static Color colPrimary;
+    public static Color colPrimary, colSecond;
 
     // Font
     public static Font fntPrimary, fntButton;
 
-    // Integers
+    // Integer - Button
     public static int btnRadius;
+
+    // Integer - Text field
+    public static int tfThickness, tfRadius;
 
     Global() {
         init();
@@ -26,6 +29,7 @@ public class Global {
 
         // Color
         colPrimary = new Color(99, 214, 179);
+        colSecond = new Color(200, 200, 200);
 
         // Font
         try {
@@ -45,8 +49,11 @@ public class Global {
         fntPrimary = fntPrimary.deriveFont(14f);
         fntButton = fntButton.deriveFont(18f);
 
-        // Integers
+        // Integers - Button
         btnRadius = 32;
 
+        // Integers - Text field
+        tfThickness = 2;
+        tfRadius = 8;
     }
 }
