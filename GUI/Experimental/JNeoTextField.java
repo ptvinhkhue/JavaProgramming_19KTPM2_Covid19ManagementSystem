@@ -50,7 +50,7 @@ class BubbleBorder extends AbstractBorder {
     RenderingHints hints;
 
     BubbleBorder() {
-        color = Global.colSecond;
+        color = Global.colSubtle;
         thickness = Global.tfThickness;
         radius = Global.tfRadius;
         pointerPad = 4;

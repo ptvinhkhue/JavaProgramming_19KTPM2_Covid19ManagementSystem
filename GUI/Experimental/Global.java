@@ -5,13 +5,13 @@ import java.util.Objects;
 public class Global {
 
     // Path
-    public static String pathFont, pathIcon;
+    public static String pathFont, pathIcon, pathImage;
 
     // Color
-    public static Color colPrimary, colSecond;
+    public static Color colPrimary, colPrimaryMild, colSecond, colSubtle;
 
     // Font
-    public static Font fntPrimary, fntButton;
+    public static Font fntPrimary, fntSecond, fntButton, fntTitle, fntSub;
 
     // Integer - Button
     public static int btnRadius;
@@ -27,20 +27,18 @@ public class Global {
         // Path
         pathFont = "\\resources\\font\\";
         pathIcon = "\\resources\\image\\icon\\";
+        pathImage = "\\resources\\image\\main\\";
 
         // Color
         colPrimary = new Color(99, 214, 179);
-        colSecond = new Color(200, 200, 200);
+        colPrimaryMild = new Color(130, 220, 178);
+        colSecond = new Color(78, 96, 88);
+        colSubtle = new Color(200, 200, 200);
 
         // Font
-        try {
-            fntPrimary = Font.createFont(Font.TRUETYPE_FONT,
-                    Objects.requireNonNull(getClass().getResource(pathFont + "Quicksand-Regular.ttf")).openStream());
-            fntButton = Font.createFont(Font.TRUETYPE_FONT,
-                    Objects.requireNonNull(getClass().getResource(pathFont + "Quicksand-Medium.ttf")).openStream());
-        } catch (IOException | FontFormatException ex) {
-            ex.printStackTrace();
-        }
+        fntPrimary = createFont("Quicksand-Regular.ttf");
+        fntSecond = fntButton = fntSub = createFont("Quicksand-Medium.ttf");
+        fntTitle = createFont("iCielPanton-Black.otf");
 
         // Font registry
         GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -48,13 +46,26 @@ public class Global {
 
         // Font derivation
         fntPrimary = fntPrimary.deriveFont(14f);
-        fntButton = fntButton.deriveFont(18f);
+        fntSecond = fntSecond.deriveFont(12f);
+        fntButton = fntButton.deriveFont(16f);
+        fntTitle = fntTitle.deriveFont(72f);
+        fntSub = fntSub.deriveFont(26f);
 
         // Integers - Button
         btnRadius = 8;
 
         // Integers - Text field
-        tfThickness = 2;
+        tfThickness = 1;
         tfRadius = 8;
+    }
+
+    Font createFont(String fontName) {
+        try {
+            return Font.createFont(Font.TRUETYPE_FONT,
+                    Objects.requireNonNull(getClass().getResource(pathFont + fontName)).openStream());
+        } catch (IOException | FontFormatException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 }

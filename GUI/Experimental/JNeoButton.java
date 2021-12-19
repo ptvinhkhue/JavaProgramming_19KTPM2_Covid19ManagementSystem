@@ -5,13 +5,13 @@ import java.awt.*;
 
 public class JNeoButton extends JButton {
 
-    JNeoButton(String label) {
+    JNeoButton(String label, Color colBack, Color colFront) {
         super(label);
         int radius = Global.btnRadius;
 
         // color
-        this.setForeground(Color.WHITE);
-        this.setBackground(Global.colPrimary);
+        this.setForeground(colFront);
+        this.setBackground(colBack);
         this.setOpaque(true);
 
         // font
@@ -64,7 +64,6 @@ class RoundedBorder implements Border {
     public boolean isBorderOpaque() {return true;}
 
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        g.setColor(Global.colPrimary);
         g.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
     }
 }
