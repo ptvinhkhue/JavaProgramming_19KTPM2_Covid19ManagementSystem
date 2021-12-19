@@ -25,7 +25,7 @@ public class Global {
         pathFont = "\\resources\\font\\";
 
         // Color
-        colPrimary = new Color(10, 147, 150);
+        colPrimary = new Color(99, 214, 179);
 
         // Font
         try {
@@ -46,7 +46,7 @@ public class Global {
         fntButton = fntButton.deriveFont(18f);
 
         // Integers
-        btnRadius = 10;
+        btnRadius = 32;
 
     }
 }

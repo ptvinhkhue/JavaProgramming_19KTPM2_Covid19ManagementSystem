@@ -51,6 +51,7 @@ class PaneUsername extends JPanel {
         this.setLayout(new FlowLayout());
         this.setBackground(Color.WHITE);
         btn_continue = new JNeoButton("Continue");
+        btn_continue.addActionListener(e -> System.out.println("Continue pressed!"));
     }
 
     void addAll() {
