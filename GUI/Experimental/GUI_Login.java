@@ -1,22 +1,10 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Objects;
 
 public class GUI_Login {
 
     public static JFrame fMain;
     PaneUsername pUsername;
-
-    GUI_Login() {
-        initPane();
-        initFrame();
-        addAll();
-
-        fMain.setVisible(true);
-    }
 
     void initPane() {
         pUsername = new PaneUsername();
@@ -34,11 +22,20 @@ public class GUI_Login {
         fMain.add(pUsername);
     }
 
+    void init() {
+        initPane();
+        initFrame();
+        addAll();
+
+        fMain.setVisible(true);
+    }
+
     public static void main(String[] args) {
         (new Global()).init();
 
         SwingUtilities.invokeLater(() -> {
             GUI_Login gui = new GUI_Login();
+            gui.init();
         });
     }
 }
@@ -49,13 +46,13 @@ class PaneUsername extends JPanel {
     private Container btnContainer;
     private JNeoTextField tf_username;
     private JLabel lb_credit, lb_subtitle;
-    private Logo logo;
+    private LogoBig logo;
 
     PaneUsername() {
         super();
         init();
         organize();
-        addActionListener();
+        addAllActionListener();
         addAll();
     }
 
@@ -78,16 +75,14 @@ class PaneUsername extends JPanel {
         lb_subtitle = new JNeoLabel("Please enter your username", Global.fntButton, Global.colSecond);
 
         // logo
-        logo = new Logo();
+        logo = new LogoBig();
     }
 
-    void addActionListener() {
+    void addAllActionListener() {
         btn_continue.addActionListener(e -> {
             tf_username.showHint(); // Show hint/error below if false
         });
-        btn_exit.addActionListener(e -> {
-            System.exit(0);
-        });
+        btn_exit.addActionListener(e -> System.exit(0));
     }
 
     void organize() {
@@ -130,49 +125,5 @@ class PaneUsername extends JPanel {
         add(tf_username);
         add(lb_credit); add(lb_subtitle);
         add(logo);
-    }
-}
-
-class Logo extends Container {
-    Logo() {
-        super();
-        SpringLayout layout = new SpringLayout();
-        setLayout(layout);
-
-        // logo
-        JLabel lb_logo = new JLabel("");
-        BufferedImage icon = null;
-        try {
-            icon = ImageIO.read(Objects.requireNonNull(getClass().getResource(
-                            Global.pathImage + "img_logo.png")));
-            lb_logo.setIcon(new ImageIcon(icon));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        // title
-        JLabel lb_title = new JNeoLabel("Shelter", Global.fntTitle, Global.colPrimaryMild);
-        JLabel lb_sub = new JNeoLabel("Covid Management", Global.fntSub, Global.colSecond);
-
-        // layout
-        layout.putConstraint(SpringLayout.WEST, lb_logo, 0,
-                SpringLayout.WEST, this);
-        layout.putConstraint(SpringLayout.NORTH, this, 0,
-                SpringLayout.NORTH, lb_logo);
-        layout.putConstraint(SpringLayout.SOUTH, this, 7,
-                SpringLayout.SOUTH, lb_logo);
-
-        layout.putConstraint(SpringLayout.NORTH, lb_title, 0,
-                SpringLayout.NORTH, lb_logo);
-        layout.putConstraint(SpringLayout.WEST, lb_title, 16,
-                SpringLayout.EAST, lb_logo);
-        layout.putConstraint(SpringLayout.SOUTH, lb_sub, 7,
-                SpringLayout.SOUTH, lb_logo);
-        layout.putConstraint(SpringLayout.WEST, lb_sub, 16,
-                SpringLayout.EAST, lb_logo);
-        layout.putConstraint(SpringLayout.EAST, this, 0,
-                SpringLayout.EAST, lb_sub);
-
-        // add
-        add(lb_logo); add(lb_title); add(lb_sub);
     }
 }
