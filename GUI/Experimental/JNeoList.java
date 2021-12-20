@@ -1,6 +1,5 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -137,7 +136,7 @@ class JNeoListItem extends JPanel {
         }
 
         // name & label
-        lb_name = new JNeoLabel(name, Global.fntListName, Global.colPrimary.darker().darker());
+        lb_name = new JNeoLabel(name, Global.fntListName, Global.colDark);
         lb_sub = new JNeoLabel(sub, Global.fntListSub, Global.colSecond);
 
         // info button

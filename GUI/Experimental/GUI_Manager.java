@@ -120,6 +120,7 @@ class PaneList extends JPanel {
 
     JSideBar sideBar;
     JNeoList list;
+    JNeoLabel title;
 
     PaneList() {
         super();
@@ -135,6 +136,9 @@ class PaneList extends JPanel {
 
         // sideBar
         sideBar = new JSideBar(Global.itemIcon_Manager, 1, 0);
+
+        // title
+        title = new JNeoLabel("Patient List", Global.fntHeader, Global.colDark);
 
         // list
         String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female",
@@ -161,13 +165,19 @@ class PaneList extends JPanel {
         layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
                 SpringLayout.SOUTH, this);
 
+        // title
+        layout.putConstraint(SpringLayout.WEST, title, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, title, 32,
+                SpringLayout.NORTH, this);
+
         // list
         layout.putConstraint(SpringLayout.WEST, list, 48,
                 SpringLayout.EAST, sideBar);
         layout.putConstraint(SpringLayout.EAST, list, -48,
                 SpringLayout.EAST, this);
-        layout.putConstraint(SpringLayout.NORTH, list, 96,
-                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.NORTH, list, 12,
+                SpringLayout.SOUTH, title);
         layout.putConstraint(SpringLayout.SOUTH, list, -24,
                 SpringLayout.SOUTH, this);
 
@@ -178,8 +188,7 @@ class PaneList extends JPanel {
     }
 
     void addAll() {
-        add(sideBar);
-        add(list);
+        add(sideBar); add(title); add(list);
     }
 
 }
