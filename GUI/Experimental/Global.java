@@ -19,6 +19,9 @@ public class Global {
     // Integer - Text field
     public static int tfThickness, tfRadius;
 
+    // Integer - Screen resolution
+    public static int width, height;
+
     Global() {
         init();
     }
@@ -59,6 +62,9 @@ public class Global {
         // Integers - Text field
         tfThickness = 1;
         tfRadius = 8;
+
+        // Integers - Screen resolution
+        width = 640; height = 480;
     }
 
     Font createFont(String fontName) {

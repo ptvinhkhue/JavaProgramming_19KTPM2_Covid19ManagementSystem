@@ -1,14 +1,16 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Objects;
 
 public class JNeoButton extends JButton {
 
-    JNeoButton(String label, Color colBack, Color colFront) {
+    JNeoButton(String label, Color colBack, Color colFront, int radius) {
         super(label);
-        int radius = Global.btnRadius;
-
         // color
         this.setForeground(colFront);
         this.setBackground(colBack);
@@ -47,6 +49,17 @@ public class JNeoButton extends JButton {
                 paint(g, c);
             }
         });
+    }
+
+    void setIcon(String iconName) {
+        try {
+            BufferedImage icon = ImageIO.read(
+                    Objects.requireNonNull(getClass().getResource(
+                            Global.pathIcon + "ic_" + iconName + ".png")));
+            setIcon(new ImageIcon(icon));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
 

@@ -12,7 +12,7 @@ public class GUI_Master {
 
     void initFrame() {
         fMain = new JFrame("Covid-19 Management - Login");
-        fMain.setSize(640, 480);
+        fMain.setSize(Global.width, Global.height);
         fMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         fMain.setLocationRelativeTo(null);
         fMain.setResizable(false);
@@ -70,8 +70,8 @@ class PaneUsername extends JPanel {
         this.setBackground(Color.WHITE);
 
         // buttons
-        btn_continue = new JNeoButton("Continue", Global.colPrimary, Color.WHITE);
-        btn_exit = new JNeoButton("Exit", Color.WHITE, Global.colSubtle);
+        btn_continue = new JNeoButton("Continue", Global.colPrimary, Color.WHITE, Global.btnRadius);
+        btn_exit = new JNeoButton("Exit", Color.WHITE, Global.colSubtle, Global.btnRadius);
         btnContainer = new Container();
         btnContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
         btnContainer.add(btn_continue); btnContainer.add(btn_exit);
@@ -86,14 +86,6 @@ class PaneUsername extends JPanel {
 
         // logo
         logo = new LogoBig();
-    }
-
-    void addAllActionListener() {
-        btn_continue.addActionListener(e -> {
-            PanePassword.resetSubtitle(tf_username.getText());
-            GUI_Master.changePanel(GUI_Manager.getPPassword()); // Show hint/error below if false
-        });
-        btn_exit.addActionListener(e -> System.exit(0));
     }
 
     void organize() {
@@ -129,6 +121,14 @@ class PaneUsername extends JPanel {
                 SpringLayout.HORIZONTAL_CENTER, this);
         layout.putConstraint(SpringLayout.SOUTH, logo, -24,
                 SpringLayout.NORTH, lb_subtitle);
+    }
+
+    void addAllActionListener() {
+        btn_continue.addActionListener(e -> {
+            PanePassword.resetSubtitle(tf_username.getText());
+            GUI_Master.changePanel(GUI_Manager.getPPassword()); // Show hint/error below if false
+        });
+        btn_exit.addActionListener(e -> System.exit(0));
     }
 
     void addAll() {

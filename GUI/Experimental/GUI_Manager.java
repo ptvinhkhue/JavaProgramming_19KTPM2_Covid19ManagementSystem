@@ -4,11 +4,13 @@ import java.awt.*;
 public class GUI_Manager {
 
     static PanePassword pPassword;
+    static PaneList pList;
 
     GUI_Manager() { init(); }
 
     void initPane() {
         pPassword = new PanePassword();
+        pList = new PaneList();
     }
 
     void init() {
@@ -16,6 +18,7 @@ public class GUI_Manager {
     }
 
     public static PanePassword getPPassword() { return pPassword; }
+    public static PaneList getPList() { return pList; }
 
 }
 
@@ -41,8 +44,8 @@ class PanePassword extends JPanel {
         this.setBackground(Color.WHITE);
 
         // buttons
-        btn_login = new JNeoButton("Login", Global.colPrimary, Color.WHITE);
-        btn_return = new JNeoButton("Return", Color.WHITE, Global.colSubtle);
+        btn_login = new JNeoButton("Login", Global.colPrimary, Color.WHITE, Global.btnRadius);
+        btn_return = new JNeoButton("Return", Color.WHITE, Global.colSubtle, Global.btnRadius);
         btnContainer = new Container();
         btnContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
         btnContainer.add(btn_login); btnContainer.add(btn_return);
@@ -57,13 +60,6 @@ class PanePassword extends JPanel {
 
         // logo
         logo = new LogoBig();
-    }
-
-    void addAllActionListener() {
-        btn_login.addActionListener(e -> {
-            tf_password.showHint(); // Show hint/error below if false
-        });
-        btn_return.addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
     }
 
     void organize() {
@@ -101,6 +97,14 @@ class PanePassword extends JPanel {
                 SpringLayout.NORTH, lb_subtitle);
     }
 
+    void addAllActionListener() {
+        btn_login.addActionListener(e -> {
+            GUI_Master.changePanel(GUI_Manager.getPList());
+            //tf_password.showHint(); // Show hint/error below if false
+        });
+        btn_return.addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
+    }
+
     void addAll() {
         add(btnContainer);
         add(tf_password);
@@ -110,6 +114,53 @@ class PanePassword extends JPanel {
 
     public static void resetSubtitle(String newUsername) {
         lb_subtitle.setText("Welcome back, " + newUsername + ". Please enter your password.");
+    }
+
+}
+
+class PaneList extends JPanel {
+
+    JSideBar sideBar;
+
+    PaneList() {
+        super();
+
+        init();
+        organize();
+        addAllActionListener();
+        addAll();
+    }
+
+    void init() {
+        this.setBackground(Color.WHITE);
+
+        // sideBar
+        String[] itemIcon = {"account", "lock"};
+        sideBar = new JSideBar(itemIcon, 1);
+    }
+
+    void organize() {
+        SpringLayout layout = new SpringLayout();
+        this.setLayout(layout);
+
+        // sideBar
+        layout.putConstraint(SpringLayout.WEST, sideBar, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.EAST, sideBar, 54,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, sideBar, 0,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
+                SpringLayout.SOUTH, this);
+
+    }
+
+    void addAllActionListener() {
+
+    }
+
+    void addAll() {
+        add(sideBar);
     }
 
 }
