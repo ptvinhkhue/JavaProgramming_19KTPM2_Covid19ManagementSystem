@@ -12,7 +12,8 @@ public class JNeoList extends Container {
     private final Container ctn_item;
     private Container ctn_btn;
     private JNeoButton btn_previous, btn_next;
-    private int curPage;
+    private int curPage, totalPage;
+    private JNeoLabel lb_page;
 
     JNeoList(String[] iconName, String[] name, String[] label) {
         super();
@@ -39,6 +40,9 @@ public class JNeoList extends Container {
             JNeoListItem i = new JNeoListItem(iconName[k], name[k], label[k]);
             item.add(i);
         }
+        totalPage = item.size() / Global.displaySize + 1;
+
+        lb_page = new JNeoLabel("Page " + (curPage + 1) + "/" + totalPage, Global.fntButton, Global.colSecond);
 
         // buttons
         btn_previous = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius);
@@ -51,7 +55,7 @@ public class JNeoList extends Container {
 
         // add
         showPage(curPage); // add items to display
-        add(ctn_item); add(ctn_btn);
+        add(ctn_item); add(ctn_btn); add(lb_page);
     }
 
     void organize() {
@@ -63,6 +67,7 @@ public class JNeoList extends Container {
         laySpring.putConstraint(SpringLayout.SOUTH, ctn_btn, 0,
                 SpringLayout.SOUTH, this);
 
+        // ctn_item
         laySpring.putConstraint(SpringLayout.WEST, ctn_item, 0,
                 SpringLayout.WEST, this);
         laySpring.putConstraint(SpringLayout.EAST, ctn_item, 0,
@@ -71,15 +76,25 @@ public class JNeoList extends Container {
                 SpringLayout.NORTH, this);
         laySpring.putConstraint(SpringLayout.SOUTH, ctn_item, -16,
                 SpringLayout.NORTH, ctn_btn);
+
+        // lb_page
+        laySpring.putConstraint(SpringLayout.WEST, lb_page, 0,
+                SpringLayout.WEST, ctn_btn);
+        laySpring.putConstraint(SpringLayout.NORTH, lb_page, 0,
+                SpringLayout.NORTH, ctn_btn);
     }
 
     void addAllActionListener() {
         btn_previous.addActionListener(e -> {
-            curPage = (0 < curPage) ? curPage - 1 : (item.size() - 1) / Global.displaySize;
+            curPage = (0 < curPage) ? curPage - 1 : totalPage - 1;
+            lb_page.setText("Page " + (curPage + 1) + "/" + totalPage);
+            lb_page.repaint();
             showPage(curPage);
         });
         btn_next.addActionListener(e -> {
-            curPage = (curPage < (item.size() - 1) / Global.displaySize) ? curPage + 1 : 0;
+            curPage = (curPage < totalPage - 1) ? curPage + 1 : 0;
+            lb_page.setText("Page " + (curPage + 1) + "/" + totalPage);
+            lb_page.repaint();
             showPage(curPage);
         });
     }
@@ -95,6 +110,7 @@ public class JNeoList extends Container {
             ctn_item.add(item.get(i));
         ctn_item.repaint();
         ctn_item.revalidate();
+
     }
 
 }
