@@ -1,5 +1,7 @@
 package com.cookies.covidapp;
 
+import java.util.Date;
+
 /**
  *
  * @author ptvin
@@ -10,6 +12,7 @@ public class Manager extends CovidAccount {
 
     public Manager(String username, String password) {
         super(username, password);
+    }
     
     /*---User Management---*/
     public void createUser(String username, String fullname, String personalID, int YoB, int addressID, int status, int placeID) {
@@ -163,10 +166,10 @@ public class Manager extends CovidAccount {
         }
     }
     
-   /*
+    /*
     public static void main(String args[]) {
         
         Manager m = new Manager("abc", "123");
     }
-    /*
+    */
 }
