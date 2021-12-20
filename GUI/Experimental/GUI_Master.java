@@ -11,7 +11,7 @@ public class GUI_Master {
     }
 
     void initFrame() {
-        fMain = new JFrame("Covid-19 Management - Login");
+        fMain = new JFrame("Shelter Covid Management");
         fMain.setSize(Global.width, Global.height);
         fMain.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         fMain.setLocationRelativeTo(null);
@@ -45,6 +45,7 @@ public class GUI_Master {
         SwingUtilities.invokeLater(() -> {
             GUI_Master gui = new GUI_Master();
             GUI_Manager gui_manager = new GUI_Manager();
+            gui_manager.init();
             gui.init();
         });
     }

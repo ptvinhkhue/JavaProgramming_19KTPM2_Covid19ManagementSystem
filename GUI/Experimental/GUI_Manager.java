@@ -6,8 +6,6 @@ public class GUI_Manager {
     static PanePassword pPassword;
     static PaneList pList;
 
-    GUI_Manager() { init(); }
-
     void initPane() {
         pPassword = new PanePassword();
         pList = new PaneList();
@@ -113,7 +111,7 @@ class PanePassword extends JPanel {
     }
 
     public static void resetSubtitle(String newUsername) {
-        lb_subtitle.setText("Welcome back, " + newUsername + ". Please enter your password.");
+        lb_subtitle.setText("Welcome back, Manager " + newUsername + ". Please enter your password.");
     }
 
 }
@@ -121,6 +119,7 @@ class PanePassword extends JPanel {
 class PaneList extends JPanel {
 
     JSideBar sideBar;
+    JNeoList list;
 
     PaneList() {
         super();
@@ -136,6 +135,16 @@ class PaneList extends JPanel {
 
         // sideBar
         sideBar = new JSideBar(Global.itemIcon_Manager, 1, 0);
+
+        // list
+        String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female",
+                "male" , "male", "female", "male", "female", "male", "female", "female"};
+        String[] name = { "Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
+                    "Trinh Xuan F", "Le G", "Vo Lien H", "Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
+                "Trinh Xuan F", "Le G", "Vo Lien H"};
+        String[] label = { "1995", "1998", "1996", "2002", "1999", "2000", "2001", "1993",
+                "1995", "1998", "1996", "2002", "1999", "2000", "2001", "1993"};
+        list = new JNeoList(iconName, name, label);
     }
 
     void organize() {
@@ -152,6 +161,16 @@ class PaneList extends JPanel {
         layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
                 SpringLayout.SOUTH, this);
 
+        // list
+        layout.putConstraint(SpringLayout.WEST, list, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.EAST, list, -48,
+                SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.NORTH, list, 96,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, list, -24,
+                SpringLayout.SOUTH, this);
+
     }
 
     void addAllActionListener() {
@@ -160,6 +179,7 @@ class PaneList extends JPanel {
 
     void addAll() {
         add(sideBar);
+        add(list);
     }
 
 }

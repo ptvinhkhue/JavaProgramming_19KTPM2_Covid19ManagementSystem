@@ -19,6 +19,10 @@ public class Global {
     // Integer - Text field
     public static int tfThickness, tfRadius;
 
+    // Integer - List
+    public static int listHeight, displaySize;
+    public static Font fntListName, fntListSub;
+
     // Integer - Screen resolution
     public static int width, height;
 
@@ -48,7 +52,8 @@ public class Global {
         // Font
         fntPrimary = fntHint = createFont("Quicksand-Regular.ttf");
         fntSecond = fntButton = fntSub = createFont("Quicksand-Medium.ttf");
-        fntTitle = createFont("iCielPanton-Black.otf");
+        fntTitle = fntListName = createFont("iCielPanton-Black.otf");
+        fntListSub = createFont("Quicksand-Bold.ttf");
 
         // Font registry
         GraphicsEnvironment genv = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -61,6 +66,8 @@ public class Global {
         fntTitle = fntTitle.deriveFont(72f); // Logo title
         fntSub = fntSub.deriveFont(26f); // Logo subtitle
         fntHint = fntHint.deriveFont(12f);
+        fntListName = fntListName.deriveFont(20f);
+        fntListSub = fntListSub.deriveFont(16f);
 
         // Integers - Button
         btnRadius = 8;
@@ -68,6 +75,10 @@ public class Global {
         // Integers - Text field
         tfThickness = 1;
         tfRadius = 8;
+
+        // Integers - List
+        listHeight = 5;
+        displaySize = 5;
 
         // Integers - Screen resolution
         width = 640; height = 480;
