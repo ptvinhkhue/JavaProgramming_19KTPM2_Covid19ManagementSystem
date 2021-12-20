@@ -22,6 +22,12 @@ public class Global {
     // Integer - Screen resolution
     public static int width, height;
 
+    // Integer - Side bar
+    public static int sb_height;
+
+    // String - Side bar items
+    public static String[] itemIcon_Manager = {"list", "add", "package", "logout"};
+
     Global() {
         init();
     }
@@ -65,6 +71,9 @@ public class Global {
 
         // Integers - Screen resolution
         width = 640; height = 480;
+
+        // Integer - Side bar
+        sb_height = 10;
     }
 
     Font createFont(String fontName) {

@@ -1,26 +1,55 @@
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class JSideBar extends JPanel {
 
     ArrayList<JNeoButton> item;
     private int role; // 0 = User; 1 = Manager; 2 = Admin
 
-    JSideBar(String[] itemIcon, int role) {
+    JSideBar(String[] itemIcon, int role, int highlight) {
         super();
         this.role = role;
 
         setBackground(Global.colSecond);
-        setLayout(new GridLayout(10, 1));
+        setLayout(new GridLayout(Global.sb_height, 1));
 
         // items
-        System.out.println(itemIcon.length);
+        init(itemIcon, highlight);
+
+        // action listener
+        addAllActionListener(role);
+    }
+
+    // initialize items
+    void init(String[] itemIcon, int highlight) {
         item = new ArrayList<>();
-        for (String icon : itemIcon) {
+        for (int k = 0; k < itemIcon.length; k++) {
+            if (Objects.equals(itemIcon[k], "logout"))
+                for (int i = 0; i < Global.sb_height - itemIcon.length; i++)
+                    add(new JLabel(""));
             JNeoButton i = new JNeoButton("", getBackground(), Color.WHITE, 0);
-            i.setIcon(icon);
+
+            String iconPath = "sb_" + itemIcon[k];
+            if (k == highlight) {
+                iconPath += "_hl";
+                i.setBackground(i.getBackground().darker());
+            }
+            i.setIcon(iconPath);
             item.add(i); add(i);
         }
     }
+
+    void addAllActionListener(int role) {
+        switch (role) {
+            case 0:
+                
+                break;
+            case 1: // manager
+                item.get(3).addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
+                break;
+        }
+    }
+
 }

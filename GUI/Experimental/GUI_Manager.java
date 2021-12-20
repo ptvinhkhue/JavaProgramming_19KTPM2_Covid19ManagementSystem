@@ -135,8 +135,7 @@ class PaneList extends JPanel {
         this.setBackground(Color.WHITE);
 
         // sideBar
-        String[] itemIcon = {"account", "lock"};
-        sideBar = new JSideBar(itemIcon, 1);
+        sideBar = new JSideBar(Global.itemIcon_Manager, 1, 0);
     }
 
     void organize() {
@@ -146,7 +145,7 @@ class PaneList extends JPanel {
         // sideBar
         layout.putConstraint(SpringLayout.WEST, sideBar, 0,
                 SpringLayout.WEST, this);
-        layout.putConstraint(SpringLayout.EAST, sideBar, 54,
+        layout.putConstraint(SpringLayout.EAST, sideBar, 48,
                 SpringLayout.WEST, this);
         layout.putConstraint(SpringLayout.NORTH, sideBar, 0,
                 SpringLayout.NORTH, this);

@@ -9,12 +9,15 @@ import java.util.Objects;
 
 public class JNeoButton extends JButton {
 
+    private Color colBack;
+
     JNeoButton(String label, Color colBack, Color colFront, int radius) {
         super(label);
         // color
         this.setForeground(colFront);
         this.setBackground(colBack);
         this.setOpaque(true);
+        this.colBack = colBack;
 
         // font
         this.setFont(Global.fntButton);
