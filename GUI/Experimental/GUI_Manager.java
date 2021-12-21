@@ -1,14 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
 
+import static javax.swing.BoxLayout.Y_AXIS;
+
 public class GUI_Manager {
 
     static PanePassword pPassword;
     static PaneList pList;
+    static PaneAdd pAdd;
 
     void initPane() {
         pPassword = new PanePassword();
         pList = new PaneList();
+        pAdd = new PaneAdd();
     }
 
     void init() {
@@ -17,6 +21,7 @@ public class GUI_Manager {
 
     public static PanePassword getPPassword() { return pPassword; }
     public static PaneList getPList() { return pList; }
+    public static PaneAdd getPAdd() { return pAdd; }
 
 }
 
@@ -138,7 +143,7 @@ class PaneList extends JPanel {
         sideBar = new JSideBar(Global.itemIcon_Manager, 1, 0);
 
         // title
-        title = new JNeoLabel("Patient List", Global.fntHeader, Global.colDark);
+        title = new JNeoLabel("Patient list", Global.fntHeader, Global.colDark);
 
         // list
         String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female",
@@ -189,6 +194,102 @@ class PaneList extends JPanel {
 
     void addAll() {
         add(sideBar); add(title); add(list);
+    }
+
+}
+
+class PaneAdd extends JPanel {
+
+    JSideBar sideBar;
+    JNeoLabel title;
+    JNeoTextField tf_fullname, tf_birthyear, tf_personalID, tf_addressID;
+    Container ctn_tf;
+    JNeoButton btn_add;
+
+    PaneAdd() {
+        super();
+
+        init();
+        organize();
+        addAllActionListener();
+        addAll();
+    }
+
+    void init() {
+        this.setBackground(Color.WHITE);
+
+        // sideBar
+        sideBar = new JSideBar(Global.itemIcon_Manager, 1, 1);
+
+        // title
+        title = new JNeoLabel("Add new patient", Global.fntHeader, Global.colDark);
+
+        // text fields
+        tf_fullname = new JNeoTextField("Full name", 20, false, "account", "!NULL");
+        tf_birthyear = new JNeoTextField("Birth year", 20, false, "account", "Format must be 'yyyy'");
+        tf_personalID = new JNeoTextField("Personal ID", 20, false, "account", "!NULL");
+        tf_addressID = new JNeoTextField("Address ID", 20, false, "account", "!NULL");
+
+        // button
+        btn_add = new JNeoButton("Add",Global.colPrimary, Color.WHITE, Global.btnRadius);
+    }
+
+    void organize() {
+        SpringLayout layout = new SpringLayout();
+        this.setLayout(layout);
+
+        // sideBar
+        layout.putConstraint(SpringLayout.WEST, sideBar, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.EAST, sideBar, 48,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, sideBar, 0,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
+                SpringLayout.SOUTH, this);
+
+        // title
+        layout.putConstraint(SpringLayout.WEST, title, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, title, 32,
+                SpringLayout.NORTH, this);
+
+        // text fields
+        ctn_tf = new Container();
+        ctn_tf.setLayout(new BoxLayout(ctn_tf, BoxLayout.Y_AXIS));
+        ctn_tf.add(tf_fullname);
+        ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
+        ctn_tf.add(tf_birthyear);
+        ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
+        ctn_tf.add(tf_personalID);
+        ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
+        ctn_tf.add(tf_addressID);
+
+        layout.putConstraint(SpringLayout.WEST, ctn_tf, 0,
+                SpringLayout.WEST, title);
+        layout.putConstraint(SpringLayout.NORTH, ctn_tf, 24,
+                SpringLayout.SOUTH, title);
+
+        // button
+        layout.putConstraint(SpringLayout.WEST, btn_add, 0,
+                SpringLayout.WEST, ctn_tf);
+        layout.putConstraint(SpringLayout.NORTH, btn_add, 24,
+                SpringLayout.SOUTH, ctn_tf);
+
+    }
+
+    void addAllActionListener() {
+        btn_add.addActionListener(e -> {
+            String str;
+            // check birthyear
+            str = tf_birthyear.getText();
+            if (str.matches("^[0-9]+$") && str.length() == 4) tf_birthyear.hideHint();
+            else tf_birthyear.showHint();
+        });
+    }
+
+    void addAll() {
+        add(sideBar); add(title); add(ctn_tf); add(btn_add);
     }
 
 }

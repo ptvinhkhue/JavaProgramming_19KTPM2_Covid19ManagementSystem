@@ -47,6 +47,8 @@ public class JNeoTextField extends Container {
 
     void showHint() { hint.setForeground(Global.colError); }
 
+    void hideHint() { hint.setForeground(Color.WHITE); }
+
     String getText() {
         return tf.getText();
     }
