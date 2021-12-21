@@ -39,9 +39,9 @@ public class JNeoList extends Container {
 
 
         // buttons
-        btn_previous = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius);
+        btn_previous = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius, 2, Global.fntButton, false);
         btn_previous.setIcon("arrow_left");
-        btn_next = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius);
+        btn_next = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius, 2, Global.fntButton, false);
         btn_next.setIcon("arrow_right");
         ctn_btn = new Container();
         ctn_btn.setLayout(new FlowLayout(FlowLayout.RIGHT, 16, 0));
@@ -159,7 +159,7 @@ class JNeoListItem extends JPanel {
         lb_sub = new JNeoLabel(sub, Global.fntListSub, Global.colSecond);
 
         // info button
-        btn_info = new JNeoButton("", Global.colPrimary.darker(), getBackground(), 0);
+        btn_info = new JNeoButton("", Global.colPrimary.darker(), getBackground(), 0, 8, Global.fntButton, false);
         btn_info.setIcon("info");
 
         // add all

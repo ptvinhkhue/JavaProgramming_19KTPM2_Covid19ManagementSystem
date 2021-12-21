@@ -9,23 +9,27 @@ import java.util.Objects;
 
 public class JNeoButton extends JButton {
 
-    private Color colBack;
+    boolean isTag, enabled;
+    Color colBack;
 
-    JNeoButton(String label, Color colBack, Color colFront, int radius) {
+    JNeoButton(String label, Color colBack, Color colFront, int radius, int insets, Font fnt, boolean isTag) {
         super(label);
+        this.isTag = isTag;
+        this.enabled = true;
+        this.colBack = colBack;
+
         // color
         this.setForeground(colFront);
         this.setBackground(colBack);
         this.setOpaque(true);
-        this.colBack = colBack;
 
         // font
-        this.setFont(Global.fntButton);
+        this.setFont(fnt);
         this.revalidate();
 
         // other configurations
         this.setFocusPainted(false); // focus border
-        this.setBorder(new RoundedBorder(Global.btnRadius)); // round border
+        this.setBorder(new RoundedBorder(Global.btnRadius, insets)); // round border
         this.setBorderPainted(false);
 
         // Color handling
@@ -52,6 +56,17 @@ public class JNeoButton extends JButton {
                 paint(g, c);
             }
         });
+
+        addAllActionListener();
+    }
+
+    void addAllActionListener() {
+        if (isTag) addActionListener(e -> {
+            enabled = !enabled;
+            Color col = (enabled) ? colBack : colBack.darker().darker();
+            setBackground(col);
+            repaint();
+        });
     }
 
     void setIcon(String iconName) {
@@ -68,13 +83,15 @@ public class JNeoButton extends JButton {
 
 class RoundedBorder implements Border {
     private final int radius;
+    private final int insets;
 
-    RoundedBorder(int radius) {
+    RoundedBorder(int radius, int insets) {
         this.radius = radius;
+        this.insets = insets;
     }
 
     public Insets getBorderInsets(Component c) {
-        return new Insets(8, 16, 8, 16);
+        return new Insets(insets, insets * 2, insets, insets * 2);
     }
 
     public boolean isBorderOpaque() {return true;}

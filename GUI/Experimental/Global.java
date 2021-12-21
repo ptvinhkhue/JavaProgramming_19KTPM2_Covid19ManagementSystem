@@ -30,7 +30,7 @@ public class Global {
     public static int sb_height;
 
     // String - Side bar items
-    public static String[] itemIcon_Manager = {"list", "add", "package", "logout"};
+    public static String[] itemIcon_Manager = {"list", "package", "logout"};
 
     Global() {
         init();
@@ -65,9 +65,9 @@ public class Global {
         fntSecond = fntSecond.deriveFont(12f);
         fntButton = fntButton.deriveFont(16f); // Also, for: Subtitle
         fntTitle = fntTitle.deriveFont(72f); // Logo title
-        fntHeader = fntHeader.deriveFont(32f); // Logo title
+        fntHeader = fntHeader.deriveFont(32f);
         fntSub = fntSub.deriveFont(26f); // Logo subtitle
-        fntHint = fntHint.deriveFont(12f);
+        fntHint = fntHint.deriveFont(12f); // Also, for: tags
         fntListName = fntListName.deriveFont(20f);
         fntListSub = fntListSub.deriveFont(16f);
 

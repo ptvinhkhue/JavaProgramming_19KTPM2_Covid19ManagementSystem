@@ -8,13 +8,13 @@ public class GUI_Manager {
     static PanePassword pPassword;
     static PaneList pList;
     static PaneAdd pAdd;
-    static PaneNecessity pNecessity;
+    static PaneAddNecessity pAddNecessity;
 
     void initPane() {
         pPassword = new PanePassword();
         pList = new PaneList();
         pAdd = new PaneAdd();
-        pNecessity = new PaneNecessity();
+        pAddNecessity = new PaneAddNecessity();
     }
 
     void init() {
@@ -24,7 +24,7 @@ public class GUI_Manager {
     public static PanePassword getPPassword() { return pPassword; }
     public static PaneList getPList() { return pList; }
     public static PaneAdd getPAdd() { return pAdd; }
-    public static PaneNecessity getPNecessity() { return pNecessity; }
+    public static PaneAddNecessity getPAddNecessity() { return pAddNecessity; }
 
 }
 
@@ -50,8 +50,8 @@ class PanePassword extends JPanel {
         this.setBackground(Color.WHITE);
 
         // buttons
-        btn_login = new JNeoButton("Login", Global.colPrimary, Color.WHITE, Global.btnRadius);
-        btn_return = new JNeoButton("Return", Color.WHITE, Global.colSubtle, Global.btnRadius);
+        btn_login = new JNeoButton("Login", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_return = new JNeoButton("Return", Color.WHITE, Global.colSubtle, Global.btnRadius, 8, Global.fntButton, false);
         btnContainer = new Container();
         btnContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
         btnContainer.add(btn_login); btnContainer.add(btn_return);
@@ -150,8 +150,8 @@ class PaneList extends JPanel {
         title = new JNeoLabel("Patient list", Global.fntHeader, Global.colDark);
 
         // search bar
-        String[] filter_states = { "filter_name", "filter_year", "filter_id", "filter_address" };
-        searchBar = new JNeoSearchBar("Search...", 12, filter_states);
+        String[] filter_names = { "Name", "Birthyear", "Personal ID", "Address ID" };
+        searchBar = new JNeoSearchBar("Search...", 15, filter_names);
 
         // list
         String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female",
@@ -184,21 +184,25 @@ class PaneList extends JPanel {
         layout.putConstraint(SpringLayout.NORTH, title, 32,
                 SpringLayout.NORTH, this);
 
+        // search bar
+        layout.putConstraint(SpringLayout.WEST, searchBar, 8,
+                SpringLayout.WEST, title);
+        layout.putConstraint(SpringLayout.EAST, searchBar, -44,
+                SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.NORTH, searchBar, -8,
+                SpringLayout.NORTH, title);
+        layout.putConstraint(SpringLayout.SOUTH, searchBar, 12,
+                SpringLayout.SOUTH, title);
+
         // list
         layout.putConstraint(SpringLayout.WEST, list, 48,
                 SpringLayout.EAST, sideBar);
         layout.putConstraint(SpringLayout.EAST, list, -48,
                 SpringLayout.EAST, this);
         layout.putConstraint(SpringLayout.NORTH, list, 12,
-                SpringLayout.SOUTH, title);
+                SpringLayout.SOUTH, searchBar);
         layout.putConstraint(SpringLayout.SOUTH, list, -24,
                 SpringLayout.SOUTH, this);
-
-        // search bar
-        layout.putConstraint(SpringLayout.EAST, searchBar, 4,
-                SpringLayout.EAST, list);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, searchBar, -6,
-                SpringLayout.VERTICAL_CENTER, title);
 
     }
 
@@ -241,7 +245,7 @@ class PaneAdd extends JPanel {
         this.setBackground(Color.WHITE);
 
         // sideBar
-        sideBar = new JSideBar(Global.itemIcon_Manager, 1, 1);
+        sideBar = new JSideBar(Global.itemIcon_Manager, 1, -1);
 
         // title
         title = new JNeoLabel("Add new patient", Global.fntHeader, Global.colDark);
@@ -253,7 +257,7 @@ class PaneAdd extends JPanel {
         tf_addressID = new JNeoTextField("Address ID", 20, false, "account", "!NULL");
 
         // button
-        btn_add = new JNeoButton("Add",Global.colPrimary, Color.WHITE, Global.btnRadius);
+        btn_add = new JNeoButton("Add",Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
     }
 
     void organize() {
@@ -287,14 +291,14 @@ class PaneAdd extends JPanel {
         ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
         ctn_tf.add(tf_addressID);
 
-        layout.putConstraint(SpringLayout.WEST, ctn_tf, 0,
+        layout.putConstraint(SpringLayout.WEST, ctn_tf, -32,
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, ctn_tf, 24,
                 SpringLayout.SOUTH, title);
 
         // button
         layout.putConstraint(SpringLayout.WEST, btn_add, 0,
-                SpringLayout.WEST, ctn_tf);
+                SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, btn_add, 24,
                 SpringLayout.SOUTH, ctn_tf);
 
@@ -316,7 +320,7 @@ class PaneAdd extends JPanel {
 
 }
 
-class PaneNecessity extends JPanel {
+class PaneAddNecessity extends JPanel {
 
     JSideBar sideBar;
     JNeoLabel title, item;
@@ -324,7 +328,7 @@ class PaneNecessity extends JPanel {
     Container ctn_tf;
     JNeoButton btn_add;
 
-    PaneNecessity() {
+    PaneAddNecessity() {
         super();
 
         init();
@@ -348,7 +352,7 @@ class PaneNecessity extends JPanel {
         tf_price = new JNeoTextField("Price", 20, false, "account", "Input must be a positive number");
 
         // button
-        btn_add = new JNeoButton("Change",Global.colPrimary, Color.WHITE, Global.btnRadius);
+        btn_add = new JNeoButton("Change",Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
     }
 
     void organize() {

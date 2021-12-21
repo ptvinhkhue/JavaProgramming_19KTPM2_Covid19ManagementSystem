@@ -71,8 +71,8 @@ class PaneUsername extends JPanel {
         this.setBackground(Color.WHITE);
 
         // buttons
-        btn_continue = new JNeoButton("Continue", Global.colPrimary, Color.WHITE, Global.btnRadius);
-        btn_exit = new JNeoButton("Exit", Color.WHITE, Global.colSubtle, Global.btnRadius);
+        btn_continue = new JNeoButton("Continue", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_exit = new JNeoButton("Exit", Color.WHITE, Global.colSubtle, Global.btnRadius, 8, Global.fntButton, false);
         btnContainer = new Container();
         btnContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
         btnContainer.add(btn_continue); btnContainer.add(btn_exit);

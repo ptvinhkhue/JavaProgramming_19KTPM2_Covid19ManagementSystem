@@ -29,7 +29,7 @@ public class JSideBar extends JPanel {
             if (Objects.equals(itemIcon[k], "logout"))
                 for (int i = 0; i < Global.sb_height - itemIcon.length; i++)
                     add(new JLabel(""));
-            JNeoButton i = new JNeoButton("", getBackground(), Color.WHITE, 0);
+            JNeoButton i = new JNeoButton("", getBackground(), Color.WHITE, 0, 8, Global.fntButton, false);
 
             String iconPath = "sb_" + itemIcon[k];
             if (k == highlight) {
@@ -49,7 +49,7 @@ public class JSideBar extends JPanel {
             case 1: // manager
                 item.get(0).addActionListener(e -> GUI_Master.changePanel(GUI_Manager.getPList()));
                 item.get(1).addActionListener(e -> GUI_Master.changePanel(GUI_Manager.getPAdd()));
-                item.get(3).addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
+                item.get(2).addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
                 break;
         }
     }

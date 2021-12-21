@@ -6,6 +6,7 @@ import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class JNeoTextField extends Container {
@@ -57,14 +58,17 @@ public class JNeoTextField extends Container {
 class JNeoSearchBar extends Container {
 
     private final JTextField tf;
-    private final JNeoButton btn_filter;
-    String[] filter_states; int curState;
+    int curState;
+    ArrayList<JNeoButton> filter_tags;
+    Container ctn_search, ctn_tags;
+    SpringLayout layout;
 
-    JNeoSearchBar(String str, int col, String[] filter_states) {
+    JNeoSearchBar(String str, int col, String[] filter_names) {
         super();
-        setLayout(new FlowLayout());
+        layout = new SpringLayout();
+        setLayout(layout);
 
-        // icon
+        // icon & search bar
         JLabel lb_icon = new JLabel("");
         try {
             BufferedImage icon = ImageIO.read(
@@ -79,22 +83,42 @@ class JNeoSearchBar extends Container {
         tf.setFont(Global.fntPrimary);
         tf.setBorder(new BubbleBorder());
 
-        this.filter_states = filter_states; curState = 0;
-        btn_filter = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius);
-        btn_filter.setIcon(filter_states[curState]);
+        ctn_search = new Container();
+        ctn_search.setLayout(new FlowLayout(FlowLayout.LEFT, 8, 0));
+        ctn_search.add(lb_icon);
+        ctn_search.add(tf);
+
+        // tags
+        ctn_tags = new Container();
+        ctn_tags.setLayout(new FlowLayout(FlowLayout.RIGHT, 4, 0));
+
+        curState = 0;
+        filter_tags = new ArrayList<>();
+
+        for (String filter_name : filter_names) {
+            JNeoButton tag = new JNeoButton(filter_name, Global.colSecond, Color.WHITE, 4, 2, Global.fntHint, true);
+            filter_tags.add(tag);
+            ctn_tags.add(tag);
+        }
 
         addAllActionListener();
+        organize();
 
-        add(lb_icon);
-        add(tf);
-        add(btn_filter);
+        add(ctn_search);
+        add(ctn_tags);
+    }
+
+    void organize() {
+        layout.putConstraint(SpringLayout.EAST, ctn_search, 0,
+                SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, ctn_tags, 0,
+                SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.NORTH, ctn_tags, 4,
+                SpringLayout.SOUTH, ctn_search);
     }
 
     void addAllActionListener() {
-        btn_filter.addActionListener(e -> {
-            curState = (curState == filter_states.length - 1) ? 0 : curState + 1;
-            setState(curState);
-        });
+
     }
 
     JTextField getTf() { return tf; }
@@ -104,8 +128,6 @@ class JNeoSearchBar extends Container {
     }
 
     void setState(int state) {
-        btn_filter.setIcon(filter_states[state]);
-        btn_filter.repaint();
     }
 }
 
