@@ -60,11 +60,6 @@ public class Manager extends CovidAccount {
 
             while (db.rs.next()) {
                 ret = db.rs.getString(field);
-                /*
-                System.out.println("ID: " + db.rs.getInt("userID"));
-                System.out.println("Username: " + db.rs.getString("username"));
-                System.out.println("Fullname: " + db.rs.getString("fullname"));
-                */
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,12 +96,21 @@ public class Manager extends CovidAccount {
         }
     }
    
-   public void updateUserStatus(int userID, int status) {
+   public void updateUserStatus(int userID, int status, ArrayList<Integer> arr) {
        try {
             DataQuery db = new DataQuery();
-            String sql = "update acc_user"
-                    + "set status = " + status + "where userID =" + userID;
-            db.stm.executeUpdate(sql);
+            String sql1 = "update acc_user "
+                    + "set status = " + status + " where userID =" + userID;
+            db.stm.executeUpdate(sql1);
+            arr.add(userID);
+            
+            String sql2 = "select * from relation where userID =" + userID;
+            db.rs = db.stm.executeQuery(sql2);
+            while (db.rs.next()) {
+                //ret = db.rs.getString(field);
+                if (!arr.contains(db.rs.getInt("relatedID"))) updateUserStatus(db.rs.getInt("relatedID"), status + 1, arr);
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -191,11 +195,12 @@ public class Manager extends CovidAccount {
         }
     }
     
-    /*
+    
     public static void main(String args[]) {
         
         Manager m = new Manager("abc");
-        m.displayNecessityList();
+        ArrayList<Integer> arr = new ArrayList<Integer>();
+        m.updateUserStatus(3, 1, arr);
     }
-    */
+    
 }
