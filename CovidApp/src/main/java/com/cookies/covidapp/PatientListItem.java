@@ -5,13 +5,17 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class PatientListItem extends JPanel {
+    
+    int userID;
 
     JLabel l_name;
     public JButton btn_info;
     public JButton btn_change;
 
-    PatientListItem(String name, String year){
+    PatientListItem(int userID, String name, String year){
         super();
+        
+        this.userID = userID;
         this.setLayout(new BorderLayout());
         this.setBackground(Color.white);
         this.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
