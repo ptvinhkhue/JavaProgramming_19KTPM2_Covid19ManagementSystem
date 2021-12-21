@@ -31,7 +31,7 @@ public class Manager extends CovidAccount {
         }
     }
     
-    public ArrayList<String> displayUserList(String info) {
+    public ArrayList<String> displayUserList(String field) {
         ArrayList<String> ret = new ArrayList<>();
         
         try {
@@ -40,7 +40,7 @@ public class Manager extends CovidAccount {
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                ret.add(db.rs.getString(info));
+                ret.add(db.rs.getString(field));
                 
             }
         } catch (Exception e) {
@@ -50,20 +50,27 @@ public class Manager extends CovidAccount {
         return ret;
    }
     
-   public void displayUserDetail(int userID) {
+   public String displayUserDetail(String username, String field) {
+       String ret = "";
+       
         try {
             DataQuery db = new DataQuery();
-            String sql = "select * from acc_user where userID =" + userID;
+            String sql = "select * from acc_user where username = '" + username + "'";
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
+                ret = db.rs.getString(info);
+                /*
                 System.out.println("ID: " + db.rs.getInt("userID"));
                 System.out.println("Username: " + db.rs.getString("username"));
                 System.out.println("Fullname: " + db.rs.getString("fullname"));
+                */
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        return ret;
    }
    
    public void searchUserByName(String key) {

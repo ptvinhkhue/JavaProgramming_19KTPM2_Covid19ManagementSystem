@@ -63,6 +63,7 @@ public class GUI_Manager {
         
         //ArrayList<String> name = new ArrayList<>(Arrays.asList("Khuê" , "Paige Gordon Johnson"));
         //ArrayList<String> year = new ArrayList<>(Arrays.asList("1995", "2000"));
+        ArrayList<String> username = mng.displayUserList("username");
         ArrayList<String> name = mng.displayUserList("fullname");
         ArrayList<String> year = mng.displayUserList("yob");
         
@@ -70,7 +71,7 @@ public class GUI_Manager {
         //mng.displayNecessityList();
         
         //String[] name = {"Jack" , "Paige Gordon Johnson"}; String[] year = {"1995", "2000"};
-        PatientList pl = new PatientList(name.size(), name, year);
+        PatientList pl = new PatientList(name.size(), username, name, year);
 
         // set layout
         layout.putConstraint(SpringLayout.WEST, mb, marginUnit * 2,
@@ -98,22 +99,19 @@ public class GUI_Manager {
         miStats.addActionListener(e -> changePanel(pChart));
         for (PatientListItem pli: pl.pli) {
             pli.btn_info.addActionListener(e -> {
-                
-                String fullname, yob, id, address;
-                
-
                 // set info here
-                lv_fullname.setText("Nguyen Van A");
-                lv_yob.setText("1990");
-                lv_id.setText("079209090909");
-                lv_address.setText("Tân Bình");
+                lv_fullname.setText(mng.displayUserDetail(pli.username, "fullname"));
+                lv_yob.setText(mng.displayUserDetail(pli.username, "yob"));
+                lv_id.setText(mng.displayUserDetail(pli.username, "personalID"));
+                lv_address.setText(mng.displayUserDetail(pli.username, "addressID"));
 
                 changePanel(pInfo);
             });
+            
             pli.btn_change.addActionListener(e -> {
 
                 // set info here
-                lv_change.setText("Nguyen Van A - 1990");
+                lv_change.setText(mng.displayUserDetail(pli.username, "fullname") + " - " + mng.displayUserDetail(pli.username, "yob"));
 
                 changePanel(pChange);
             });
@@ -344,10 +342,11 @@ public class GUI_Manager {
         lv_id = new JLabel("079209090909");
         lv_address = new JLabel("001");
 
+        ArrayList<String> username = mng.displayUserList("username");
         ArrayList<String> name = mng.displayUserList("fullname");
         ArrayList<String> year = mng.displayUserList("yob");
         
-        PatientList pl = new PatientList(name.size(), name, year);
+        PatientList pl = new PatientList(name.size(), username, name, year);
 
         // set layout
         layout.putConstraint(SpringLayout.WEST, mb, marginUnit * 2,
