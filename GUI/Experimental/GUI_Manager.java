@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static javax.swing.BoxLayout.Y_AXIS;
@@ -9,15 +10,18 @@ public class GUI_Manager {
     static PanePassword pPassword;
     static PanePatientList pPatientList;
     static PaneNecessityList pNecessityList;
-    static PanePatientAdd pPatientAdd;
-    static PaneNecessityAdd pNecessityAdd;
+    static PanePatientForm pPatientAdd, pPatientEdit;
+    static PaneNecessityForm pNecessityAdd;
+    static PanePatientInfo pPatientInfo;
 
     void initPane() {
         pPassword = new PanePassword();
         pPatientList = new PanePatientList();
         pNecessityList = new PaneNecessityList();
-        pPatientAdd = new PanePatientAdd();
-        pNecessityAdd = new PaneNecessityAdd();
+        pPatientAdd = new PanePatientForm(true);
+        pPatientEdit = new PanePatientForm(false);
+        pNecessityAdd = new PaneNecessityForm(true);
+        pPatientInfo = new PanePatientInfo();
     }
 
     void init() {
@@ -27,8 +31,10 @@ public class GUI_Manager {
     public static PanePassword getPPassword() { return pPassword; }
     public static PanePatientList getPPatientList() { return pPatientList; }
     public static PaneNecessityList getPNecessityList() { return pNecessityList; }
-    public static PanePatientAdd getPPatientAdd() { return pPatientAdd; }
-    public static PaneNecessityAdd getPNecessityAdd() { return pNecessityAdd; }
+    public static PanePatientForm getPPatientAdd() { return pPatientAdd; }
+    public static PanePatientForm getPPatientEdit() { return pPatientEdit; }
+    public static PaneNecessityForm getpNecessityAdd() { return pNecessityAdd; }
+    public static PanePatientInfo getPPatientInfo() { return pPatientInfo; }
 
 }
 
@@ -130,10 +136,10 @@ class PanePassword extends JPanel {
 
 class PanePatientList extends JPanel {
 
-    JSideBar sideBar;
-    JNeoList list;
-    JNeoLabel title;
-    JNeoSearchBar searchBar;
+    private JSideBar sideBar;
+    private JNeoList list;
+    private JNeoLabel title;
+    private JNeoSearchBar searchBar;
 
     PanePatientList() {
         super();
@@ -159,12 +165,13 @@ class PanePatientList extends JPanel {
 
         // list
         String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female",
-                "male" , "male", "female", "male", "female", "male", "female", "female"};
+                "male" , "male", "female", "female"};
         String[] name = { "Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                    "Trinh Xuan F", "Le G", "Vo Lien H", "Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                "Trinh Xuan F", "Le G", "Vo Lien H"};
-        String[] label = { "1995", "1998", "1996", "2002", "1999", "2000", "2001", "1993",
-                "1995", "1998", "1996", "2002", "1999", "2000", "2001", "1993"};
+                    "Trinh Xuan F", "Le G", "Vo Lien H", "Nguyen Van A", "Tran Thanh B", "Le G", "Vo Lien H"};
+        String[] label = { "2001 | District 1", "1995 | District 7","1987 | District 4","1999 | District 6",
+                "2003 | District 1","1980 | District 3","1970 | District 4", "2001 | District 1", "1995 | District 7","1987 | District 4","1999 | District 6",
+                "2003 | District 1"
+        };
         list = new JNeoList(iconName, name, label);
     }
 
@@ -223,6 +230,29 @@ class PanePatientList extends JPanel {
         list.getBtnAdd().addActionListener(e -> {
             GUI_Master.changePanel(GUI_Manager.getPPatientAdd());
         });
+        addListActionListener();
+    }
+
+    void addListActionListener() {
+        ArrayList<JNeoListItem> item = list.getItemList();
+        for (JNeoListItem i : item) {
+            i.getBtnInfo().addActionListener(e -> {
+
+                String[] iconName = {"male", "male", "female", "male", "female", "male"};
+                String[] name = {"Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
+                        "Trinh Xuan F"};
+                String[] label = {"2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
+                        "2003 | District 1", "1980 | District 3"};
+
+                String[][] related = new String[3][iconName.length];
+                related[0] = iconName;
+                related[1] = name;
+                related[2] = label;
+
+                GUI_Manager.getPPatientInfo().setInfo(i.getLbName().getText(), i.getLbSub().getText(), related);
+                GUI_Master.changePanel(GUI_Manager.getPPatientInfo());
+            });
+        }
     }
 
     void addAll() {
@@ -319,9 +349,29 @@ class PaneNecessityList extends JPanel {
 
         });
         list.getBtnAdd().addActionListener(e -> {
-            GUI_Master.changePanel(GUI_Manager.getPNecessityAdd());
+            GUI_Master.changePanel(GUI_Manager.getpNecessityAdd());
 
         });
+
+        ArrayList<JNeoListItem> item = list.getItemList();
+        for (JNeoListItem i : item) {
+            i.getBtnInfo().addActionListener(e -> {
+
+                String[] iconName = {"male", "male", "female", "male", "female", "male"};
+                String[] name = {"Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
+                        "Trinh Xuan F"};
+                String[] label = {"2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
+                        "2003 | District 1", "1980 | District 3"};
+
+                String[][] related = new String[3][iconName.length];
+                related[0] = iconName;
+                related[1] = name;
+                related[2] = label;
+
+                GUI_Manager.getPPatientInfo().setInfo(i.getLbName().getText(), i.getLbSub().getText(), related);
+                GUI_Master.changePanel(GUI_Manager.getPPatientInfo());
+            });
+        }
     }
 
     void addAll() {
@@ -330,7 +380,7 @@ class PaneNecessityList extends JPanel {
 
 }
 
-class PanePatientAdd extends JPanel {
+class PanePatientForm extends JPanel {
 
     JSideBar sideBar;
     JNeoLabel title;
@@ -338,10 +388,12 @@ class PanePatientAdd extends JPanel {
     Container ctn_tf;
     JNeoButton btn_add;
     JLabel lb_error;
+    boolean isAdd;
 
-    PanePatientAdd() {
+    PanePatientForm(boolean isAdd) {
         super();
-
+        this.isAdd = isAdd;
+        
         init();
         organize();
         addAllActionListener();
@@ -355,7 +407,9 @@ class PanePatientAdd extends JPanel {
         sideBar = new JSideBar(Global.itemIcon_Manager, 1, -1);
 
         // title
-        title = new JNeoLabel("Add new patient", Global.fntHeader, Global.colDark);
+        String str_btn = isAdd ? "Add" : "Edit";
+        String str_title = isAdd ? " new " : " ";
+        title = new JNeoLabel(str_btn + str_title + "patient", Global.fntHeader, Global.colDark);
 
         // text fields
         tf_fullname = new JNeoTextField("Full name", 20, false, "account", "!NULL");
@@ -364,10 +418,11 @@ class PanePatientAdd extends JPanel {
         tf_addressID = new JNeoTextField("Address ID", 20, false, "account", "!NULL");
 
         // button
-        btn_add = new JNeoButton("Add",Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_add = new JNeoButton(str_btn ,Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
 
         // label
-        lb_error = new JNeoLabel("Patient already exists.", Global.fntSecond, Color.WHITE);
+        String str_error = isAdd ? "Patient already exists" : "Information matches with another patient's";
+        lb_error = new JNeoLabel(str_error, Global.fntSecond, Color.WHITE);
     }
 
     void organize() {
@@ -422,7 +477,7 @@ class PanePatientAdd extends JPanel {
 
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
-            String str; boolean valid = true; boolean exist = false;
+            String str; boolean valid = true; boolean exist;
             // check birthyear
             str = tf_birthyear.getText();
             if (str.matches("^[0-9]+$") && str.length() == 4)
@@ -449,6 +504,7 @@ class PanePatientAdd extends JPanel {
             tf_personalID.setText("Personal ID");
             tf_addressID.setText("Address ID");
         });
+
     }
 
     void addAll() {
@@ -457,7 +513,7 @@ class PanePatientAdd extends JPanel {
 
 }
 
-class PaneNecessityAdd extends JPanel {
+class PaneNecessityForm extends JPanel {
 
     JSideBar sideBar;
     JNeoLabel title;
@@ -465,9 +521,11 @@ class PaneNecessityAdd extends JPanel {
     Container ctn_tf;
     JNeoButton btn_add;
     JNeoLabel lb_error;
+    boolean isAdd;
 
-    PaneNecessityAdd() {
+    PaneNecessityForm(boolean isAdd) {
         super();
+        this.isAdd = isAdd;
 
         init();
         organize();
@@ -482,7 +540,9 @@ class PaneNecessityAdd extends JPanel {
         sideBar = new JSideBar(Global.itemIcon_Manager, 1, -1);
 
         // title
-        title = new JNeoLabel("Add new patient", Global.fntHeader, Global.colDark);
+        String str_btn = isAdd ? "Add" : "Edit";
+        String str_title = isAdd ? " new " : " ";
+        title = new JNeoLabel(str_btn + str_title + "necessity", Global.fntHeader, Global.colDark);
 
         // text fields
         tf_name = new JNeoTextField("Necessity name", 20, false, "account", "!NULL");
@@ -490,10 +550,11 @@ class PaneNecessityAdd extends JPanel {
         tf_price = new JNeoTextField("Price", 20, false, "account", "Must be a positive number");
 
         // button
-        btn_add = new JNeoButton("Add",Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_add = new JNeoButton(str_btn,Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
 
         // label
-        lb_error = new JNeoLabel("Necessity already exists.", Global.fntSecond, Color.WHITE);
+        String str_error = isAdd ? "Patient already exists" : "Information matches with another patient's";
+        lb_error = new JNeoLabel(str_error, Global.fntSecond, Color.WHITE);
     }
 
     void organize() {
@@ -584,6 +645,138 @@ class PaneNecessityAdd extends JPanel {
 
     void addAll() {
         add(sideBar); add(title); add(ctn_tf); add(btn_add); add(lb_error);
+    }
+
+}
+
+class PanePatientInfo extends JPanel {
+
+    private JSideBar sideBar;
+    private JPanel ctn_lb;
+    private JNeoButton btn_edit;
+    private JNeoLabel lb_fullname, lb_subtitle;
+    private JNeoList list;
+
+    PanePatientInfo() {
+        super();
+
+        init();
+        addAllActionListener();
+        organize();
+        addAll();
+    }
+
+    void init() {
+        this.setBackground(Color.WHITE);
+
+        // sideBar
+        sideBar = new JSideBar(Global.itemIcon_Manager, 1, -1);
+
+        // labels
+        lb_fullname = new JNeoLabel("", Global.fntHeader, Global.colDark);
+        lb_subtitle = new JNeoLabel("", Global.fntButton, Global.colSecond);
+
+        // labels container
+        ctn_lb = new JPanel();
+        ctn_lb.setBackground(Color.WHITE);
+        GridLayout grid = new GridLayout(2, 1);
+        ctn_lb.setLayout(grid);
+        ctn_lb.setAlignmentX(Component.LEFT_ALIGNMENT);
+        ctn_lb.add(lb_fullname);
+        ctn_lb.add(lb_subtitle);
+
+        // list
+        String[] iconName = { "male"};
+        String[] name = { "Nguyen Van Lee"};
+        String[] label = { "2001 | District 1"
+        };
+        list = new JNeoList(iconName, name, label);
+
+        // button
+        btn_edit = new JNeoButton("Edit", Global.colPrimary, Color.WHITE, Global.btnRadius,
+                8, Global.fntButton, false);
+    }
+
+    void organize() {
+        SpringLayout layout = new SpringLayout();
+        this.setLayout(layout);
+
+        // sideBar
+        layout.putConstraint(SpringLayout.WEST, sideBar, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.EAST, sideBar, 48,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, sideBar, 0,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
+                SpringLayout.SOUTH, this);
+
+        // labels container
+        layout.putConstraint(SpringLayout.WEST, ctn_lb, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, ctn_lb, 32,
+                SpringLayout.NORTH, this);
+
+        // list
+        layout.putConstraint(SpringLayout.WEST, list, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.EAST, list, -48,
+                SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.NORTH, list, 12,
+                SpringLayout.SOUTH, ctn_lb);
+        layout.putConstraint(SpringLayout.SOUTH, list, -24,
+                SpringLayout.SOUTH, this);
+
+        // button
+        layout.putConstraint(SpringLayout.EAST, btn_edit, -48,
+                SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, btn_edit, 0,
+                SpringLayout.VERTICAL_CENTER, ctn_lb);
+
+    }
+
+    void addAllActionListener() {
+        btn_edit.addActionListener(e -> {
+            GUI_Master.changePanel(GUI_Manager.getPPatientEdit());
+        });
+        addListActionListener();
+    }
+
+    void addListActionListener() {
+        ArrayList<JNeoListItem> item = list.getItemList();
+        for (JNeoListItem i : item) {
+
+            i.getBtnInfo().addActionListener(e -> {
+
+                String[] iconName = {"male", "male", "female", "male", "female"};
+                String[] name = {"Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E"};
+                String[] label = {"2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
+                        "2003 | District 1"};
+
+                String[][] related = new String[3][iconName.length];
+                related[0] = iconName;
+                related[1] = name;
+                related[2] = label;
+
+                setInfo(i.getLbName().getText(), i.getLbSub().getText(), related);
+            });
+        }
+    }
+
+    void addAll() {
+        add(sideBar); add(ctn_lb); add(list); add(btn_edit);
+    }
+
+    void setInfo(String fullname, String subtitle, String[][] related) {
+        // info
+        lb_fullname.setText(fullname);
+        lb_fullname.repaint();
+        lb_subtitle.setText(subtitle);
+        lb_subtitle.repaint();
+
+        // related
+        list.setNewList(related[0], related[1], related[2]);
+        addListActionListener();
     }
 
 }

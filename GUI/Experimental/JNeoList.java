@@ -120,6 +120,10 @@ public class JNeoList extends Container {
     }
 
     JNeoButton getBtnAdd() { return btn_add; }
+
+    ArrayList<JNeoListItem> getItemList() {
+        return item;
+    }
 }
 
 class JNeoListItem extends JPanel {
@@ -196,7 +200,13 @@ class JNeoListItem extends JPanel {
 
     }
 
+
     void addAll() {
         add(lb_img); add(lb_name); add(lb_sub); add(btn_info);
     }
+
+    JNeoButton getBtnInfo() { return btn_info; }
+
+    JNeoLabel getLbName() {return lb_name;}
+    JNeoLabel getLbSub() {return lb_sub;}
 }

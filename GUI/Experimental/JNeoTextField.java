@@ -124,15 +124,6 @@ class JNeoSearchBar extends Container {
     }
 
     JTextField getTf() { return tf; }
-
-    String getText() {
-        return tf.getText();
-    }
-
-    void setText(String str) { tf.setText(str); }
-
-    void setState(int state) {
-    }
 }
 
 class BubbleBorder extends AbstractBorder {
