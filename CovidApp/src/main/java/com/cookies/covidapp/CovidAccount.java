@@ -17,4 +17,8 @@ public class CovidAccount {
         this.username = username;
         this.password = password;
     }
+    
+    public CovidAccount(String username) {
+        this.username = username;
+    }
 }

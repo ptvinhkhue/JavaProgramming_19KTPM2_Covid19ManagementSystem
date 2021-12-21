@@ -2,8 +2,12 @@ package com.cookies.covidapp;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GUI_Manager {
+    
+    Manager mng;
 
     int width = 640; int height = 480;
     int marginUnit = 4;
@@ -17,7 +21,9 @@ public class GUI_Manager {
     JLabel lv_fullname, lv_yob, lv_id, lv_address;
     JLabel lv_change;
 
-    GUI_Manager(GUI_Login gui_login) {
+    GUI_Manager(GUI_Login gui_login, String username) {
+        this.mng = new Manager(username);
+        
         initFont();
         initPanels();
         initFMain();
@@ -54,9 +60,17 @@ public class GUI_Manager {
 
         JLabel title = new JLabel("Patient List");
         title.setFont(new Font("SANS-SERIF", Font.BOLD, 24));
-
-        String[] name = {"Jack" , "Paige Gordon Johnson"}; String[] year = {"1995", "2000"};
-        PatientList pl = new PatientList(2, name, year);
+        
+        //ArrayList<String> name = new ArrayList<>(Arrays.asList("Khuê" , "Paige Gordon Johnson"));
+        //ArrayList<String> year = new ArrayList<>(Arrays.asList("1995", "2000"));
+        ArrayList<String> name = mng.displayUserList("fullname");
+        ArrayList<String> year = mng.displayUserList("yob");
+        
+        //System.out.println(mng.displayUserList("fullname"));
+        //mng.displayNecessityList();
+        
+        //String[] name = {"Jack" , "Paige Gordon Johnson"}; String[] year = {"1995", "2000"};
+        PatientList pl = new PatientList(name.size(), name, year);
 
         // set layout
         layout.putConstraint(SpringLayout.WEST, mb, marginUnit * 2,
@@ -84,6 +98,9 @@ public class GUI_Manager {
         miStats.addActionListener(e -> changePanel(pChart));
         for (PatientListItem pli: pl.pli) {
             pli.btn_info.addActionListener(e -> {
+                
+                String fullname, yob, id, address;
+                
 
                 // set info here
                 lv_fullname.setText("Nguyen Van A");
@@ -327,8 +344,10 @@ public class GUI_Manager {
         lv_id = new JLabel("079209090909");
         lv_address = new JLabel("001");
 
-        String[] name = {"Jack" , "Paige Gordon Johnson"}; String[] year = {"1995", "2000"};
-        PatientList pl = new PatientList(2, name, year);
+        ArrayList<String> name = mng.displayUserList("fullname");
+        ArrayList<String> year = mng.displayUserList("yob");
+        
+        PatientList pl = new PatientList(name.size(), name, year);
 
         // set layout
         layout.putConstraint(SpringLayout.WEST, mb, marginUnit * 2,
