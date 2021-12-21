@@ -50,12 +50,12 @@ public class Manager extends CovidAccount {
         return ret;
    }
     
-   public String displayUserDetail(String username, String field) {
+   public String displayUserDetail(int userID, String field) {
        String ret = "";
        
         try {
             DataQuery db = new DataQuery();
-            String sql = "select * from acc_user where username = '" + username + "'";
+            String sql = "select * from acc_user where userID = " + userID;
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
@@ -89,18 +89,28 @@ public class Manager extends CovidAccount {
         }
    }
    
-   public void updateUser(int userID, String username, String fullname, String personalID, int YoB, int addressID, int status, int placeID) {
+   public void updateUserInfo(int userID, String fullname, String personalID, int YoB, int addressID) {
        try {
             DataQuery db = new DataQuery();
             String sql = "update acc_user"
-                    + "set username ='" + username + "', fullname ='" + fullname + "', personalID ='" + personalID
-                    + "', yob =" + YoB + ", addressID =" + addressID + ", status =" + status + ", placeID =" + placeID 
-                    + "where userID =" + userID;
+                    + "set fullname ='" + fullname + "', personalID ='" + personalID
+                    + "', yob =" + YoB + ", addressID =" + addressID + "where userID =" + userID;
             db.stm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+   
+   public void updateUserStatus(int userID, int status) {
+       try {
+            DataQuery db = new DataQuery();
+            String sql = "update acc_user"
+                    + "set status = " + status + "where userID =" + userID;
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+   }
    
    /*---Necessity Management---*/
 

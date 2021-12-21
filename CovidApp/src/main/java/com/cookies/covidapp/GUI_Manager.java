@@ -63,7 +63,7 @@ public class GUI_Manager {
         
         //ArrayList<String> name = new ArrayList<>(Arrays.asList("Khuê" , "Paige Gordon Johnson"));
         //ArrayList<String> year = new ArrayList<>(Arrays.asList("1995", "2000"));
-        ArrayList<String> username = mng.displayUserList("username");
+        ArrayList<String> username = mng.displayUserList("userID");
         ArrayList<String> name = mng.displayUserList("fullname");
         ArrayList<String> year = mng.displayUserList("yob");
         
@@ -100,10 +100,10 @@ public class GUI_Manager {
         for (PatientListItem pli: pl.pli) {
             pli.btn_info.addActionListener(e -> {
                 // set info here
-                lv_fullname.setText(mng.displayUserDetail(pli.username, "fullname"));
-                lv_yob.setText(mng.displayUserDetail(pli.username, "yob"));
-                lv_id.setText(mng.displayUserDetail(pli.username, "personalID"));
-                lv_address.setText(mng.displayUserDetail(pli.username, "addressID"));
+                lv_fullname.setText(mng.displayUserDetail(pli.userID, "fullname"));
+                lv_yob.setText(mng.displayUserDetail(pli.userID, "yob"));
+                lv_id.setText(mng.displayUserDetail(pli.userID, "personalID"));
+                lv_address.setText(mng.displayUserDetail(pli.userID, "addressID"));
 
                 changePanel(pInfo);
             });
@@ -111,7 +111,7 @@ public class GUI_Manager {
             pli.btn_change.addActionListener(e -> {
 
                 // set info here
-                lv_change.setText(mng.displayUserDetail(pli.username, "fullname") + " - " + mng.displayUserDetail(pli.username, "yob"));
+                lv_change.setText(mng.displayUserDetail(pli.userID, "fullname") + " - " + mng.displayUserDetail(pli.userID, "yob"));
 
                 changePanel(pChange);
             });
@@ -342,7 +342,7 @@ public class GUI_Manager {
         lv_id = new JLabel("079209090909");
         lv_address = new JLabel("001");
 
-        ArrayList<String> username = mng.displayUserList("username");
+        ArrayList<String> username = mng.displayUserList("userID");
         ArrayList<String> name = mng.displayUserList("fullname");
         ArrayList<String> year = mng.displayUserList("yob");
         

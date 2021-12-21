@@ -6,16 +6,16 @@ import java.awt.*;
 
 public class PatientListItem extends JPanel {
     
-    String username;
+    int userID;
 
     JLabel l_name;
     public JButton btn_info;
     public JButton btn_change;
 
-    PatientListItem(String username, String name, String year){
+    PatientListItem(int userID, String name, String year){
         super();
         
-        this.username = username;
+        this.userID = userID;
         this.setLayout(new BorderLayout());
         this.setBackground(Color.white);
         this.setBorder(BorderFactory.createLineBorder(Color.lightGray, 1));
