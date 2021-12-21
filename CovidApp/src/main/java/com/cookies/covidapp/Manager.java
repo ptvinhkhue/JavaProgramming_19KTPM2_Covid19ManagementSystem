@@ -59,7 +59,7 @@ public class Manager extends CovidAccount {
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                ret = db.rs.getString(info);
+                ret = db.rs.getString(field);
                 /*
                 System.out.println("ID: " + db.rs.getInt("userID"));
                 System.out.println("Username: " + db.rs.getString("username"));
