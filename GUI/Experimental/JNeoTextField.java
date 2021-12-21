@@ -57,8 +57,10 @@ public class JNeoTextField extends Container {
 class JNeoSearchBar extends Container {
 
     private final JTextField tf;
+    private final JNeoButton btn_filter;
+    String[] filter_states; int curState;
 
-    JNeoSearchBar(String str, int col) {
+    JNeoSearchBar(String str, int col, String[] filter_states) {
         super();
         setLayout(new FlowLayout());
 
@@ -77,18 +79,33 @@ class JNeoSearchBar extends Container {
         tf.setFont(Global.fntPrimary);
         tf.setBorder(new BubbleBorder());
 
-        // organize
-        //layout.putConstraint(SpringLayout.WEST, tf, 0, SpringLayout.WEST, ctn_tf);
-        //layout.putConstraint(SpringLayout.WEST, lb_icon, 32, SpringLayout.WEST, ctn_tf);
+        this.filter_states = filter_states; curState = 0;
+        btn_filter = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius);
+        btn_filter.setIcon(filter_states[curState]);
+
+        addAllActionListener();
 
         add(lb_icon);
         add(tf);
+        add(btn_filter);
+    }
+
+    void addAllActionListener() {
+        btn_filter.addActionListener(e -> {
+            curState = (curState == filter_states.length - 1) ? 0 : curState + 1;
+            setState(curState);
+        });
     }
 
     JTextField getTf() { return tf; }
 
     String getText() {
         return tf.getText();
+    }
+
+    void setState(int state) {
+        btn_filter.setIcon(filter_states[state]);
+        btn_filter.repaint();
     }
 }
 

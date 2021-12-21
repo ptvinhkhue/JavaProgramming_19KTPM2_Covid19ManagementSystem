@@ -150,7 +150,8 @@ class PaneList extends JPanel {
         title = new JNeoLabel("Patient list", Global.fntHeader, Global.colDark);
 
         // search bar
-        searchBar = new JNeoSearchBar("Search...", 16);
+        String[] filter_states = { "filter_name", "filter_year", "filter_id", "filter_address" };
+        searchBar = new JNeoSearchBar("Search...", 12, filter_states);
 
         // list
         String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female",
@@ -183,12 +184,6 @@ class PaneList extends JPanel {
         layout.putConstraint(SpringLayout.NORTH, title, 32,
                 SpringLayout.NORTH, this);
 
-        // search bar
-        layout.putConstraint(SpringLayout.EAST, searchBar, -48,
-                SpringLayout.EAST, this);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, searchBar, -6,
-                SpringLayout.VERTICAL_CENTER, title);
-
         // list
         layout.putConstraint(SpringLayout.WEST, list, 48,
                 SpringLayout.EAST, sideBar);
@@ -198,6 +193,12 @@ class PaneList extends JPanel {
                 SpringLayout.SOUTH, title);
         layout.putConstraint(SpringLayout.SOUTH, list, -24,
                 SpringLayout.SOUTH, this);
+
+        // search bar
+        layout.putConstraint(SpringLayout.EAST, searchBar, 4,
+                SpringLayout.EAST, list);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, searchBar, -6,
+                SpringLayout.VERTICAL_CENTER, title);
 
     }
 
