@@ -374,9 +374,9 @@ class PanePatientForm extends JPanel {
 
     JSideBar sideBar;
     JNeoLabel title;
-    JNeoTextField tf_fullname, tf_birthyear, tf_personalID, tf_addressID; // add
-    JNeoTextField tf_place, tf_status; // edit
-    Container ctn_tf;
+    JNeoTextField tf_fullname, tf_birthyear, tf_personalID, tf_addressID;
+    JNeoTextField tf_place, tf_status;
+    Container ctn_tf, ctn_tf_2;
     JNeoButton btn_add;
     JLabel lb_error;
     boolean isAdd;
@@ -403,13 +403,13 @@ class PanePatientForm extends JPanel {
         title = new JNeoLabel(str_btn + str_title + "patient", Global.fntHeader, Global.colDark);
 
         // text fields
-        tf_fullname = new JNeoTextField("Full name", 20, false, "account", "!NULL");
-        tf_birthyear = new JNeoTextField("Birth year", 20, false, "account", "Format must be 'yyyy'");
-        tf_personalID = new JNeoTextField("Personal ID", 20, false, "account", "!NULL");
-        tf_addressID = new JNeoTextField("Address ID", 20, false, "account", "!NULL");
+        tf_fullname = new JNeoTextField("Full name", 14, false, "account", "!NULL");
+        tf_birthyear = new JNeoTextField("Birth year", 14, false, "account", "Format must be 'yyyy'");
+        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "!NULL");
+        tf_addressID = new JNeoTextField("Address ID", 14, false, "account", "!NULL");
 
-        tf_place = new JNeoTextField("New treatment location", 20, false, "account", "!NULL");
-        tf_status = new JNeoTextField("New status", 20, false, "account", "!NULL");
+        tf_place = new JNeoTextField("Treatment location", 14, false, "account", "!NULL");
+        tf_status = new JNeoTextField("Status", 14, false, "account", "!NULL");
 
         // button
         btn_add = new JNeoButton(str_btn ,Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -442,23 +442,28 @@ class PanePatientForm extends JPanel {
         // text fields
         ctn_tf = new Container();
         ctn_tf.setLayout(new BoxLayout(ctn_tf, BoxLayout.Y_AXIS));
-        if (isAdd) {
-            ctn_tf.add(tf_fullname);
-            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
-            ctn_tf.add(tf_birthyear);
-            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
-            ctn_tf.add(tf_personalID);
-            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
-            ctn_tf.add(tf_addressID);
-        } else {
-            ctn_tf.add(tf_place);
-            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
-            ctn_tf.add(tf_status);
-        }
+        ctn_tf.add(tf_fullname);
+        ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
+        ctn_tf.add(tf_birthyear);
+        ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
+        ctn_tf.add(tf_personalID);
+        ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
+        ctn_tf.add(tf_addressID);
 
-        layout.putConstraint(SpringLayout.WEST, ctn_tf, isAdd ? -32 : 0,
+        ctn_tf_2 = new Container();
+        ctn_tf_2.setLayout(new BoxLayout(ctn_tf_2, BoxLayout.Y_AXIS));
+        ctn_tf_2.add(tf_place);
+        ctn_tf_2.add(Box.createRigidArea(new Dimension(0, 4)));
+        ctn_tf_2.add(tf_status);
+
+        layout.putConstraint(SpringLayout.WEST, ctn_tf, -48,
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, ctn_tf, 24,
+                SpringLayout.SOUTH, title);
+
+        layout.putConstraint(SpringLayout.WEST, ctn_tf_2, -48,
+                SpringLayout.EAST, ctn_tf);
+        layout.putConstraint(SpringLayout.NORTH, ctn_tf_2, 24,
                 SpringLayout.SOUTH, title);
 
         // button
@@ -508,7 +513,7 @@ class PanePatientForm extends JPanel {
     }
 
     void addAll() {
-        add(sideBar); add(title); add(ctn_tf); add(btn_add); add(lb_error);
+        add(sideBar); add(title); add(ctn_tf); add(ctn_tf_2); add(btn_add); add(lb_error);
     }
 
 }
