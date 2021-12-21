@@ -11,7 +11,7 @@ public class JNeoList extends Container {
     SpringLayout laySpring;
     private final Container ctn_item;
     private Container ctn_btn;
-    private JNeoButton btn_previous, btn_next;
+    private JNeoButton btn_previous, btn_next, btn_add;
     private int curPage, totalPage;
     private JNeoLabel lb_page;
 
@@ -39,13 +39,15 @@ public class JNeoList extends Container {
 
 
         // buttons
+        btn_add = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius, 2, Global.fntButton, false);
+        btn_add.setIcon("add");
         btn_previous = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius, 2, Global.fntButton, false);
         btn_previous.setIcon("arrow_left");
         btn_next = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius, 2, Global.fntButton, false);
         btn_next.setIcon("arrow_right");
         ctn_btn = new Container();
         ctn_btn.setLayout(new FlowLayout(FlowLayout.RIGHT, 16, 0));
-        ctn_btn.add(btn_previous); ctn_btn.add(btn_next);
+        ctn_btn.add(btn_add); ctn_btn.add(btn_previous); ctn_btn.add(btn_next);
 
         // add
         add(ctn_item); add(ctn_btn); add(lb_page);
@@ -116,6 +118,8 @@ public class JNeoList extends Container {
         totalPage = item.size() / Global.displaySize + 1;
         showPage(curPage);
     }
+
+    JNeoButton getBtnAdd() { return btn_add; }
 }
 
 class JNeoListItem extends JPanel {

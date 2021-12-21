@@ -53,6 +53,8 @@ public class JNeoTextField extends Container {
     String getText() {
         return tf.getText();
     }
+
+    void setText(String str) { tf.setText(str); }
 }
 
 class JNeoSearchBar extends Container {
@@ -126,6 +128,8 @@ class JNeoSearchBar extends Container {
     String getText() {
         return tf.getText();
     }
+
+    void setText(String str) { tf.setText(str); }
 
     void setState(int state) {
     }
