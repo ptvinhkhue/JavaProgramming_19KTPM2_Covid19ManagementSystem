@@ -10,6 +10,7 @@ public class DataQuery {
     public Connection con = null;
     public Statement stm = null;
     public ResultSet rs = null;
+    public ResultSet rsSub = null;
     
     public DataQuery() {
         try {
