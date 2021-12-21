@@ -31,18 +31,12 @@ public class JNeoList extends Container {
 
     void init(String[] iconName, String[] name, String[] label) {
         curPage = 0;
+        lb_page = new JNeoLabel("" + totalPage, Global.fntButton, Global.colSecond);
 
         // items
         item = new ArrayList<>();
-        if (iconName.length != name.length || name.length != label.length)
-            throw new java.lang.Error("[JNeoList] Unmatched length.");
-        for (int k = 0; k < name.length; k++) {
-            JNeoListItem i = new JNeoListItem(iconName[k], name[k], label[k]);
-            item.add(i);
-        }
-        totalPage = item.size() / Global.displaySize + 1;
+        setNewList(iconName, name, label);
 
-        lb_page = new JNeoLabel("Page " + (curPage + 1) + "/" + totalPage, Global.fntButton, Global.colSecond);
 
         // buttons
         btn_previous = new JNeoButton("", Global.colPrimary, Color.WHITE, Global.btnRadius);
@@ -54,7 +48,6 @@ public class JNeoList extends Container {
         ctn_btn.add(btn_previous); ctn_btn.add(btn_next);
 
         // add
-        showPage(curPage); // add items to display
         add(ctn_item); add(ctn_btn); add(lb_page);
     }
 
@@ -87,14 +80,10 @@ public class JNeoList extends Container {
     void addAllActionListener() {
         btn_previous.addActionListener(e -> {
             curPage = (0 < curPage) ? curPage - 1 : totalPage - 1;
-            lb_page.setText("Page " + (curPage + 1) + "/" + totalPage);
-            lb_page.repaint();
             showPage(curPage);
         });
         btn_next.addActionListener(e -> {
             curPage = (curPage < totalPage - 1) ? curPage + 1 : 0;
-            lb_page.setText("Page " + (curPage + 1) + "/" + totalPage);
-            lb_page.repaint();
             showPage(curPage);
         });
     }
@@ -110,9 +99,23 @@ public class JNeoList extends Container {
             ctn_item.add(item.get(i));
         ctn_item.repaint();
         ctn_item.revalidate();
+        lb_page.setText("Page " + (curPage + 1) + "/" + totalPage);
+        lb_page.repaint();
 
     }
 
+    void setNewList(String[] iconName, String[] name, String[] label) {
+        item.clear();
+        if (iconName.length != name.length || name.length != label.length)
+            throw new java.lang.Error("[JNeoList] Unmatched length.");
+        for (int k = 0; k < name.length; k++) {
+            JNeoListItem i = new JNeoListItem(iconName[k], name[k], label[k]);
+            item.add(i);
+        }
+        curPage = 0;
+        totalPage = item.size() / Global.displaySize + 1;
+        showPage(curPage);
+    }
 }
 
 class JNeoListItem extends JPanel {

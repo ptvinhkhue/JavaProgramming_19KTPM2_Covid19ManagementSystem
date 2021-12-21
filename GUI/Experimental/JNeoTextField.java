@@ -54,6 +54,44 @@ public class JNeoTextField extends Container {
     }
 }
 
+class JNeoSearchBar extends Container {
+
+    private final JTextField tf;
+
+    JNeoSearchBar(String str, int col) {
+        super();
+        setLayout(new FlowLayout());
+
+        // icon
+        JLabel lb_icon = new JLabel("");
+        try {
+            BufferedImage icon = ImageIO.read(
+                    Objects.requireNonNull(getClass().getResource(
+                            Global.pathIcon + "ic_search.png")));
+            lb_icon.setIcon(new ImageIcon(icon));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        tf = new JTextField(str, col);
+        tf.setFont(Global.fntPrimary);
+        tf.setBorder(new BubbleBorder());
+
+        // organize
+        //layout.putConstraint(SpringLayout.WEST, tf, 0, SpringLayout.WEST, ctn_tf);
+        //layout.putConstraint(SpringLayout.WEST, lb_icon, 32, SpringLayout.WEST, ctn_tf);
+
+        add(lb_icon);
+        add(tf);
+    }
+
+    JTextField getTf() { return tf; }
+
+    String getText() {
+        return tf.getText();
+    }
+}
+
 class BubbleBorder extends AbstractBorder {
 
     private final Color color;

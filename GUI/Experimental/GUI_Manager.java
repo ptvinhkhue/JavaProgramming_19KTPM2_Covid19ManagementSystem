@@ -8,11 +8,13 @@ public class GUI_Manager {
     static PanePassword pPassword;
     static PaneList pList;
     static PaneAdd pAdd;
+    static PaneNecessity pNecessity;
 
     void initPane() {
         pPassword = new PanePassword();
         pList = new PaneList();
         pAdd = new PaneAdd();
+        pNecessity = new PaneNecessity();
     }
 
     void init() {
@@ -22,6 +24,7 @@ public class GUI_Manager {
     public static PanePassword getPPassword() { return pPassword; }
     public static PaneList getPList() { return pList; }
     public static PaneAdd getPAdd() { return pAdd; }
+    public static PaneNecessity getPNecessity() { return pNecessity; }
 
 }
 
@@ -126,6 +129,7 @@ class PaneList extends JPanel {
     JSideBar sideBar;
     JNeoList list;
     JNeoLabel title;
+    JNeoSearchBar searchBar;
 
     PaneList() {
         super();
@@ -144,6 +148,9 @@ class PaneList extends JPanel {
 
         // title
         title = new JNeoLabel("Patient list", Global.fntHeader, Global.colDark);
+
+        // search bar
+        searchBar = new JNeoSearchBar("Search...", 16);
 
         // list
         String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female",
@@ -176,6 +183,12 @@ class PaneList extends JPanel {
         layout.putConstraint(SpringLayout.NORTH, title, 32,
                 SpringLayout.NORTH, this);
 
+        // search bar
+        layout.putConstraint(SpringLayout.EAST, searchBar, -48,
+                SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, searchBar, -6,
+                SpringLayout.VERTICAL_CENTER, title);
+
         // list
         layout.putConstraint(SpringLayout.WEST, list, 48,
                 SpringLayout.EAST, sideBar);
@@ -189,11 +202,19 @@ class PaneList extends JPanel {
     }
 
     void addAllActionListener() {
+        searchBar.getTf().addActionListener(e -> {
 
+            String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female"};
+            String[] name = { "Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
+                    "Trinh Xuan F", "Le G", "Vo Lien H"};
+            String[] label = { "1995", "1998", "1996", "2002", "1999", "2000", "2001", "1993"};
+            list.setNewList(iconName, name, label);
+
+        });
     }
 
     void addAll() {
-        add(sideBar); add(title); add(list);
+        add(sideBar); add(title); add(list); add(searchBar);
     }
 
 }
@@ -285,6 +306,105 @@ class PaneAdd extends JPanel {
             str = tf_birthyear.getText();
             if (str.matches("^[0-9]+$") && str.length() == 4) tf_birthyear.hideHint();
             else tf_birthyear.showHint();
+        });
+    }
+
+    void addAll() {
+        add(sideBar); add(title); add(ctn_tf); add(btn_add);
+    }
+
+}
+
+class PaneNecessity extends JPanel {
+
+    JSideBar sideBar;
+    JNeoLabel title, item;
+    JNeoTextField tf_limit, tf_price;
+    Container ctn_tf;
+    JNeoButton btn_add;
+
+    PaneNecessity() {
+        super();
+
+        init();
+        organize();
+        addAllActionListener();
+        addAll();
+    }
+
+    void init() {
+        this.setBackground(Color.WHITE);
+
+        // sideBar
+        sideBar = new JSideBar(Global.itemIcon_Manager, 1, 1);
+
+        // title
+        title = new JNeoLabel("Edit necessity", Global.fntHeader, Global.colDark);
+        item = new JNeoLabel("Rice - 5000đ - Limit: 15", Global.fntButton, Global.colSecond);
+
+        // text fields
+        tf_limit = new JNeoTextField("Limit", 20, false, "account", "Input must be a positive number");
+        tf_price = new JNeoTextField("Price", 20, false, "account", "Input must be a positive number");
+
+        // button
+        btn_add = new JNeoButton("Change",Global.colPrimary, Color.WHITE, Global.btnRadius);
+    }
+
+    void organize() {
+        SpringLayout layout = new SpringLayout();
+        this.setLayout(layout);
+
+        // sideBar
+        layout.putConstraint(SpringLayout.WEST, sideBar, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.EAST, sideBar, 48,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, sideBar, 0,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
+                SpringLayout.SOUTH, this);
+
+        // title & item label
+        layout.putConstraint(SpringLayout.WEST, title, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, title, 32,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.WEST, item, 0,
+                SpringLayout.WEST, title);
+        layout.putConstraint(SpringLayout.NORTH, item, 12,
+                SpringLayout.NORTH, title);
+
+        // text fields
+        ctn_tf = new Container();
+        ctn_tf.setLayout(new BoxLayout(ctn_tf, BoxLayout.Y_AXIS));
+        ctn_tf.add(tf_limit);
+        ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
+        ctn_tf.add(tf_price);
+
+        layout.putConstraint(SpringLayout.WEST, ctn_tf, 0,
+                SpringLayout.WEST, title);
+        layout.putConstraint(SpringLayout.NORTH, ctn_tf, 24,
+                SpringLayout.SOUTH, title);
+
+        // button
+        layout.putConstraint(SpringLayout.WEST, btn_add, 0,
+                SpringLayout.WEST, ctn_tf);
+        layout.putConstraint(SpringLayout.NORTH, btn_add, 24,
+                SpringLayout.SOUTH, ctn_tf);
+
+    }
+
+    void addAllActionListener() {
+        btn_add.addActionListener(e -> {
+            String str;
+            // check limit
+            str = tf_limit.getText();
+            if (str.matches("^[0-9]+$") && Integer.parseInt(str) >= 0) tf_limit.hideHint();
+            else tf_limit.showHint();
+            // check price
+            str = tf_price.getText();
+            if (str.matches("^[0-9]+$") && Integer.parseInt(str) >= 0) tf_price.hideHint();
+            else tf_price.showHint();
         });
     }
 
