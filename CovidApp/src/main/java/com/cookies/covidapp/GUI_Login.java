@@ -6,7 +6,7 @@ import java.awt.*;
 public class GUI_Login {
     
     Login login = new Login();
-    String username, password;
+    String username;
 
     int width = 640; int height = 480;
     int marginUnit = 4;
@@ -22,7 +22,7 @@ public class GUI_Login {
         initPanels();
         initFMain();
 
-        gui_manager = new GUI_Manager(this);
+        gui_manager = new GUI_Manager(this, username);
         fMain.setVisible(true);
     }
 
@@ -109,7 +109,6 @@ public class GUI_Login {
         // action listeners
         btn_login.addActionListener(e -> {
             if (login.handlePassword(username, tf_password.getText())) {
-                password = tf_password.getText();
                 changePanel(gui_manager.getpMain());
             }
         });

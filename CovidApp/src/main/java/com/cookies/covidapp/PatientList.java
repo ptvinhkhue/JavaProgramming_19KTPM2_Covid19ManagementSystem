@@ -8,14 +8,14 @@ public class PatientList extends JPanel {
 
     public ArrayList<PatientListItem> pli = new ArrayList<>();
 
-    public PatientList(int n, String[] name, String[] year) {
+    public PatientList(int n, ArrayList<String> name, ArrayList<String> year) {
         super();
 
         Container table = new Container();
         table.setLayout(new BoxLayout(table, BoxLayout.Y_AXIS));
 
         for (int i = 0; i < n; i++) {
-            PatientListItem pli_cur = new PatientListItem(name[i], year[i]);
+            PatientListItem pli_cur = new PatientListItem(name.get(i), year.get(i));
             pli.add(pli_cur);
             table.add(pli_cur);
         }

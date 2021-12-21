@@ -4,8 +4,6 @@
  */
 package com.cookies.covidapp;
 
-import java.util.Scanner;
-
 /**
  *
  * @author ptvin
