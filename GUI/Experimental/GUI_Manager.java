@@ -11,7 +11,7 @@ public class GUI_Manager {
     static PanePatientList pPatientList;
     static PaneNecessityList pNecessityList;
     static PanePatientForm pPatientAdd, pPatientEdit;
-    static PaneNecessityForm pNecessityAdd;
+    static PaneNecessityForm pNecessityAdd, pNecessityEdit;
     static PanePatientInfo pPatientInfo;
 
     void initPane() {
@@ -21,6 +21,7 @@ public class GUI_Manager {
         pPatientAdd = new PanePatientForm(true);
         pPatientEdit = new PanePatientForm(false);
         pNecessityAdd = new PaneNecessityForm(true);
+        pNecessityEdit = new PaneNecessityForm(false);
         pPatientInfo = new PanePatientInfo();
     }
 
@@ -33,7 +34,8 @@ public class GUI_Manager {
     public static PaneNecessityList getPNecessityList() { return pNecessityList; }
     public static PanePatientForm getPPatientAdd() { return pPatientAdd; }
     public static PanePatientForm getPPatientEdit() { return pPatientEdit; }
-    public static PaneNecessityForm getpNecessityAdd() { return pNecessityAdd; }
+    public static PaneNecessityForm getPNecessityAdd() { return pNecessityAdd; }
+    public static PaneNecessityForm getPNecessityEdit() { return pNecessityEdit; }
     public static PanePatientInfo getPPatientInfo() { return pPatientInfo; }
 
 }
@@ -345,31 +347,19 @@ class PaneNecessityList extends JPanel {
     void addAllActionListener() {
         searchBar.getTf().addActionListener(e -> {
 
-
-
         });
         list.getBtnAdd().addActionListener(e -> {
-            GUI_Master.changePanel(GUI_Manager.getpNecessityAdd());
+            GUI_Master.changePanel(GUI_Manager.getPNecessityAdd());
 
         });
+        addListActionListener();
+    }
 
+    void addListActionListener() {
         ArrayList<JNeoListItem> item = list.getItemList();
         for (JNeoListItem i : item) {
             i.getBtnInfo().addActionListener(e -> {
-
-                String[] iconName = {"male", "male", "female", "male", "female", "male"};
-                String[] name = {"Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                        "Trinh Xuan F"};
-                String[] label = {"2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
-                        "2003 | District 1", "1980 | District 3"};
-
-                String[][] related = new String[3][iconName.length];
-                related[0] = iconName;
-                related[1] = name;
-                related[2] = label;
-
-                GUI_Manager.getPPatientInfo().setInfo(i.getLbName().getText(), i.getLbSub().getText(), related);
-                GUI_Master.changePanel(GUI_Manager.getPPatientInfo());
+                GUI_Master.changePanel(GUI_Manager.getPNecessityEdit());
             });
         }
     }
@@ -384,7 +374,8 @@ class PanePatientForm extends JPanel {
 
     JSideBar sideBar;
     JNeoLabel title;
-    JNeoTextField tf_fullname, tf_birthyear, tf_personalID, tf_addressID;
+    JNeoTextField tf_fullname, tf_birthyear, tf_personalID, tf_addressID; // add
+    JNeoTextField tf_place, tf_status; // edit
     Container ctn_tf;
     JNeoButton btn_add;
     JLabel lb_error;
@@ -393,7 +384,7 @@ class PanePatientForm extends JPanel {
     PanePatientForm(boolean isAdd) {
         super();
         this.isAdd = isAdd;
-        
+
         init();
         organize();
         addAllActionListener();
@@ -407,7 +398,7 @@ class PanePatientForm extends JPanel {
         sideBar = new JSideBar(Global.itemIcon_Manager, 1, -1);
 
         // title
-        String str_btn = isAdd ? "Add" : "Edit";
+        String str_btn = isAdd ? "Add" : "Update";
         String str_title = isAdd ? " new " : " ";
         title = new JNeoLabel(str_btn + str_title + "patient", Global.fntHeader, Global.colDark);
 
@@ -416,6 +407,9 @@ class PanePatientForm extends JPanel {
         tf_birthyear = new JNeoTextField("Birth year", 20, false, "account", "Format must be 'yyyy'");
         tf_personalID = new JNeoTextField("Personal ID", 20, false, "account", "!NULL");
         tf_addressID = new JNeoTextField("Address ID", 20, false, "account", "!NULL");
+
+        tf_place = new JNeoTextField("New treatment location", 20, false, "account", "!NULL");
+        tf_status = new JNeoTextField("New status", 20, false, "account", "!NULL");
 
         // button
         btn_add = new JNeoButton(str_btn ,Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -448,15 +442,21 @@ class PanePatientForm extends JPanel {
         // text fields
         ctn_tf = new Container();
         ctn_tf.setLayout(new BoxLayout(ctn_tf, BoxLayout.Y_AXIS));
-        ctn_tf.add(tf_fullname);
-        ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
-        ctn_tf.add(tf_birthyear);
-        ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
-        ctn_tf.add(tf_personalID);
-        ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
-        ctn_tf.add(tf_addressID);
+        if (isAdd) {
+            ctn_tf.add(tf_fullname);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
+            ctn_tf.add(tf_birthyear);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
+            ctn_tf.add(tf_personalID);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
+            ctn_tf.add(tf_addressID);
+        } else {
+            ctn_tf.add(tf_place);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
+            ctn_tf.add(tf_status);
+        }
 
-        layout.putConstraint(SpringLayout.WEST, ctn_tf, -32,
+        layout.putConstraint(SpringLayout.WEST, ctn_tf, isAdd ? -32 : 0,
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, ctn_tf, 24,
                 SpringLayout.SOUTH, title);
@@ -519,7 +519,7 @@ class PaneNecessityForm extends JPanel {
     JNeoLabel title;
     JNeoTextField tf_name, tf_limit, tf_price;
     Container ctn_tf;
-    JNeoButton btn_add;
+    JNeoButton btn_add, btn_delete;
     JNeoLabel lb_error;
     boolean isAdd;
 
@@ -540,7 +540,7 @@ class PaneNecessityForm extends JPanel {
         sideBar = new JSideBar(Global.itemIcon_Manager, 1, -1);
 
         // title
-        String str_btn = isAdd ? "Add" : "Edit";
+        String str_btn = isAdd ? "Add" : "Update";
         String str_title = isAdd ? " new " : " ";
         title = new JNeoLabel(str_btn + str_title + "necessity", Global.fntHeader, Global.colDark);
 
@@ -551,9 +551,10 @@ class PaneNecessityForm extends JPanel {
 
         // button
         btn_add = new JNeoButton(str_btn,Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_delete = new JNeoButton("Delete", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
 
         // label
-        String str_error = isAdd ? "Patient already exists" : "Information matches with another patient's";
+        String str_error = isAdd ? "Necessity already exists" : "Information matches with another necessity's";
         lb_error = new JNeoLabel(str_error, Global.fntSecond, Color.WHITE);
     }
 
@@ -596,10 +597,19 @@ class PaneNecessityForm extends JPanel {
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, btn_add, 24,
                 SpringLayout.SOUTH, ctn_tf);
+        layout.putConstraint(SpringLayout.WEST, btn_delete, 8,
+                SpringLayout.EAST, btn_add);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, btn_delete, 0,
+                SpringLayout.VERTICAL_CENTER, btn_add);
 
         // label
-        layout.putConstraint(SpringLayout.WEST, lb_error, 16,
-                SpringLayout.EAST, btn_add);
+        if (isAdd) {
+            layout.putConstraint(SpringLayout.WEST, lb_error, 16,
+                    SpringLayout.EAST, btn_add);
+        } else {
+            layout.putConstraint(SpringLayout.WEST, lb_error, 16,
+                    SpringLayout.EAST, btn_delete);
+        }
         layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_error, 0,
                 SpringLayout.VERTICAL_CENTER, btn_add);
 
@@ -645,6 +655,8 @@ class PaneNecessityForm extends JPanel {
 
     void addAll() {
         add(sideBar); add(title); add(ctn_tf); add(btn_add); add(lb_error);
+        if (!isAdd) add(btn_delete);
+
     }
 
 }
@@ -693,7 +705,7 @@ class PanePatientInfo extends JPanel {
         list = new JNeoList(iconName, name, label);
 
         // button
-        btn_edit = new JNeoButton("Edit", Global.colPrimary, Color.WHITE, Global.btnRadius,
+        btn_edit = new JNeoButton("Update", Global.colPrimary, Color.WHITE, Global.btnRadius,
                 8, Global.fntButton, false);
     }
 

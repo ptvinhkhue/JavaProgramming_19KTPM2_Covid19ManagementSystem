@@ -115,7 +115,7 @@ public class JNeoList extends Container {
             item.add(i);
         }
         curPage = 0;
-        totalPage = item.size() / Global.displaySize + 1;
+        totalPage = item.size() / Global.displaySize + (item.size() % Global.displaySize != 0 ? 1 : 0);
         showPage(curPage);
     }
 
