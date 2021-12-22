@@ -8,11 +8,13 @@ public class GUI_User {
     static PanePasswordUser pPasswordUser;
     static PanePersonalInfo pPersonalInfo;
     static PaneBuyNecessity pBuyNecessity;
+    static PaneNecessityInfo pNecessityInfo;
 
     void initPane() {
         pPasswordUser = new PanePasswordUser();
         pPersonalInfo = new PanePersonalInfo();
         pBuyNecessity = new PaneBuyNecessity();
+        pNecessityInfo = new PaneNecessityInfo();
     }
 
     void init() {
@@ -22,6 +24,7 @@ public class GUI_User {
     public static PanePasswordUser getPPasswordUser() { return pPasswordUser; }
     public static PanePersonalInfo getPPersonalInfo() { return pPersonalInfo; }
     public static PaneBuyNecessity getPBuyNecessity() { return pBuyNecessity; }
+    public static PaneNecessityInfo getPNecessityInfo() { return pNecessityInfo; }
 
 }
 
@@ -342,13 +345,109 @@ class PaneBuyNecessity extends JPanel {
         ArrayList<JNeoListItem> item = list.getItemList();
         for (JNeoListItem i : item) {
             i.getBtnInfo().addActionListener(e -> {
-                GUI_Master.changePanel(GUI_Manager.getPNecessityEdit());
+                GUI_User.getPNecessityInfo().setInfo(i.getLbName().getText(), i.getLbSub().getText());
+                GUI_Master.changePanel(GUI_User.getPNecessityInfo());
             });
         }
     }
 
     void addAll() {
         add(sideBar); add(title); add(list); add(searchBar);
+    }
+
+}
+
+class PaneNecessityInfo extends JPanel {
+
+    private JSideBar sideBar;
+    private JPanel ctn_lb;
+    private JNeoLabel lb_fullname, lb_subtitle;
+    private JNeoTextField tf_count;
+    private JNeoButton btn_buy;
+
+    PaneNecessityInfo() {
+        super();
+
+        init();
+        addAllActionListener();
+        organize();
+        addAll();
+    }
+
+    void init() {
+        this.setBackground(Color.WHITE);
+
+        // sideBar
+        sideBar = new JSideBar(Global.itemIcon_User, 0, -1);
+
+        // labels
+        lb_fullname = new JNeoLabel("", Global.fntHeader, Global.colDark);
+        lb_subtitle = new JNeoLabel("", Global.fntButton, Global.colSecond);
+
+        // labels container
+        ctn_lb = new JPanel();
+        ctn_lb.setBackground(Color.WHITE);
+        GridLayout grid = new GridLayout(2, 1);
+        ctn_lb.setLayout(grid);
+        ctn_lb.setAlignmentX(Component.LEFT_ALIGNMENT);
+        ctn_lb.add(lb_fullname);
+        ctn_lb.add(lb_subtitle);
+
+        // text field
+        tf_count = new JNeoTextField("Necessity count", 16, false, "account", "Must be a positive number");
+
+        // button
+        btn_buy = new JNeoButton("Buy", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+    }
+
+    void organize() {
+        SpringLayout layout = new SpringLayout();
+        this.setLayout(layout);
+
+        // sideBar
+        layout.putConstraint(SpringLayout.WEST, sideBar, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.EAST, sideBar, 48,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, sideBar, 0,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
+                SpringLayout.SOUTH, this);
+
+        // labels container
+        layout.putConstraint(SpringLayout.WEST, ctn_lb, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, ctn_lb, 32,
+                SpringLayout.NORTH, this);
+
+        // text field
+        layout.putConstraint(SpringLayout.WEST, tf_count, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, tf_count, 16,
+                SpringLayout.SOUTH, ctn_lb);
+
+        // button
+        layout.putConstraint(SpringLayout.WEST, btn_buy, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, btn_buy, 16,
+                SpringLayout.SOUTH, tf_count);
+
+    }
+
+    void addAllActionListener() {
+
+    }
+
+    void addAll() {
+        add(sideBar); add(ctn_lb); add(tf_count); add(btn_buy);
+    }
+
+    void setInfo(String fullname, String subtitle) {
+        // info
+        lb_fullname.setText(fullname);
+        lb_fullname.repaint();
+        lb_subtitle.setText(subtitle);
+        lb_subtitle.repaint();
     }
 
 }
