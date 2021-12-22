@@ -673,6 +673,7 @@ class PanePatientInfo extends JPanel {
     private JNeoButton btn_edit;
     private JNeoLabel lb_fullname, lb_subtitle;
     private JNeoList list;
+    private JNeoTextField tf_add;
 
     PanePatientInfo() {
         super();
@@ -712,6 +713,10 @@ class PanePatientInfo extends JPanel {
         // button
         btn_edit = new JNeoButton("Update", Global.colPrimary, Color.WHITE, Global.btnRadius,
                 8, Global.fntButton, false);
+
+        // text field
+        tf_add = new JNeoTextField("Add related patient ID", 12, false, "account", "Patient does not exist");
+
     }
 
     void organize() {
@@ -750,6 +755,11 @@ class PanePatientInfo extends JPanel {
         layout.putConstraint(SpringLayout.VERTICAL_CENTER, btn_edit, 0,
                 SpringLayout.VERTICAL_CENTER, ctn_lb);
 
+        // text field
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tf_add, -32,
+                SpringLayout.HORIZONTAL_CENTER, this);
+        layout.putConstraint(SpringLayout.SOUTH, tf_add, -8,
+                SpringLayout.SOUTH, this);
     }
 
     void addAllActionListener() {
@@ -781,7 +791,7 @@ class PanePatientInfo extends JPanel {
     }
 
     void addAll() {
-        add(sideBar); add(ctn_lb); add(list); add(btn_edit);
+        add(sideBar); add(ctn_lb); add(list); add(btn_edit); add(tf_add);
     }
 
     void setInfo(String fullname, String subtitle, String[][] related) {
