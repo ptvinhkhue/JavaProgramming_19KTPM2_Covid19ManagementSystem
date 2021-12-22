@@ -8,14 +8,30 @@ import java.util.Date;
  * @author ptvin
  */
 public class Manager extends CovidAccount {
+    
+    int ID;
 
     /*---Constructor---*/
     Manager(String username, String password) {
         super(username, password);
     }
+    
+    Manager() {       
+    }
 
     Manager(String username) {
         super(username);
+        
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select managerID from acc_manager where username = '" + username + "'";
+            db.rs = db.stm.executeQuery(sql);
+            
+            db.rs.next();
+            this.ID = db.rs.getInt("managerID");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /*---User Management---*/
@@ -202,11 +218,12 @@ public class Manager extends CovidAccount {
         }
     }
 
+    /*
     public static void main(String args[]) {
 
         Manager m = new Manager("abc");
         ArrayList<Integer> arr = new ArrayList<Integer>();
-        m.updateUserStatus(3, 1, arr);
+        m.updateUserStatus(1, 0, arr);
     }
-
+    */
 }
