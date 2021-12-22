@@ -21,8 +21,8 @@ public class GUI_Manager {
     JLabel lv_fullname, lv_yob, lv_id, lv_address;
     JLabel lv_change;
 
-    GUI_Manager(GUI_Login gui_login, String username) {
-        this.mng = new Manager(username);
+    GUI_Manager(GUI_Login gui_login) {
+        this.mng = new Manager();
         
         initFont();
         initPanels();
@@ -30,6 +30,10 @@ public class GUI_Manager {
 
         this.gui_login = gui_login;
         this.fMain = gui_login.getfMain();
+    }
+    
+    public void assignManager(String username) {
+        this.mng = new Manager(username);
     }
 
     // initiate components

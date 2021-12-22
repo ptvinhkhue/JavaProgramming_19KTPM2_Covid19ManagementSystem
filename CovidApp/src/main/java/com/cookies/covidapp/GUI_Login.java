@@ -22,7 +22,7 @@ public class GUI_Login {
         initPanels();
         initFMain();
 
-        gui_manager = new GUI_Manager(this, username);
+        gui_manager = new GUI_Manager(this);
         fMain.setVisible(true);
     }
 
@@ -68,7 +68,9 @@ public class GUI_Login {
         // action listeners
         btn_continue.addActionListener(e -> {
             if (login.handleUsername(tf_username.getText())) {
+                //System.out.println(tf_username.getText());
                 username = tf_username.getText();
+                gui_manager.assignManager(username);
                 changePanel(pPassword);
             }
         });
