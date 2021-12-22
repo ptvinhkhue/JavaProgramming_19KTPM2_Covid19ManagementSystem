@@ -128,7 +128,7 @@ class PaneUsername extends JPanel {
 
     void addAllActionListener() {
         btn_continue.addActionListener(e -> {
-            int role = 1;
+            int role = 0;
 
             switch (role) {
                 case 0: // user

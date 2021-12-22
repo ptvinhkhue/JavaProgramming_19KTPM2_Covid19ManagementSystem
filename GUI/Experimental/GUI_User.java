@@ -10,6 +10,7 @@ public class GUI_User {
     static PaneBuyNecessity pBuyNecessity;
     static PaneNecessityInfo pNecessityInfo;
     static PanePayment pPayment;
+    static PaneCart pCart;
 
     void initPane() {
         pPasswordUser = new PanePasswordUser();
@@ -17,6 +18,7 @@ public class GUI_User {
         pBuyNecessity = new PaneBuyNecessity();
         pNecessityInfo = new PaneNecessityInfo();
         pPayment = new PanePayment();
+        pCart = new PaneCart();
     }
 
     void init() {
@@ -28,6 +30,7 @@ public class GUI_User {
     public static PaneBuyNecessity getPBuyNecessity() { return pBuyNecessity; }
     public static PaneNecessityInfo getPNecessityInfo() { return pNecessityInfo; }
     public static PanePayment getPPayment() { return pPayment; }
+    public static PaneCart getPCart() { return pCart; }
 
 }
 
@@ -256,6 +259,7 @@ class PaneBuyNecessity extends JPanel {
     JNeoList list;
     JNeoLabel title;
     JNeoSearchBar searchBar;
+    JButton btn_cart;
 
     PaneBuyNecessity() {
         super();
@@ -289,6 +293,10 @@ class PaneBuyNecessity extends JPanel {
         list = new JNeoList(iconName, name, label);
         list.setBtnIcon("cart");
         list.removeBtnAdd();
+
+        // button cart
+        btn_cart = new JNeoButton("Cart", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+
     }
 
     void organize() {
@@ -331,6 +339,12 @@ class PaneBuyNecessity extends JPanel {
         layout.putConstraint(SpringLayout.SOUTH, list, -24,
                 SpringLayout.SOUTH, this);
 
+        // button
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, btn_cart, 0,
+                SpringLayout.HORIZONTAL_CENTER, this);
+        layout.putConstraint(SpringLayout.SOUTH, btn_cart, -24,
+                SpringLayout.SOUTH, this);
+
     }
 
     void addAllActionListener() {
@@ -341,6 +355,7 @@ class PaneBuyNecessity extends JPanel {
             GUI_Master.changePanel(GUI_Manager.getPNecessityAdd());
 
         });
+        btn_cart.addActionListener(e -> GUI_Master.changePanel(GUI_User.getPCart()));
         addListActionListener();
     }
 
@@ -355,7 +370,7 @@ class PaneBuyNecessity extends JPanel {
     }
 
     void addAll() {
-        add(sideBar); add(title); add(list); add(searchBar);
+        add(sideBar); add(title); add(list); add(searchBar); add(btn_cart);
     }
 
 }
@@ -366,7 +381,7 @@ class PaneNecessityInfo extends JPanel {
     private JPanel ctn_lb;
     private JNeoLabel lb_fullname, lb_subtitle;
     private JNeoTextField tf_count;
-    private JNeoButton btn_buy;
+    private JNeoButton btn_add;
 
     PaneNecessityInfo() {
         super();
@@ -400,7 +415,7 @@ class PaneNecessityInfo extends JPanel {
         tf_count = new JNeoTextField("Necessity count", 16, false, "account", "Must be a positive number");
 
         // button
-        btn_buy = new JNeoButton("Buy", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_add = new JNeoButton("Add to cart", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
     }
 
     void organize() {
@@ -430,9 +445,9 @@ class PaneNecessityInfo extends JPanel {
                 SpringLayout.SOUTH, ctn_lb);
 
         // button
-        layout.putConstraint(SpringLayout.WEST, btn_buy, 48,
+        layout.putConstraint(SpringLayout.WEST, btn_add, 48,
                 SpringLayout.EAST, sideBar);
-        layout.putConstraint(SpringLayout.NORTH, btn_buy, 16,
+        layout.putConstraint(SpringLayout.NORTH, btn_add, 16,
                 SpringLayout.SOUTH, tf_count);
 
     }
@@ -442,7 +457,7 @@ class PaneNecessityInfo extends JPanel {
     }
 
     void addAll() {
-        add(sideBar); add(ctn_lb); add(tf_count); add(btn_buy);
+        add(sideBar); add(ctn_lb); add(tf_count); add(btn_add);
     }
 
     void setInfo(String fullname, String subtitle) {
@@ -476,7 +491,7 @@ class PanePayment extends JPanel {
         this.setBackground(Color.WHITE);
 
         // sideBar
-        sideBar = new JSideBar(Global.itemIcon_User, 0, 0);
+        sideBar = new JSideBar(Global.itemIcon_User, 0, 2);
 
         // labels
         lb_title = new JNeoLabel("Payment", Global.fntHeader, Global.colDark);
@@ -550,4 +565,100 @@ class PanePayment extends JPanel {
         lb_balance.repaint();
     }
 
+}
+
+class PaneCart extends JPanel {
+
+    private JSideBar sideBar;
+    private JPanel ctn_lb;
+    JNeoList list;
+    private JNeoLabel lb_title;
+    private JNeoButton btn_buy;
+
+    PaneCart() {
+        super();
+
+        init();
+        addAllActionListener();
+        organize();
+        addAll();
+    }
+
+    void init() {
+        this.setBackground(Color.WHITE);
+
+        // sideBar
+        sideBar = new JSideBar(Global.itemIcon_User, 0, -1);
+
+        // labels
+        lb_title = new JNeoLabel("Cart", Global.fntHeader, Global.colDark);
+
+        // labels container
+        ctn_lb = new JPanel();
+        ctn_lb.setBackground(Color.WHITE);
+        GridLayout grid = new GridLayout(2, 1);
+        ctn_lb.setLayout(grid);
+        ctn_lb.setAlignmentX(Component.LEFT_ALIGNMENT);
+        ctn_lb.add(lb_title);
+
+        // list
+        String[] iconName = new String[7];
+        for (int i = 0; i < 7; i++) {
+            iconName[i] = "sb_package";
+        }
+        String[] name = { "Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
+        String[] label = { "$5", "$15", "$2", "$2", "$4", "$6", "$8",};
+        list = new JNeoList(iconName, name, label);
+        list.removeAllBtnInfo();
+        list.removeBtnAdd();
+
+        // button
+        btn_buy = new JNeoButton("Buy", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+    }
+
+    void organize() {
+        SpringLayout layout = new SpringLayout();
+        this.setLayout(layout);
+
+        // sideBar
+        layout.putConstraint(SpringLayout.WEST, sideBar, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.EAST, sideBar, 48,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, sideBar, 0,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
+                SpringLayout.SOUTH, this);
+
+        // labels container
+        layout.putConstraint(SpringLayout.WEST, ctn_lb, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, ctn_lb, 32,
+                SpringLayout.NORTH, this);
+
+        // text field
+        layout.putConstraint(SpringLayout.WEST, list, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.EAST, list, -48,
+                SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.NORTH, list, -24,
+                SpringLayout.SOUTH, ctn_lb);
+        layout.putConstraint(SpringLayout.SOUTH, list, -48,
+                SpringLayout.SOUTH, this);
+
+        // button
+        layout.putConstraint(SpringLayout.WEST, btn_buy, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, btn_buy, 0,
+                SpringLayout.SOUTH, list);
+
+    }
+
+    void addAllActionListener() {
+
+    }
+
+    void addAll() {
+        add(sideBar); add(ctn_lb); add(list); add(btn_buy);
+    }
 }
