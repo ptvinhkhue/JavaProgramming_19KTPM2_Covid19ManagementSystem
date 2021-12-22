@@ -300,6 +300,7 @@ class PaneNecessityList extends JPanel {
         String[] name = { "Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
         String[] label = { "$5", "$15", "$2", "$2", "$4", "$6", "$8",};
         list = new JNeoList(iconName, name, label);
+        list.setBtnIcon("edit");
     }
 
     void organize() {

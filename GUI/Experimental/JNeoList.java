@@ -119,10 +119,19 @@ public class JNeoList extends Container {
         showPage(curPage);
     }
 
+    void setBtnIcon(String iconName) {
+        for (JNeoListItem i: item) i.setBtnIcon(iconName);
+    }
+
     JNeoButton getBtnAdd() { return btn_add; }
 
     void removeBtnAdd() {
         ctn_btn.remove(btn_add);
+        ctn_btn.repaint();
+    }
+    void removeAllBtnInfo() {
+        for (JNeoListItem i : item) i.removeBtnInfo();
+        repaint();
     }
 
     ArrayList<JNeoListItem> getItemList() {
@@ -204,13 +213,21 @@ class JNeoListItem extends JPanel {
 
     }
 
-
     void addAll() {
         add(lb_img); add(lb_name); add(lb_sub); add(btn_info);
     }
 
-    JNeoButton getBtnInfo() { return btn_info; }
+    void setBtnIcon(String iconName) {
+        btn_info.setIcon(iconName);
+    }
 
+    JNeoButton getBtnInfo() { return btn_info; }
     JNeoLabel getLbName() {return lb_name;}
     JNeoLabel getLbSub() {return lb_sub;}
+
+    void removeBtnInfo() {
+        remove(btn_info);
+        repaint();
+    }
+
 }

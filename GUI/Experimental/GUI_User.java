@@ -185,6 +185,8 @@ class PanePersonalInfo extends JPanel {
         String[] label = { "2001 | District 1"
         };
         list = new JNeoList(iconName, name, label);
+        list.removeBtnAdd();
+        list.removeAllBtnInfo();
 
     }
 
@@ -236,6 +238,8 @@ class PanePersonalInfo extends JPanel {
 
         // related
         list.setNewList(related[0], related[1], related[2]);
+        list.removeBtnAdd();
+        list.removeAllBtnInfo();
     }
 
 }
@@ -277,6 +281,7 @@ class PaneBuyNecessity extends JPanel {
         String[] name = { "Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
         String[] label = { "$5", "$15", "$2", "$2", "$4", "$6", "$8",};
         list = new JNeoList(iconName, name, label);
+        list.setBtnIcon("cart");
         list.removeBtnAdd();
     }
 
