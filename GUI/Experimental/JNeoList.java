@@ -121,6 +121,10 @@ public class JNeoList extends Container {
 
     JNeoButton getBtnAdd() { return btn_add; }
 
+    void removeBtnAdd() {
+        ctn_btn.remove(btn_add);
+    }
+
     ArrayList<JNeoListItem> getItemList() {
         return item;
     }

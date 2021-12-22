@@ -7,7 +7,7 @@ import static javax.swing.BoxLayout.Y_AXIS;
 
 public class GUI_Manager {
 
-    static PanePassword pPassword;
+    static PanePasswordManager pPasswordManager;
     static PanePatientList pPatientList;
     static PaneNecessityList pNecessityList;
     static PanePatientForm pPatientAdd, pPatientEdit;
@@ -15,7 +15,7 @@ public class GUI_Manager {
     static PanePatientInfo pPatientInfo;
 
     void initPane() {
-        pPassword = new PanePassword();
+        pPasswordManager = new PanePasswordManager();
         pPatientList = new PanePatientList();
         pNecessityList = new PaneNecessityList();
         pPatientAdd = new PanePatientForm(true);
@@ -29,7 +29,7 @@ public class GUI_Manager {
         initPane();
     }
 
-    public static PanePassword getPPassword() { return pPassword; }
+    public static PanePasswordManager getPPasswordManager() { return pPasswordManager; }
     public static PanePatientList getPPatientList() { return pPatientList; }
     public static PaneNecessityList getPNecessityList() { return pNecessityList; }
     public static PanePatientForm getPPatientAdd() { return pPatientAdd; }
@@ -40,7 +40,7 @@ public class GUI_Manager {
 
 }
 
-class PanePassword extends JPanel {
+class PanePasswordManager extends JPanel {
 
     private JNeoButton btn_login, btn_return;
     private Container btnContainer;
@@ -49,7 +49,7 @@ class PanePassword extends JPanel {
     private static JLabel lb_subtitle;
     private LogoBig logo;
 
-    PanePassword() {
+    PanePasswordManager() {
         super();
 
         init();

@@ -45,6 +45,8 @@ public class GUI_Master {
         SwingUtilities.invokeLater(() -> {
             GUI_Master gui = new GUI_Master();
             GUI_Manager gui_manager = new GUI_Manager();
+            GUI_User gui_user = new GUI_User();
+            gui_user.init();
             gui_manager.init();
             gui.init();
         });
@@ -126,8 +128,18 @@ class PaneUsername extends JPanel {
 
     void addAllActionListener() {
         btn_continue.addActionListener(e -> {
-            PanePassword.resetSubtitle(tf_username.getText());
-            GUI_Master.changePanel(GUI_Manager.getPPassword()); // Show hint/error below if false
+            int role = 0;
+
+            switch (role) {
+                case 0:
+                    PanePasswordUser.resetSubtitle(tf_username.getText(), false);
+                    GUI_Master.changePanel(GUI_User.getPPasswordUser());
+                    break;
+                case 1:
+                    PanePasswordManager.resetSubtitle(tf_username.getText());
+                    GUI_Master.changePanel(GUI_Manager.getPPasswordManager());
+                break;
+            }
         });
         btn_exit.addActionListener(e -> System.exit(0));
     }
