@@ -9,12 +9,14 @@ public class GUI_User {
     static PanePersonalInfo pPersonalInfo;
     static PaneBuyNecessity pBuyNecessity;
     static PaneNecessityInfo pNecessityInfo;
+    static PanePayment pPayment;
 
     void initPane() {
         pPasswordUser = new PanePasswordUser();
         pPersonalInfo = new PanePersonalInfo();
         pBuyNecessity = new PaneBuyNecessity();
         pNecessityInfo = new PaneNecessityInfo();
+        pPayment = new PanePayment();
     }
 
     void init() {
@@ -25,6 +27,7 @@ public class GUI_User {
     public static PanePersonalInfo getPPersonalInfo() { return pPersonalInfo; }
     public static PaneBuyNecessity getPBuyNecessity() { return pBuyNecessity; }
     public static PaneNecessityInfo getPNecessityInfo() { return pNecessityInfo; }
+    public static PanePayment getPPayment() { return pPayment; }
 
 }
 
@@ -448,6 +451,103 @@ class PaneNecessityInfo extends JPanel {
         lb_fullname.repaint();
         lb_subtitle.setText(subtitle);
         lb_subtitle.repaint();
+    }
+
+}
+
+class PanePayment extends JPanel {
+
+    private JSideBar sideBar;
+    private JPanel ctn_lb;
+    private JNeoLabel lb_title, lb_debt, lb_balance;
+    private JNeoTextField tf_account, tf_amount;
+    private JNeoButton btn_transfer;
+
+    PanePayment() {
+        super();
+
+        init();
+        addAllActionListener();
+        organize();
+        addAll();
+    }
+
+    void init() {
+        this.setBackground(Color.WHITE);
+
+        // sideBar
+        sideBar = new JSideBar(Global.itemIcon_User, 0, 0);
+
+        // labels
+        lb_title = new JNeoLabel("Payment", Global.fntHeader, Global.colDark);
+        lb_balance = new JNeoLabel("Balance: 0", Global.fntButton, Global.colSecond);
+        lb_debt = new JNeoLabel("Debt: 0", Global.fntButton, Global.colSecond);
+
+        // labels container
+        ctn_lb = new JPanel();
+        ctn_lb.setBackground(Color.WHITE);
+        GridLayout grid = new GridLayout(3, 1);
+        ctn_lb.setLayout(grid);
+        ctn_lb.setAlignmentX(Component.LEFT_ALIGNMENT);
+        ctn_lb.add(lb_title);
+        ctn_lb.add(lb_balance);
+        ctn_lb.add(lb_debt);
+
+        // text fields & button
+        tf_account = new JNeoTextField("Account to transfer", 16, false, "account", "Account does not exist");
+        tf_amount = new JNeoTextField("Amount to transfer", 16, false, "account", "Must be a positive number");
+        btn_transfer = new JNeoButton("Transfer", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+    }
+
+    void organize() {
+        SpringLayout layout = new SpringLayout();
+        this.setLayout(layout);
+
+        // sideBar
+        layout.putConstraint(SpringLayout.WEST, sideBar, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.EAST, sideBar, 48,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, sideBar, 0,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
+                SpringLayout.SOUTH, this);
+
+        // labels container
+        layout.putConstraint(SpringLayout.WEST, ctn_lb, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, ctn_lb, 32,
+                SpringLayout.NORTH, this);
+
+        // text fields & buttons
+        layout.putConstraint(SpringLayout.WEST, tf_account, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, tf_account, 32,
+                SpringLayout.SOUTH, ctn_lb);
+        layout.putConstraint(SpringLayout.WEST, tf_amount, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, tf_amount, 16,
+                SpringLayout.SOUTH, tf_account);
+        layout.putConstraint(SpringLayout.WEST, btn_transfer, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, btn_transfer, 24,
+                SpringLayout.SOUTH, tf_amount);
+    }
+
+    void addAllActionListener() {
+
+    }
+
+    void addAll() {
+        add(sideBar); add(ctn_lb); add(tf_account); add(tf_amount); add(btn_transfer);
+    }
+
+    void setInfo(String debt, String balance) {
+        // info
+        lb_debt.setText("Debt: " + debt);
+        lb_debt.repaint();
+        lb_balance.setText("Balance: " + balance);
+        lb_balance.repaint();
     }
 
 }

@@ -172,8 +172,7 @@ class PanePatientList extends JPanel {
                     "Trinh Xuan F", "Le G", "Vo Lien H", "Nguyen Van A", "Tran Thanh B", "Le G", "Vo Lien H"};
         String[] label = { "2001 | District 1", "1995 | District 7","1987 | District 4","1999 | District 6",
                 "2003 | District 1","1980 | District 3","1970 | District 4", "2001 | District 1", "1995 | District 7","1987 | District 4","1999 | District 6",
-                "2003 | District 1"
-        };
+                "2003 | District 1"};
         list = new JNeoList(iconName, name, label);
     }
 
@@ -378,8 +377,8 @@ class PanePatientForm extends JPanel {
     JNeoTextField tf_fullname, tf_birthyear, tf_personalID, tf_addressID;
     JNeoTextField tf_place, tf_status;
     Container ctn_tf, ctn_tf_2;
-    JNeoButton btn_add;
-    JLabel lb_error;
+    JNeoButton btn_add, btn_updatePlace, btn_updateStatus;
+    JLabel lb_error_add, lb_error_place, lb_error_status;
     boolean isAdd;
 
     PanePatientForm(boolean isAdd) {
@@ -409,15 +408,18 @@ class PanePatientForm extends JPanel {
         tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "!NULL");
         tf_addressID = new JNeoTextField("Address ID", 14, false, "account", "!NULL");
 
-        tf_place = new JNeoTextField("Treatment location", 14, false, "account", "!NULL");
-        tf_status = new JNeoTextField("Status", 14, false, "account", "!NULL");
+        tf_place = new JNeoTextField("Treatment location", 14, false, "account", "Location does not exist");
+        tf_status = new JNeoTextField("Status", 14, false, "account", "Invalid status");
 
         // button
-        btn_add = new JNeoButton(str_btn ,Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_add = new JNeoButton("Add" ,Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_updatePlace = new JNeoButton("Update" ,Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_updateStatus = new JNeoButton("Update" ,Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
 
         // label
-        String str_error = isAdd ? "Patient already exists" : "Information matches with another patient's";
-        lb_error = new JNeoLabel(str_error, Global.fntSecond, Color.WHITE);
+        lb_error_add = new JNeoLabel("Patient already exists", Global.fntSecond, Color.WHITE);
+        lb_error_place = new JNeoLabel("Location does not exist", Global.fntSecond, Color.WHITE);
+        lb_error_status = new JNeoLabel("Must be a positive number", Global.fntSecond, Color.WHITE);
     }
 
     void organize() {
@@ -442,42 +444,55 @@ class PanePatientForm extends JPanel {
 
         // text fields
         ctn_tf = new Container();
-        ctn_tf.setLayout(new BoxLayout(ctn_tf, BoxLayout.Y_AXIS));
-        ctn_tf.add(tf_fullname);
-        ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
-        ctn_tf.add(tf_birthyear);
-        ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
-        ctn_tf.add(tf_personalID);
-        ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
-        ctn_tf.add(tf_addressID);
-
         ctn_tf_2 = new Container();
+        ctn_tf.setLayout(new BoxLayout(ctn_tf, BoxLayout.Y_AXIS));
         ctn_tf_2.setLayout(new BoxLayout(ctn_tf_2, BoxLayout.Y_AXIS));
-        ctn_tf_2.add(tf_place);
-        ctn_tf_2.add(Box.createRigidArea(new Dimension(0, 4)));
-        ctn_tf_2.add(tf_status);
+        if (isAdd) {
+            ctn_tf.add(tf_fullname);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
+            ctn_tf.add(tf_birthyear);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
+            ctn_tf.add(tf_personalID);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
+            ctn_tf.add(tf_addressID);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
+            ctn_tf.add(btn_add);
+            ctn_tf_2.add(tf_place);
+            ctn_tf_2.add(Box.createRigidArea(new Dimension(0, 4)));
+            ctn_tf_2.add(tf_status);
+        } else {
+            ctn_tf.add(tf_place);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
+            ctn_tf.add(btn_updatePlace);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 32)));
+            ctn_tf.add(tf_status);
+            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
+            ctn_tf.add(btn_updateStatus);
+        }
 
-        layout.putConstraint(SpringLayout.WEST, ctn_tf, -48,
+
+        layout.putConstraint(SpringLayout.WEST, ctn_tf, (isAdd) ? -48 : 0,
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, ctn_tf, 24,
                 SpringLayout.SOUTH, title);
-
         layout.putConstraint(SpringLayout.WEST, ctn_tf_2, -48,
                 SpringLayout.EAST, ctn_tf);
-        layout.putConstraint(SpringLayout.NORTH, ctn_tf_2, 24,
-                SpringLayout.SOUTH, title);
-
-        // button
-        layout.putConstraint(SpringLayout.WEST, btn_add, 0,
-                SpringLayout.WEST, title);
-        layout.putConstraint(SpringLayout.NORTH, btn_add, 24,
-                SpringLayout.SOUTH, ctn_tf);
+        layout.putConstraint(SpringLayout.NORTH, ctn_tf_2, 0,
+                SpringLayout.NORTH, ctn_tf);
 
         // label
-        layout.putConstraint(SpringLayout.WEST, lb_error, 16,
+        layout.putConstraint(SpringLayout.WEST, lb_error_add, 16,
                 SpringLayout.EAST, btn_add);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_error, 0,
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_error_add, 0,
                 SpringLayout.VERTICAL_CENTER, btn_add);
+        layout.putConstraint(SpringLayout.WEST, lb_error_place, 16,
+                SpringLayout.EAST, btn_updatePlace);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_error_place, 0,
+                SpringLayout.VERTICAL_CENTER, btn_updatePlace);
+        layout.putConstraint(SpringLayout.WEST, lb_error_status, 16,
+                SpringLayout.EAST, btn_updateStatus);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_error_status, 0,
+                SpringLayout.VERTICAL_CENTER, btn_updateStatus);
 
     }
 
@@ -496,15 +511,15 @@ class PanePatientForm extends JPanel {
             exist = (Objects.equals(tf_fullname.getText(), "Tran Thanh Tung"));
 
             if (exist) {
-                lb_error.setForeground(Global.colError);
+                lb_error_add.setForeground(Global.colError);
                 valid = false;
-            } else lb_error.setForeground(Color.WHITE);
+            } else lb_error_add.setForeground(Color.WHITE);
 
             if (!valid) return;
 
             // reset all text fields
             GUI_Master.changePanel(GUI_Manager.getPNecessityList());
-            lb_error.setForeground(Color.WHITE);
+            lb_error_add.setForeground(Color.WHITE);
             tf_fullname.setText("Full name");
             tf_birthyear.setText("Birth year (yyyy)");
             tf_personalID.setText("Personal ID");
@@ -514,7 +529,14 @@ class PanePatientForm extends JPanel {
     }
 
     void addAll() {
-        add(sideBar); add(title); add(ctn_tf); add(ctn_tf_2); add(btn_add); add(lb_error);
+        add(sideBar); add(title); add(ctn_tf);
+        if (isAdd) {
+            add(ctn_tf_2);
+            add(lb_error_add);
+        } else {
+            add(lb_error_place);
+            add(lb_error_status);
+        }
     }
 
 }

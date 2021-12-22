@@ -46,7 +46,8 @@ public class JSideBar extends JPanel {
             case 0: // user
                 item.get(0).addActionListener(e -> GUI_Master.changePanel(GUI_User.getPPersonalInfo()));
                 item.get(1).addActionListener(e -> GUI_Master.changePanel(GUI_User.getPBuyNecessity()));
-                item.get(2).addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
+                item.get(2).addActionListener(e -> GUI_Master.changePanel(GUI_User.getPPayment()));
+                item.get(3).addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
                 break;
             case 1: // manager
                 item.get(0).addActionListener(e -> GUI_Master.changePanel(GUI_Manager.getPPatientList()));

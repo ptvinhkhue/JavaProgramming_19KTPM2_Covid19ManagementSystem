@@ -31,7 +31,7 @@ public class Global {
 
     // String - Side bar items
     public static String[] itemIcon_Manager = {"list", "package", "logout"};
-    public static String[] itemIcon_User = {"info", "package", "logout"};
+    public static String[] itemIcon_User = {"info", "package", "wallet", "logout"};
 
     Global() {
         init();
