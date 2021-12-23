@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -14,10 +15,10 @@ public class LogoBig extends Container {
 
         // logo
         JLabel lb_logo = new JLabel("");
-        BufferedImage icon = null;
         try {
-            icon = ImageIO.read(Objects.requireNonNull(getClass().getResource(
-                    Global.pathImage + "img_logo.png")));
+            BufferedImage icon = ImageIO.read(
+                    new File(System.getProperty("user.dir") +
+                            Global.pathImage + "img_logo.png"));
             lb_logo.setIcon(new ImageIcon(icon));
         } catch (IOException ex) {
             ex.printStackTrace();

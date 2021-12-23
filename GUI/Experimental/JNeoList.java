@@ -166,14 +166,7 @@ class JNeoListItem extends JPanel {
     void init(String iconName, String name, String sub) {
         // image
         lb_img = new JLabel("");
-        try {
-            BufferedImage icon = ImageIO.read(
-                    Objects.requireNonNull(getClass().getResource(
-                            Global.pathIcon + "ic_" + iconName + ".png")));
-            lb_img.setIcon(new ImageIcon(icon));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        lb_img.setIcon(new ImageIcon(Objects.requireNonNull(Global.getIcon(iconName))));
 
         // name & label
         lb_name = new JNeoLabel(name, Global.fntListName, Global.colDark);

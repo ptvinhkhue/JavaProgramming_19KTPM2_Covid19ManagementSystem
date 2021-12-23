@@ -1,4 +1,8 @@
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -92,11 +96,25 @@ public class Global {
 
     Font createFont(String fontName) {
         try {
+            System.out.println(System.getProperty("user.dir") + pathFont + fontName);
             return Font.createFont(Font.TRUETYPE_FONT,
-                    Objects.requireNonNull(getClass().getResource(pathFont + fontName)).openStream());
+                    new File(System.getProperty("user.dir") + pathFont + fontName));
         } catch (IOException | FontFormatException ex) {
             ex.printStackTrace();
         }
         return null;
     }
+
+    static BufferedImage getIcon(String iconName) {
+        try {
+            return ImageIO.read(
+                    new File(System.getProperty("user.dir") +
+                    Global.pathIcon + "ic_" + iconName + ".png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+
 }

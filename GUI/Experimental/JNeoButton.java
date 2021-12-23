@@ -70,14 +70,7 @@ public class JNeoButton extends JButton {
     }
 
     void setIcon(String iconName) {
-        try {
-            BufferedImage icon = ImageIO.read(
-                    Objects.requireNonNull(getClass().getResource(
-                            Global.pathIcon + "ic_" + iconName + ".png")));
-            setIcon(new ImageIcon(icon));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        setIcon(new ImageIcon(Objects.requireNonNull(Global.getIcon(iconName))));
     }
 }
 

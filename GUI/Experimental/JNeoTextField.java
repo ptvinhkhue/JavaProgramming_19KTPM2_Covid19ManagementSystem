@@ -23,14 +23,7 @@ public class JNeoTextField extends Container {
 
         // icon
         JLabel lb_icon = new JLabel("");
-        try {
-            BufferedImage icon = ImageIO.read(
-                    Objects.requireNonNull(getClass().getResource(
-                            Global.pathIcon + "ic_" + iconName + ".png")));
-            lb_icon.setIcon(new ImageIcon(icon));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        lb_icon.setIcon(new ImageIcon(Objects.requireNonNull(Global.getIcon(iconName))));
 
         tf = isPassword ? new JPasswordField(str, col) : new JTextField(str, col);
         tf.setFont(Global.fntPrimary);
@@ -72,14 +65,7 @@ class JNeoSearchBar extends Container {
 
         // icon & search bar
         JLabel lb_icon = new JLabel("");
-        try {
-            BufferedImage icon = ImageIO.read(
-                    Objects.requireNonNull(getClass().getResource(
-                            Global.pathIcon + "ic_search.png")));
-            lb_icon.setIcon(new ImageIcon(icon));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        lb_icon.setIcon(new ImageIcon(Objects.requireNonNull(Global.getIcon("search"))));
 
         tf = new JTextField(str, col);
         tf.setFont(Global.fntPrimary);
