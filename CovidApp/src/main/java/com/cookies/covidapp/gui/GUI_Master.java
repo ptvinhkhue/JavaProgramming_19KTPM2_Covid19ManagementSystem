@@ -131,7 +131,9 @@ class PaneUsername extends JPanel {
 
     void addAllActionListener() {
         btn_continue.addActionListener(e -> {
-            int role = 0;
+            //System.out.println(tf_username.getText());
+            
+            int role = Login.handleUsername(tf_username.getText());
 
             switch (role) {
                 case 0: // user
@@ -139,6 +141,7 @@ class PaneUsername extends JPanel {
                     GUI_Master.changePanel(GUI_User.getPPasswordUser());
                     break;
                 case 1: // manager
+                    PanePasswordManager.assignUsername(tf_username.getText());
                     PanePasswordManager.resetSubtitle(tf_username.getText());
                     GUI_Master.changePanel(GUI_Manager.getPPasswordManager());
                     break;

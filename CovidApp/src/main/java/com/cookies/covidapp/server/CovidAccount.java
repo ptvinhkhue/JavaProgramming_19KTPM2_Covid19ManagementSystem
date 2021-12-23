@@ -10,8 +10,8 @@ package com.cookies.covidapp.server;
  */
 public class CovidAccount {
 
-    String username = "";
-    String password = "";
+    static String username = "";
+    static String password = "";
     
     public CovidAccount(String username, String password) {
         this.username = username;

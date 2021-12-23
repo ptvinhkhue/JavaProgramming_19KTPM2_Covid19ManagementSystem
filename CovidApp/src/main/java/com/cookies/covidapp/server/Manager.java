@@ -9,8 +9,6 @@ import java.util.Date;
  */
 public class Manager extends CovidAccount {
 
-    int ID;
-
     /*---Constructor---*/
     public Manager(String username, String password) {
         super(username, password);
@@ -21,17 +19,21 @@ public class Manager extends CovidAccount {
 
     public Manager(String username) {
         super(username);
-
+    }
+    
+    public static int getID() {
         try {
             DataQuery db = new DataQuery();
             String sql = "select managerID from acc_manager where username = '" + username + "'";
             db.rs = db.stm.executeQuery(sql);
 
             db.rs.next();
-            this.ID = db.rs.getInt("managerID");
+            return db.rs.getInt("managerID");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        return 0;
     }
 
     /*---User Management---*/

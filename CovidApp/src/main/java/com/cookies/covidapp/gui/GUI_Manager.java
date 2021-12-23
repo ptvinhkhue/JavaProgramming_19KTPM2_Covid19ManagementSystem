@@ -1,5 +1,6 @@
 package com.cookies.covidapp.gui;
 
+import com.cookies.covidapp.server.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.Objects;
 import static javax.swing.BoxLayout.Y_AXIS;
 
 public class GUI_Manager {
+    
+    static Manager manager;
 
     static PanePasswordManager pPasswordManager;
     static PanePatientList pPatientList;
@@ -39,10 +42,11 @@ public class GUI_Manager {
     public static PaneNecessityForm getPNecessityAdd() { return pNecessityAdd; }
     public static PaneNecessityForm getPNecessityEdit() { return pNecessityEdit; }
     public static PanePatientInfo getPPatientInfo() { return pPatientInfo; }
-
 }
 
 class PanePasswordManager extends JPanel {
+    
+    static String username;
 
     private JNeoButton btn_login, btn_return;
     private Container btnContainer;
@@ -119,8 +123,11 @@ class PanePasswordManager extends JPanel {
 
     void addAllActionListener() {
         btn_login.addActionListener(e -> {
-            GUI_Master.changePanel(GUI_Manager.getPPatientList());
-            //tf_password.showHint(); // Show hint/error below if false
+            if (Login.handlePassword(username, tf_password.getText())) {
+                GUI_Manager.manager = new Manager(username);
+                GUI_Master.changePanel(GUI_Manager.getPPatientList());
+            }
+            else tf_password.showHint(); // Show hint/error below if false
         });
         btn_return.addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
     }
@@ -134,6 +141,9 @@ class PanePasswordManager extends JPanel {
 
     public static void resetSubtitle(String newUsername) {
         lb_subtitle.setText("Welcome back, Manager " + newUsername + ". Please enter your password.");
+    }
+    public static void assignUsername(String username) {
+        PanePasswordManager.username = username;
     }
 
 }
