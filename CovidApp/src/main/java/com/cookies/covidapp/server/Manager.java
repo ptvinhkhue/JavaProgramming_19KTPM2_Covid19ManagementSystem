@@ -37,7 +37,7 @@ public class Manager extends CovidAccount {
     }
 
     /*---User Management---*/
-    public void createUser(String username, String fullname, String personalID, int YoB, int addressID, int status, int placeID) {
+    public static void createUser(String username, String fullname, String personalID, int YoB, int addressID, int status, int placeID) {
         try {
             DataQuery db = new DataQuery();
             String sql = "insert into acc_user (username, fullname, personalID, addressID, status, placeID, debt, loggedIn) values ('"
@@ -48,7 +48,7 @@ public class Manager extends CovidAccount {
         }
     }
 
-    public ArrayList<String> displayUserList(String field) {
+    public static ArrayList<String> displayUserList(String field) {
         ArrayList<String> ret = new ArrayList<>();
 
         try {
@@ -67,7 +67,7 @@ public class Manager extends CovidAccount {
         return ret;
     }
 
-    public String displayUserDetail(int userID, String field) {
+    public static String displayUserDetail(int userID, String field) {
         String ret = "";
 
         try {
@@ -85,7 +85,7 @@ public class Manager extends CovidAccount {
         return ret;
     }
 
-    public void searchUserByName(String key) {
+    public static void searchUserByName(String key) {
         try {
             DataQuery db = new DataQuery();
             String sql = "select * from acc_user where fullname like '%" + key + "%'";
@@ -101,7 +101,7 @@ public class Manager extends CovidAccount {
         }
     }
 
-    public void updateUserInfo(int userID, String fullname, String personalID, int YoB, int addressID) {
+    public static void updateUserInfo(int userID, String fullname, String personalID, int YoB, int addressID) {
         try {
             DataQuery db = new DataQuery();
             String sql = "update acc_user"
@@ -113,7 +113,7 @@ public class Manager extends CovidAccount {
         }
     }
 
-    public void updateUserStatus(int userID, int status, ArrayList<Integer> arr) {
+    public static void updateUserStatus(int userID, int status, ArrayList<Integer> arr) {
         try {
             DataQuery db = new DataQuery();
 
@@ -142,7 +142,7 @@ public class Manager extends CovidAccount {
         }
     }
 
-    public void updateUserPlace(int userID, int placeID) {
+    public static void updateUserPlace(int userID, int placeID) {
         try {
             DataQuery db = new DataQuery();
 
@@ -195,22 +195,23 @@ public class Manager extends CovidAccount {
         }
     }
 
-    public void displayNecessityList() {
+    public static ArrayList<String> displayNecessityList(String field) {
+        ArrayList<String> ret = new ArrayList<>();
+
         try {
             DataQuery db = new DataQuery();
-            String sql = "select * from necessity";
+            String sql = "select * from neccessity";
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                System.out.print("ID: " + db.rs.getInt("necessityID"));
-                System.out.print(", Name: " + db.rs.getString("name"));
-                System.out.print(", Limit amout: " + db.rs.getInt("limitAmount"));
-                System.out.print(", Limit time: " + db.rs.getDate("limitTime"));
-                System.out.print(", Price: " + db.rs.getInt("price") + "\n");
+                ret.add(db.rs.getString(field));
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return ret;
     }
 
     public void displayNecessityDetail(int necessityID) {
@@ -263,10 +264,9 @@ public class Manager extends CovidAccount {
 
     
     public static void main(String args[]) {
-
-        Manager m = new Manager();
+        
         //ArrayList<Integer> arr = new ArrayList<Integer>();
-        m.updateUserPlace(1, 2);
+        Manager.updateUserPlace(1, 2);
     }
     
 }
