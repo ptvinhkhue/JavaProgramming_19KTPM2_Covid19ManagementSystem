@@ -17,7 +17,7 @@ public class JNeoList extends Container {
     private int curPage, totalPage;
     private JNeoLabel lb_page;
 
-    JNeoList(ArrayList<String> iconName, ArrayList<String> name, ArrayList<String> label) {
+    JNeoList(ArrayList<String> iconName, ArrayList<String> name, ArrayList<String> label, ArrayList<String> label_full) {
         super();
         laySpring = new SpringLayout();
         setLayout(laySpring);
@@ -26,18 +26,18 @@ public class JNeoList extends Container {
         GridLayout layGrid = new GridLayout(Global.listHeight, 1);
         ctn_item.setLayout(layGrid); layGrid.setVgap(8);
 
-        init(iconName, name, label);
+        init(iconName, name, label, label_full);
         organize();
         addAllActionListener();
     }
 
-    void init(ArrayList<String> iconName, ArrayList<String> name, ArrayList<String> label) {
+    void init(ArrayList<String> iconName, ArrayList<String> name, ArrayList<String> label, ArrayList<String> label_full) {
         curPage = 0;
         lb_page = new JNeoLabel("" + totalPage, Global.fntButton, Global.colSecond);
 
         // items
         item = new ArrayList<>();
-        setNewList(iconName, name, label);
+        setNewList(iconName, name, label, label_full);
 
 
         // buttons
@@ -108,12 +108,12 @@ public class JNeoList extends Container {
 
     }
 
-    void setNewList(ArrayList<String> iconName, ArrayList<String> name, ArrayList<String> label) {
+    void setNewList(ArrayList<String> iconName, ArrayList<String> name, ArrayList<String> label, ArrayList<String> label_full) {
         item.clear();
         if (iconName.size() != name.size() || name.size() != label.size())
             throw new java.lang.Error("[JNeoList] Unmatched length.");
         for (int k = 0; k < name.size(); k++) {
-            JNeoListItem i = new JNeoListItem(iconName.get(k), name.get(k), label.get(k));
+            JNeoListItem i = new JNeoListItem(iconName.get(k), name.get(k), label.get(k), label_full.get(k));
             item.add(i);
         }
         curPage = 0;
@@ -146,26 +146,27 @@ class JNeoListItem extends JPanel {
     private JLabel lb_img;
     private JNeoLabel lb_name;
     private JNeoLabel lb_sub;
+    private String lb_sub_full;
     private final SpringLayout layout;
 
     // info button
     private JNeoButton btn_info;
 
-    JNeoListItem(String iconName, String name, String label) {
+    JNeoListItem(String iconName, String name, String label, String sub_full) {
         super();
         layout = new SpringLayout();
         setLayout(layout);
 
         this.setBackground(Global.colPrimaryMild);
 
-        init(iconName, name, label);
+        init(iconName, name, label, sub_full);
         organize();
         addAll();
     }
 
     // name: patient's or necessity's name
     // label: patient's birth year or necessity's price
-    void init(String iconName, String name, String sub) {
+    void init(String iconName, String name, String sub, String sub_full) {
         // image
         lb_img = new JLabel("");
         lb_img.setIcon(new ImageIcon(Objects.requireNonNull(Global.getIcon(iconName))));
@@ -173,6 +174,7 @@ class JNeoListItem extends JPanel {
         // name & label
         lb_name = new JNeoLabel(name, Global.fntListName, Global.colDark);
         lb_sub = new JNeoLabel(sub, Global.fntListSub, Global.colSecond);
+        lb_sub_full = sub_full;
 
         // info button
         btn_info = new JNeoButton("", Global.colPrimary.darker(), getBackground(), 0, 8, Global.fntButton, false);
@@ -219,6 +221,7 @@ class JNeoListItem extends JPanel {
     JNeoButton getBtnInfo() { return btn_info; }
     JNeoLabel getLbName() {return lb_name;}
     JNeoLabel getLbSub() {return lb_sub;}
+    String getLbSubFull() { return lb_sub_full; }
 
     void removeBtnInfo() {
         remove(btn_info);

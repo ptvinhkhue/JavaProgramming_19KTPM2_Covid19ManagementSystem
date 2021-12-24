@@ -218,6 +218,11 @@ class PanePatientList extends JPanel {
          */
         ArrayList<String> name = Manager.displayUserList("fullname");
         ArrayList<String> label = Manager.displayUserList("yob");
+        ArrayList<String> label_full = new ArrayList<>();
+        ArrayList<String> status = Manager.displayUserList("status");
+        for (int k = 0; k < label.size(); k++) {
+            label_full.add(label.get(k) + " | F" + status.get(k));
+        }
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
@@ -228,7 +233,7 @@ class PanePatientList extends JPanel {
             }
         }
 
-        list = new JNeoList(iconName, name, label);
+        list = new JNeoList(iconName, name, label, label_full);
     }
 
     void organize() {
@@ -284,6 +289,11 @@ class PanePatientList extends JPanel {
              */
             ArrayList<String> name = Manager.displayUserList("fullname");
             ArrayList<String> label = Manager.displayUserList("yob");
+            ArrayList<String> label_full = new ArrayList<>();
+            ArrayList<String> status = Manager.displayUserList("status");
+            for (int k = 0; k < label.size(); k++) {
+                label_full.add(label.get(k) + " | F" + status.get(k));
+            }
 
             ArrayList<String> iconName = new ArrayList<>();
             for (int i = 0; i < name.size(); i++) {
@@ -293,7 +303,7 @@ class PanePatientList extends JPanel {
                     iconName.add("female");
                 }
             }
-            list.setNewList(iconName, name, label);
+            list.setNewList(iconName, name, label, label_full);
 
         });
         list.getBtnAdd().addActionListener(e -> {
@@ -330,7 +340,7 @@ class PanePatientList extends JPanel {
                 related.add(name);
                 related.add(label);
                 
-                GUI_Manager.getPPatientInfo().setInfo(i.getLbName().getText(), i.getLbSub().getText(), related);
+                GUI_Manager.getPPatientInfo().setInfo(i.getLbName().getText(), i.getLbSubFull(), related);
                 GUI_Master.changePanel(GUI_Manager.getPPatientInfo());
             });
         }
@@ -385,13 +395,15 @@ class PaneNecessityList extends JPanel {
          */
         ArrayList<String> name = Manager.displayNecessityList("name");
         ArrayList<String> label = Manager.displayNecessityList("price");
+        ArrayList<String> label_full = Manager.displayNecessityList("price");
+
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
             iconName.add("sb_package");
         }
 
-        list = new JNeoList(iconName, name, label);
+        list = new JNeoList(iconName, name, label, label_full);
         list.setBtnIcon("edit");
     }
 
@@ -850,10 +862,11 @@ class PanePatientInfo extends JPanel {
          */
         ArrayList<String> name = new ArrayList<>(Arrays.asList("Nguyen Van Lee"));
         ArrayList<String> label = new ArrayList<>(Arrays.asList("2001 | District 1"));
+        ArrayList<String> label_full = new ArrayList<>(Arrays.asList("2001 | District 1 | F0"));
 
         ArrayList<String> iconName = new ArrayList<>(Arrays.asList("male"));
 
-        list = new JNeoList(iconName, name, label);
+        list = new JNeoList(iconName, name, label, label_full);
 
         // button
         btn_edit = new JNeoButton("Update", Global.colPrimary, Color.WHITE, Global.btnRadius,
@@ -942,7 +955,7 @@ class PanePatientInfo extends JPanel {
                 related.add(name);
                 related.add(label);
 
-                setInfo(i.getLbName().getText(), i.getLbSub().getText(), related);
+                setInfo(i.getLbName().getText(), i.getLbSubFull(), related);
             });
         }
     }
@@ -963,7 +976,7 @@ class PanePatientInfo extends JPanel {
         lb_subtitle.repaint();
 
         // related
-        list.setNewList(related.get(0), related.get(1), related.get(2));
+        list.setNewList(related.get(0), related.get(1), related.get(2), related.get(2));
         addListActionListener();
     }
 

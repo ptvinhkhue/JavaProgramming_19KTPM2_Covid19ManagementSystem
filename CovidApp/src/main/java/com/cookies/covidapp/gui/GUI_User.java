@@ -232,10 +232,11 @@ class PanePersonalInfo extends JPanel {
          */
         ArrayList<String> name = new ArrayList<>(Arrays.asList("Nguyen Van Lee"));
         ArrayList<String> label = new ArrayList<>(Arrays.asList("2001 | District 1"));
+        ArrayList<String> label_full = new ArrayList<>(Arrays.asList("2001"));
 
         ArrayList<String> iconName = new ArrayList<>(Arrays.asList("male"));
 
-        list = new JNeoList(iconName, name, label);
+        list = new JNeoList(iconName, name, label, label_full);
         list.removeBtnAdd();
         list.removeAllBtnInfo();
 
@@ -290,7 +291,7 @@ class PanePersonalInfo extends JPanel {
         lb_subtitle.repaint();
 
         // related
-        list.setNewList(related.get(0), related.get(1), related.get(2));
+        list.setNewList(related.get(0), related.get(1), related.get(2), related.get(2));
         list.removeBtnAdd();
         list.removeAllBtnInfo();
     }
@@ -338,13 +339,14 @@ class PaneBuyNecessity extends JPanel {
          */
         ArrayList name = new ArrayList<>(Arrays.asList("Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"));
         ArrayList label = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
+        ArrayList label_full = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
         
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
             iconName.add("sb_package");
         }
 
-        list = new JNeoList(iconName, name, label);
+        list = new JNeoList(iconName, name, label, label_full);
         list.setBtnIcon("cart");
         list.removeBtnAdd();
 
@@ -678,13 +680,14 @@ class PaneCart extends JPanel {
         
         ArrayList name = new ArrayList<>(Arrays.asList("Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"));
         ArrayList label = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
+        ArrayList label_full = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
         
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
             iconName.add("sb_package");
         }
         
-        list = new JNeoList(iconName, name, label);
+        list = new JNeoList(iconName, name, label, label_full);
         list.removeAllBtnInfo();
         list.removeBtnAdd();
 
