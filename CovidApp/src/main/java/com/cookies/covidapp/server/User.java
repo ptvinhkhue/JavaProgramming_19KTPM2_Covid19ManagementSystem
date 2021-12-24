@@ -40,6 +40,21 @@ public class User extends CovidAccount {
         }
     }
 
+    public static int getID() {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select userID from acc_user where username = '" + username + "'";
+            db.rs = db.stm.executeQuery(sql);
+            while (db.rs.next()) {
+                return db.rs.getInt("userID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
     public void displayManagedHistory(int userID) {
         try {
             DataQuery db = new DataQuery();
@@ -58,7 +73,7 @@ public class User extends CovidAccount {
             e.printStackTrace();
         }
     }
-    
+
     public void displayNecessityHistory(int userID) {
         try {
             DataQuery db = new DataQuery();
@@ -66,16 +81,16 @@ public class User extends CovidAccount {
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                System.out.print("Order: " + db.rs.getInt("orderID")+ ". ");
+                System.out.print("Order: " + db.rs.getInt("orderID") + ". ");
                 System.out.println("Sum: " + db.rs.getInt("sum"));
-                System.out.print("Necessity: " + db.rs.getString("nesscityID")+ ". ");
+                System.out.print("Necessity: " + db.rs.getString("nesscityID") + ". ");
                 System.out.println("Amount: " + db.rs.getString("amount"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
     public void displayDebt(String username) {
         try {
             DataQuery db = new DataQuery();
@@ -147,7 +162,7 @@ public class User extends CovidAccount {
             int orderID = 0;
             sql = "select * from order where userID = " + userID + "order by orderID desc limit 1";
             db.rs = db.stm.executeQuery(sql);
-            
+
             while (db.rs.next()) {
                 orderID = db.rs.getInt("orderID");
             }
@@ -164,5 +179,5 @@ public class User extends CovidAccount {
             e.printStackTrace();
         }
     }
-    
+
 }
