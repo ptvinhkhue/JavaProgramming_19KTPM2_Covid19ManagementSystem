@@ -3,6 +3,7 @@ package com.cookies.covidapp.gui;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class GUI_User {
@@ -27,12 +28,29 @@ public class GUI_User {
         initPane();
     }
 
-    public static PanePasswordUser getPPasswordUser() { return pPasswordUser; }
-    public static PanePersonalInfo getPPersonalInfo() { return pPersonalInfo; }
-    public static PaneBuyNecessity getPBuyNecessity() { return pBuyNecessity; }
-    public static PaneNecessityInfo getPNecessityInfo() { return pNecessityInfo; }
-    public static PanePayment getPPayment() { return pPayment; }
-    public static PaneCart getPCart() { return pCart; }
+    public static PanePasswordUser getPPasswordUser() {
+        return pPasswordUser;
+    }
+
+    public static PanePersonalInfo getPPersonalInfo() {
+        return pPersonalInfo;
+    }
+
+    public static PaneBuyNecessity getPBuyNecessity() {
+        return pBuyNecessity;
+    }
+
+    public static PaneNecessityInfo getPNecessityInfo() {
+        return pNecessityInfo;
+    }
+
+    public static PanePayment getPPayment() {
+        return pPayment;
+    }
+
+    public static PaneCart getPCart() {
+        return pCart;
+    }
 
 }
 
@@ -64,7 +82,8 @@ class PanePasswordUser extends JPanel {
         btn_return = new JNeoButton("Return", Color.WHITE, Global.colSubtle, Global.btnRadius, 8, Global.fntButton, false);
         btnContainer = new Container();
         btnContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
-        btnContainer.add(btn_login); btnContainer.add(btn_return);
+        btnContainer.add(btn_login);
+        btnContainer.add(btn_return);
 
         // text fields
         tf_password = new JNeoTextField("Password", 16, true, "lock", "Password does not match.");
@@ -116,6 +135,7 @@ class PanePasswordUser extends JPanel {
     void addAllActionListener() {
         btn_login.addActionListener(e -> {
             if (!firstTime) {
+                /*
                 String[] iconName = {"male", "male", "female", "male", "female"};
                 String[] name = {"Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E"};
                 String[] label = {"2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
@@ -125,11 +145,22 @@ class PanePasswordUser extends JPanel {
                 related[0] = iconName;
                 related[1] = name;
                 related[2] = label;
+                 */
+
+                ArrayList name = new ArrayList<>(Arrays.asList("Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
+                        "Trinh Xuan F"));
+                ArrayList label = new ArrayList<>(Arrays.asList("2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
+                        "2003 | District 1", "1980 | District 3"));
+                ArrayList iconName = new ArrayList<>(Arrays.asList("male", "male", "female", "male", "female", "male"));
+
+                ArrayList<ArrayList<String>> related = new ArrayList<>(3);
+                related.add(iconName);
+                related.add(name);
+                related.add(label);
 
                 GUI_User.getPPersonalInfo().setInfo("Nguyen Van A", "2001 | District 1", related);
                 GUI_Master.changePanel(GUI_User.getPPersonalInfo());
-            }
-            else {
+            } else {
                 resetSubtitle(username, false);
                 GUI_Master.changePanel(GUI_User.getPPasswordUser());
             }
@@ -141,7 +172,8 @@ class PanePasswordUser extends JPanel {
     void addAll() {
         add(btnContainer);
         add(tf_password);
-        add(lb_credit); add(lb_subtitle);
+        add(lb_credit);
+        add(lb_subtitle);
         add(logo);
     }
 
@@ -149,9 +181,11 @@ class PanePasswordUser extends JPanel {
         PanePasswordUser.firstTime = firstTime;
         PanePasswordUser.username = newUsername;
 
-        if (!firstTime)
+        if (!firstTime) {
             lb_subtitle.setText("Welcome back, User " + newUsername + ". Please enter your password.");
-        else lb_subtitle.setText("Welcome, User " + newUsername + ". Please set your new password.");
+        } else {
+            lb_subtitle.setText("Welcome, User " + newUsername + ". Please set your new password.");
+        }
     }
 }
 
@@ -191,10 +225,16 @@ class PanePersonalInfo extends JPanel {
         ctn_lb.add(lb_subtitle);
 
         // list
+        /*
         String[] iconName = { "male"};
         String[] name = { "Nguyen Van Lee"};
-        String[] label = { "2001 | District 1"
-        };
+        String[] label = { "2001 | District 1"};
+         */
+        ArrayList<String> name = new ArrayList<>(Arrays.asList("Nguyen Van Lee"));
+        ArrayList<String> label = new ArrayList<>(Arrays.asList("2001 | District 1"));
+
+        ArrayList<String> iconName = new ArrayList<>(Arrays.asList("male"));
+
         list = new JNeoList(iconName, name, label);
         list.removeBtnAdd();
         list.removeAllBtnInfo();
@@ -237,10 +277,12 @@ class PanePersonalInfo extends JPanel {
     }
 
     void addAll() {
-        add(sideBar); add(ctn_lb); add(list);
+        add(sideBar);
+        add(ctn_lb);
+        add(list);
     }
 
-    void setInfo(String fullname, String subtitle, String[][] related) {
+    void setInfo(String fullname, String subtitle, ArrayList<ArrayList<String>> related) {
         // info
         lb_fullname.setText(fullname);
         lb_fullname.repaint();
@@ -248,7 +290,7 @@ class PanePersonalInfo extends JPanel {
         lb_subtitle.repaint();
 
         // related
-        list.setNewList(related[0], related[1], related[2]);
+        list.setNewList(related.get(0), related.get(1), related.get(2));
         list.removeBtnAdd();
         list.removeAllBtnInfo();
     }
@@ -282,16 +324,26 @@ class PaneBuyNecessity extends JPanel {
         title = new JNeoLabel("Necessity list", Global.fntHeader, Global.colDark);
 
         // search bar
-        String[] filter_names = { "Name", "Limit", "Price" };
+        String[] filter_names = {"Name", "Limit", "Price"};
         searchBar = new JNeoSearchBar("Search...", 15, filter_names);
 
         // list
+        /*
         String[] iconName = new String[7];
         for (int i = 0; i < 7; i++) {
             iconName[i] = "sb_package";
         }
         String[] name = { "Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
         String[] label = { "$5", "$15", "$2", "$2", "$4", "$6", "$8",};
+         */
+        ArrayList name = new ArrayList<>(Arrays.asList("Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"));
+        ArrayList label = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
+        
+        ArrayList<String> iconName = new ArrayList<>();
+        for (int i = 0; i < name.size(); i++) {
+            iconName.add("sb_package");
+        }
+
         list = new JNeoList(iconName, name, label);
         list.setBtnIcon("cart");
         list.removeBtnAdd();
@@ -372,7 +424,11 @@ class PaneBuyNecessity extends JPanel {
     }
 
     void addAll() {
-        add(sideBar); add(title); add(list); add(searchBar); add(btn_cart);
+        add(sideBar);
+        add(title);
+        add(list);
+        add(searchBar);
+        add(btn_cart);
     }
 
 }
@@ -459,7 +515,10 @@ class PaneNecessityInfo extends JPanel {
     }
 
     void addAll() {
-        add(sideBar); add(ctn_lb); add(tf_count); add(btn_add);
+        add(sideBar);
+        add(ctn_lb);
+        add(tf_count);
+        add(btn_add);
     }
 
     void setInfo(String fullname, String subtitle) {
@@ -556,7 +615,11 @@ class PanePayment extends JPanel {
     }
 
     void addAll() {
-        add(sideBar); add(ctn_lb); add(tf_account); add(tf_amount); add(btn_transfer);
+        add(sideBar);
+        add(ctn_lb);
+        add(tf_account);
+        add(tf_amount);
+        add(btn_transfer);
     }
 
     void setInfo(String debt, String balance) {
@@ -604,12 +667,23 @@ class PaneCart extends JPanel {
         ctn_lb.add(lb_title);
 
         // list
+        /*
         String[] iconName = new String[7];
         for (int i = 0; i < 7; i++) {
             iconName[i] = "sb_package";
         }
-        String[] name = { "Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
-        String[] label = { "$5", "$15", "$2", "$2", "$4", "$6", "$8",};
+        String[] name = {"Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
+        String[] label = {"$5", "$15", "$2", "$2", "$4", "$6", "$8",};
+        */
+        
+        ArrayList name = new ArrayList<>(Arrays.asList("Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"));
+        ArrayList label = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
+        
+        ArrayList<String> iconName = new ArrayList<>();
+        for (int i = 0; i < name.size(); i++) {
+            iconName.add("sb_package");
+        }
+        
         list = new JNeoList(iconName, name, label);
         list.removeAllBtnInfo();
         list.removeBtnAdd();
@@ -661,6 +735,9 @@ class PaneCart extends JPanel {
     }
 
     void addAll() {
-        add(sideBar); add(ctn_lb); add(list); add(btn_buy);
+        add(sideBar);
+        add(ctn_lb);
+        add(list);
+        add(btn_buy);
     }
 }

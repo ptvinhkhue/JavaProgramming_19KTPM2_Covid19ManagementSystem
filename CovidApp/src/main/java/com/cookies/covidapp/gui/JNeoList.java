@@ -17,7 +17,7 @@ public class JNeoList extends Container {
     private int curPage, totalPage;
     private JNeoLabel lb_page;
 
-    JNeoList(String[] iconName, String[] name, String[] label) {
+    JNeoList(ArrayList<String> iconName, ArrayList<String> name, ArrayList<String> label) {
         super();
         laySpring = new SpringLayout();
         setLayout(laySpring);
@@ -31,7 +31,7 @@ public class JNeoList extends Container {
         addAllActionListener();
     }
 
-    void init(String[] iconName, String[] name, String[] label) {
+    void init(ArrayList<String> iconName, ArrayList<String> name, ArrayList<String> label) {
         curPage = 0;
         lb_page = new JNeoLabel("" + totalPage, Global.fntButton, Global.colSecond);
 
@@ -108,12 +108,12 @@ public class JNeoList extends Container {
 
     }
 
-    void setNewList(String[] iconName, String[] name, String[] label) {
+    void setNewList(ArrayList<String> iconName, ArrayList<String> name, ArrayList<String> label) {
         item.clear();
-        if (iconName.length != name.length || name.length != label.length)
+        if (iconName.size() != name.size() || name.size() != label.size())
             throw new java.lang.Error("[JNeoList] Unmatched length.");
-        for (int k = 0; k < name.length; k++) {
-            JNeoListItem i = new JNeoListItem(iconName[k], name[k], label[k]);
+        for (int k = 0; k < name.size(); k++) {
+            JNeoListItem i = new JNeoListItem(iconName.get(k), name.get(k), label.get(k));
             item.add(i);
         }
         curPage = 0;

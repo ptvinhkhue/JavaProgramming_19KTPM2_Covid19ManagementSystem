@@ -200,7 +200,7 @@ public class Manager extends CovidAccount {
 
         try {
             DataQuery db = new DataQuery();
-            String sql = "select * from neccessity";
+            String sql = "select * from necessity";
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
