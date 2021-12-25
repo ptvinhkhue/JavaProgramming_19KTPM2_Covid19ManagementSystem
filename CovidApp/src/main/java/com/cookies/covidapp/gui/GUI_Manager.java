@@ -675,33 +675,62 @@ class PanePatientForm extends JPanel {
 
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
-            String str;
             boolean valid = true;
-            boolean exist;
+            
+            int addressID, placeID;
+            
             // check birthyear
-            str = tf_birthyear.getText();
-            if (str.matches("^[0-9]+$") && str.length() == 4) {
+            if (tf_birthyear.getText().matches("^[0-9]+$") && tf_birthyear.getText().length() == 4 && Integer.parseInt(tf_birthyear.getText()) < 2022) {
                 tf_birthyear.hideHint();
             } else {
                 tf_birthyear.showHint();
                 return;
             }
-
-            exist = (Objects.equals(tf_fullname.getText(), "Tran Thanh Tung"));
-
-            if (exist) {
-                lb_error_add.setForeground(Global.colError);
-                valid = false;
-            } else {
-                lb_error_add.setForeground(Color.WHITE);
+            
+            // check addressID
+            if (Manager.existedAddress(tf_addressID.getText()) > 0) {
+                addressID = Manager.existedAddress(tf_addressID.getText());
+                tf_addressID.hideHint();
             }
-
-            if (!valid) {
+            else {
+                tf_addressID.showHint();
                 return;
             }
+            
+            // check status
+            if (Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4) tf_status.hideHint();
+            else {
+                tf_addressID.showHint();
+                return;
+            }
+            
+            // check placeID
+            if (Manager.existedPlace(tf_place.getText()) > 0) {
+                 placeID = Manager.existedPlace(tf_place.getText());
+                tf_place.hideHint();
+            }
+            else {
+                tf_place.showHint();
+                return;
+            }
+            
+            // check existed user 
+            //exist = (Objects.equals(tf_personalID.getText(), "Tran Thanh Tung"));
+
+            if (Manager.existedUser(tf_place.getText()) == 0) {
+                lb_error_add.setForeground(Color.WHITE);
+            } else {
+                lb_error_add.setForeground(Global.colError);
+                valid = false;
+            }
+
+            if (valid) {
+                Manager.createUser(tf_fullname.getText(), tf_personalID.getText(), Integer.parseInt(tf_birthyear.getText()), addressID, Integer.parseInt(tf_status.getText()), placeID);
+            }
+            else return;
 
             // reset all text fields
-            GUI_Master.changePanel(GUI_Manager.getPNecessityList());
+            GUI_Master.changePanel(GUI_Manager.getPPatientList());
             lb_error_add.setForeground(Color.WHITE);
             tf_fullname.setText("Full name");
             tf_birthyear.setText("Birth year (yyyy)");

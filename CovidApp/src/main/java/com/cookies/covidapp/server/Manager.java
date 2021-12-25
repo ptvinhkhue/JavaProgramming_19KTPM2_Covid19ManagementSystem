@@ -141,12 +141,64 @@ public class Manager extends CovidAccount {
             e.printStackTrace();
         }
     }
-
-    public static void createUser(String username, String fullname, String personalID, int YoB, int addressID, int status, int placeID) {
+    
+    public static int existedAddress(String address) {
         try {
             DataQuery db = new DataQuery();
-            String sql = "insert into acc_user (username, fullname, personalID, addressID, status, placeID, debt, loggedIn) values ('"
-                    + username + "','" + fullname + "','" + personalID + "'," + addressID + "," + status + "," + placeID + "," + 0 + "," + 0 + ")";
+            String sql = "select * from address";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                String str = db.rs.getString("ward") + ", " + db.rs.getString("district") + ", " + db.rs.getString("province");
+                if ( str == null ? address == null : str.equals(address)) return db.rs.getInt("addressID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+
+    public static int existedPlace(String place) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from place";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                if (db.rs.getString("name") == null ? place == null : db.rs.getString("name").equals(place)) return db.rs.getInt("placeID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+    
+    public static int existedUser(String personalID) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_user";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                if (db.rs.getString("personalID") == null ?  personalID == null : db.rs.getString("personalID").equals( personalID)) return db.rs.getInt("userID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return 0;
+    }
+    
+    public static void createUser(String fullname, String personalID, int yob, int addressID, int status, int placeID) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "insert into acc_covid (username) values ('" + personalID + "')";
+            db.stm.executeUpdate(sql);
+            
+            sql = "insert into acc_user (username, fullname, personalID, yob, addressID, status, placeID, debt, loggedIn) values ('"
+                    + personalID + "','" + fullname + "','" + personalID + "'," + yob + "," + addressID + "," + status + "," + placeID + "," + 0 + "," + 0 + ")";
             db.stm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
