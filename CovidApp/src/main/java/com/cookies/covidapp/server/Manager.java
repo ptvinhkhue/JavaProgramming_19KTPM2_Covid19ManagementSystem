@@ -21,6 +21,7 @@ public class Manager extends CovidAccount {
         super(username);
     }
 
+    /*
     public static int getID() {
         try {
             DataQuery db = new DataQuery();
@@ -35,7 +36,7 @@ public class Manager extends CovidAccount {
 
         return 0;
     }
-
+    */
     /*---User Management---*/
     public static int getUserID(String username) {
         try {
@@ -50,8 +51,8 @@ public class Manager extends CovidAccount {
         }
         return 0;
     }
-
-    public static ArrayList<String> getUserList(String field) {
+    
+    public static ArrayList<String> getUserStringList(String field) {
         ArrayList<String> ret = new ArrayList<>();
 
         try {
@@ -61,6 +62,25 @@ public class Manager extends CovidAccount {
 
             while (db.rs.next()) {
                 ret.add(db.rs.getString(field));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static ArrayList<Integer> getUserIntList(String field) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_user";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt(field));
 
             }
         } catch (Exception e) {
