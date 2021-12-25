@@ -179,6 +179,8 @@ class PanePasswordManager extends JPanel {
 
 class PanePatientList extends JPanel {
 
+    static ArrayList<String> username;
+
     private JSideBar sideBar;
     private JNeoList list;
     private JNeoLabel title;
@@ -216,16 +218,29 @@ class PanePatientList extends JPanel {
                 "2003 | District 1","1980 | District 3","1970 | District 4", "2001 | District 1", "1995 | District 7","1987 | District 4","1999 | District 6",
                 "2003 | District 1"};
          */
-        ArrayList<String> name = Manager.displayUserList("fullname");
-        ArrayList<String> label = Manager.displayUserList("yob");
+        username = Manager.getUserList("username");
+        ArrayList<String> name = Manager.getUserList("fullname");
+
+        ArrayList<String> yob = Manager.getUserList("yob");
+        ArrayList<String> pID = Manager.getUserList("personalID");
+        ArrayList<String> address = Manager.getUserList("addressID");
+        ArrayList<String> status = Manager.getUserList("status");
+        ArrayList<String> place = Manager.getUserList("placeID");
+        //ArrayList<String> debt = Manager.getUserList("debt");
+
+        ArrayList<String> label = new ArrayList<>();
+        for (int i = 0; i < username.size(); i++) {
+            label.add(yob.get(i) + " | " + pID.get(i));
+        }
+
         ArrayList<String> label_full = new ArrayList<>();
-        ArrayList<String> status = Manager.displayUserList("status");
-        for (int k = 0; k < label.size(); k++) {
-            label_full.add(label.get(k) + " | F" + status.get(k));
+
+        for (int i = 0; i < username.size(); i++) {
+            label_full.add(label.get(i) + " | " + address.get(i) + " | F" + status.get(i) + " | " + place.get(i));
         }
 
         ArrayList<String> iconName = new ArrayList<>();
-        for (int i = 0; i < name.size(); i++) {
+        for (int i = 0; i < username.size(); i++) {
             if (i % 2 == 0) {
                 iconName.add("male");
             } else {
@@ -280,19 +295,30 @@ class PanePatientList extends JPanel {
 
     void addAllActionListener() {
         searchBar.getTf().addActionListener(e -> {
-
             /*
             String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female"};
             String[] name = { "Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
                     "Trinh Xuan F", "Le G", "Vo Lien H"};
             String[] label = { "1995", "1998", "1996", "2002", "1999", "2000", "2001", "1993"};
              */
-            ArrayList<String> name = Manager.displayUserList("fullname");
-            ArrayList<String> label = Manager.displayUserList("yob");
+            ArrayList<String> name = Manager.getUserList("fullname");
+
+            ArrayList<String> yob = Manager.getUserList("yob");
+            ArrayList<String> pID = Manager.getUserList("personalID");
+            ArrayList<String> address = Manager.getUserList("addressID");
+            ArrayList<String> status = Manager.getUserList("status");
+            ArrayList<String> place = Manager.getUserList("placeID");
+            //ArrayList<String> debt = Manager.getUserList("debt");
+
+            ArrayList<String> label = new ArrayList<>();
+            for (int i = 0; i < label.size(); i++) {
+                label.add(yob.get(i) + " | " + pID.get(i));
+            }
+
             ArrayList<String> label_full = new ArrayList<>();
-            ArrayList<String> status = Manager.displayUserList("status");
-            for (int k = 0; k < label.size(); k++) {
-                label_full.add(label.get(k) + " | F" + status.get(k));
+
+            for (int i = 0; i < label.size(); i++) {
+                label_full.add(label.get(i) + " | " + address.get(i) + " | F" + status.get(i) + " | " + place.get(i));
             }
 
             ArrayList<String> iconName = new ArrayList<>();
@@ -303,9 +329,10 @@ class PanePatientList extends JPanel {
                     iconName.add("female");
                 }
             }
-            list.setNewList(iconName, name, label, label_full);
 
+            list.setNewList(iconName, name, label, label_full);
         });
+
         list.getBtnAdd().addActionListener(e -> {
             GUI_Master.changePanel(GUI_Manager.getPPatientAdd());
         });
@@ -314,9 +341,15 @@ class PanePatientList extends JPanel {
 
     void addListActionListener() {
         ArrayList<JNeoListItem> item = list.getItemList();
+
+        int count = 0;
+        for (JNeoListItem i : item) {
+            i.assignID(Manager.getUserID(username.get(count)));
+            count++;
+        }
+
         for (JNeoListItem i : item) {
             i.getBtnInfo().addActionListener(e -> {
-
                 /*
                 String[] iconName = {"male", "male", "female", "male", "female", "male"};
                 String[] name = {"Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
@@ -329,18 +362,45 @@ class PanePatientList extends JPanel {
                 related[1] = name;
                 related[2] = label;
                  */
+                ArrayList<Integer> relatedID = Manager.getUserRelation(i.getID());
+
+                ArrayList<String> name = new ArrayList<>();
+                ArrayList<String> yob = new ArrayList<>();
+                ArrayList<String> pID = new ArrayList<>();
+                
+                for (int k = 0; k < relatedID.size(); k++) {
+                    name.add(Manager.getUserDetail(relatedID.get(k), "fullname"));
+                    yob.add(Manager.getUserDetail(relatedID.get(k), "yob"));
+                    pID.add(Manager.getUserDetail(relatedID.get(k), "personalID"));
+                }
+
+                ArrayList<String> label = new ArrayList<>();
+                for (int k = 0; k < relatedID.size(); k++) {
+                    label.add(yob.get(k) + " | " + pID.get(k));
+                }
+
+                ArrayList<String> iconName = new ArrayList<>();
+                for (int k = 0; k < relatedID.size(); k++) {
+                    if (k % 2 == 0) {
+                        iconName.add("male");
+                    } else {
+                        iconName.add("female");
+                    }
+                }
+
+                /*
                 ArrayList name = new ArrayList<>(Arrays.asList("Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
                         "Trinh Xuan F"));
                 ArrayList label = new ArrayList<>(Arrays.asList("2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
                         "2003 | District 1", "1980 | District 3"));
                 ArrayList iconName = new ArrayList<>(Arrays.asList("male", "male", "female", "male", "female", "male"));
-
+                 */
                 ArrayList<ArrayList<String>> related = new ArrayList<>(3);
                 related.add(iconName);
                 related.add(name);
                 related.add(label);
-                
-                GUI_Manager.getPPatientInfo().setInfo(i.getLbName().getText(), i.getLbSubFull(), related);
+
+                GUI_Manager.getPPatientInfo().setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), related);
                 GUI_Master.changePanel(GUI_Manager.getPPatientInfo());
             });
         }
@@ -396,7 +456,6 @@ class PaneNecessityList extends JPanel {
         ArrayList<String> name = Manager.displayNecessityList("name");
         ArrayList<String> label = Manager.displayNecessityList("price");
         ArrayList<String> label_full = Manager.displayNecessityList("price");
-
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
@@ -812,12 +871,13 @@ class PaneNecessityForm extends JPanel {
         if (!isAdd) {
             add(btn_delete);
         }
-
     }
 
 }
 
 class PanePatientInfo extends JPanel {
+
+    static int ID;
 
     private JSideBar sideBar;
     private JPanel ctn_lb;
@@ -933,29 +993,47 @@ class PanePatientInfo extends JPanel {
 
             i.getBtnInfo().addActionListener(e -> {
                 /*
-                String[] iconName = {"male", "male", "female", "male", "female"};
-                String[] name = {"Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E"};
-                String[] label = {"2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
-                    "2003 | District 1"};
-
-                String[][] related = new String[3][iconName.length];
-                related[0] = iconName;
-                related[1] = name;
-                related[2] = label;
-                */
-                
                 ArrayList name = new ArrayList<>(Arrays.asList("Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
                         "Trinh Xuan F"));
                 ArrayList label = new ArrayList<>(Arrays.asList("2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
                         "2003 | District 1", "1980 | District 3"));
+                ArrayList label_full = new ArrayList<>(Arrays.asList("2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
+                        "2003 | District 1", "1980 | District 3"));
                 ArrayList iconName = new ArrayList<>(Arrays.asList("male", "male", "female", "male", "female", "male"));
+                */
+                
+                ArrayList<Integer> relatedID = Manager.getUserRelation(i.getID());
 
+                ArrayList<String> name = new ArrayList<>();
+                ArrayList<String> yob = new ArrayList<>();
+                ArrayList<String> pID = new ArrayList<>();
+                
+                for (int k = 0; k < relatedID.size(); k++) {
+                    name.add(Manager.getUserDetail(relatedID.get(k), "fullname"));
+                    yob.add(Manager.getUserDetail(relatedID.get(k), "yob"));
+                    pID.add(Manager.getUserDetail(relatedID.get(k), "personalID"));
+                }
+
+                ArrayList<String> label = new ArrayList<>();
+                for (int k = 0; k < relatedID.size(); k++) {
+                    label.add(yob.get(k) + " | " + pID.get(k));
+                }
+
+                ArrayList<String> iconName = new ArrayList<>();
+                for (int k = 0; k < relatedID.size(); k++) {
+                    if (k % 2 == 0) {
+                        iconName.add("male");
+                    } else {
+                        iconName.add("female");
+                    }
+                }
+                
                 ArrayList<ArrayList<String>> related = new ArrayList<>(3);
                 related.add(iconName);
                 related.add(name);
                 related.add(label);
 
-                setInfo(i.getLbName().getText(), i.getLbSubFull(), related);
+                setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), related);
             });
         }
     }
@@ -968,7 +1046,10 @@ class PanePatientInfo extends JPanel {
         add(tf_add);
     }
 
-    void setInfo(String fullname, String subtitle, ArrayList<ArrayList<String>> related) {
+    void setInfo(int ID, String fullname, String subtitle, ArrayList<ArrayList<String>> related) {
+        PanePatientInfo.ID = ID;
+        System.out.println(PanePatientInfo.ID);
+
         // info
         lb_fullname.setText(fullname);
         lb_fullname.repaint();
@@ -979,5 +1060,4 @@ class PanePatientInfo extends JPanel {
         list.setNewList(related.get(0), related.get(1), related.get(2), related.get(2));
         addListActionListener();
     }
-
 }

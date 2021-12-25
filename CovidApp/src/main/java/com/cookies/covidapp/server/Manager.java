@@ -20,7 +20,7 @@ public class Manager extends CovidAccount {
     public Manager(String username) {
         super(username);
     }
-    
+
     public static int getID() {
         try {
             DataQuery db = new DataQuery();
@@ -32,23 +32,26 @@ public class Manager extends CovidAccount {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return 0;
     }
 
     /*---User Management---*/
-    public static void createUser(String username, String fullname, String personalID, int YoB, int addressID, int status, int placeID) {
+    public static int getUserID(String username) {
         try {
             DataQuery db = new DataQuery();
-            String sql = "insert into acc_user (username, fullname, personalID, addressID, status, placeID, debt, loggedIn) values ('"
-                    + username + "','" + fullname + "','" + personalID + "'," + addressID + "," + status + "," + placeID + "," + 0 + "," + 0 + ")";
-            db.stm.executeUpdate(sql);
+            String sql = "select * from acc_user where username = '" + username + "'";
+            db.rs = db.stm.executeQuery(sql);
+
+            db.rs.next();
+            return db.rs.getInt("userID");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return 0;
     }
 
-    public static ArrayList<String> displayUserList(String field) {
+    public static ArrayList<String> getUserList(String field) {
         ArrayList<String> ret = new ArrayList<>();
 
         try {
@@ -67,7 +70,7 @@ public class Manager extends CovidAccount {
         return ret;
     }
 
-    public static String displayUserDetail(int userID, String field) {
+    public static String getUserDetail(int userID, String field) {
         String ret = "";
 
         try {
@@ -77,6 +80,24 @@ public class Manager extends CovidAccount {
 
             while (db.rs.next()) {
                 ret = db.rs.getString(field);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<Integer> getUserRelation(int userID) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from relation where userID = " + userID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt("relatedID"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,6 +117,17 @@ public class Manager extends CovidAccount {
                 System.out.print("Username: " + db.rs.getString("username"));
                 System.out.print("Fullname: " + db.rs.getString("fullname") + "\n");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createUser(String username, String fullname, String personalID, int YoB, int addressID, int status, int placeID) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "insert into acc_user (username, fullname, personalID, addressID, status, placeID, debt, loggedIn) values ('"
+                    + username + "','" + fullname + "','" + personalID + "'," + addressID + "," + status + "," + placeID + "," + 0 + "," + 0 + ")";
+            db.stm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -152,7 +184,7 @@ public class Manager extends CovidAccount {
             if (db.rs.getInt("placeID") != placeID) {
                 int oldPlaceID, newCurrent;
                 oldPlaceID = db.rs.getInt("placeID");
-                
+
                 // update current
                 sql = "select current from place where placeID = " + oldPlaceID;
                 db.rsSub = db.stm.executeQuery(sql);
@@ -171,7 +203,7 @@ public class Manager extends CovidAccount {
                 sql = "update place "
                         + "set current = " + newCurrent + " where placeID =" + placeID;
                 db.stm.executeUpdate(sql);
-                
+
                 // update user data
                 sql = "update acc_user "
                         + "set placeID = " + placeID + " where userID =" + userID;
@@ -262,11 +294,10 @@ public class Manager extends CovidAccount {
         }
     }
 
-    
     public static void main(String args[]) {
-        
+
         //ArrayList<Integer> arr = new ArrayList<Integer>();
         Manager.updateUserPlace(1, 2);
     }
-    
+
 }

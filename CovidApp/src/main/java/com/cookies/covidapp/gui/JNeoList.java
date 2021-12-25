@@ -142,6 +142,8 @@ public class JNeoList extends Container {
 }
 
 class JNeoListItem extends JPanel {
+    
+    int ID;
 
     private JLabel lb_img;
     private JNeoLabel lb_name;
@@ -162,6 +164,10 @@ class JNeoListItem extends JPanel {
         init(iconName, name, label, sub_full);
         organize();
         addAll();
+    }
+    
+    void assignID(int ID) {
+        this.ID = ID;
     }
 
     // name: patient's or necessity's name
@@ -222,6 +228,7 @@ class JNeoListItem extends JPanel {
     JNeoLabel getLbName() {return lb_name;}
     JNeoLabel getLbSub() {return lb_sub;}
     String getLbSubFull() { return lb_sub_full; }
+    int getID() { return ID; } 
 
     void removeBtnInfo() {
         remove(btn_info);
