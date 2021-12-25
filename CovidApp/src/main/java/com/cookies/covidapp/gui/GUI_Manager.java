@@ -583,11 +583,11 @@ class PanePatientForm extends JPanel {
         // text fields
         tf_fullname = new JNeoTextField("Full name", 14, false, "account", "!NULL");
         tf_birthyear = new JNeoTextField("Birth year", 14, false, "account", "Format must be 'yyyy'");
-        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "!NULL");
-        tf_addressID = new JNeoTextField("Address ID", 14, false, "account", "!NULL");
+        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "Personal ID already exists");
+        tf_addressID = new JNeoTextField("Address ID", 14, false, "account", "Address does not exist");
 
         tf_place = new JNeoTextField("Treatment location", 14, false, "account", "Location does not exist");
-        tf_status = new JNeoTextField("Status", 14, false, "account", "Invalid status");
+        tf_status = new JNeoTextField("Status", 14, false, "account", "Invalid status (0 -> 3)");
 
         // button
         btn_add = new JNeoButton("Add", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -675,8 +675,6 @@ class PanePatientForm extends JPanel {
 
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
-            boolean valid = true;
-            
             int addressID, placeID;
             
             // check birthyear
@@ -720,14 +718,13 @@ class PanePatientForm extends JPanel {
             if (Manager.existedUser(tf_place.getText()) == 0) {
                 lb_error_add.setForeground(Color.WHITE);
             } else {
+                tf_personalID.showHint();
                 lb_error_add.setForeground(Global.colError);
-                valid = false;
+                return;
             }
-
-            if (valid) {
-                Manager.createUser(tf_fullname.getText(), tf_personalID.getText(), Integer.parseInt(tf_birthyear.getText()), addressID, Integer.parseInt(tf_status.getText()), placeID);
-            }
-            else return;
+            
+            // create a user in database
+            Manager.createUser(tf_fullname.getText(), tf_personalID.getText(), Integer.parseInt(tf_birthyear.getText()), addressID, Integer.parseInt(tf_status.getText()), placeID);
 
             // reset all text fields
             GUI_Master.changePanel(GUI_Manager.getPPatientList());
