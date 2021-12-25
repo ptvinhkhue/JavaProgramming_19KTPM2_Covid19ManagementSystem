@@ -21,23 +21,108 @@ public class User extends CovidAccount {
         n = new ArrayList<>();
     }
 
-    public void displayUserInformation(String username) {
+    public User(String username) {
+        super(username);
+    }
+
+    public static ArrayList<Integer> getUserIntList(String field) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
         try {
             DataQuery db = new DataQuery();
-            String sql = "select * from acc_user join address on acc_user.addressID = address.addressID where acc_user.username =" + username;
+            String sql = "select * from acc_user";
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                System.out.println("ID: " + db.rs.getInt("userID"));
-                System.out.println("Username: " + db.rs.getString("username"));
-                System.out.println("Fullname: " + db.rs.getString("fullname"));
-                System.out.println("Personal ID: " + db.rs.getString("personalID"));
-                System.out.println("Year: " + db.rs.getInt("year"));
-                System.out.println("Address: " + db.rs.getInt("ward") + ", " + db.rs.getInt("district") + ", " + db.rs.getInt("province"));
+                ret.add(db.rs.getInt(field));
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return ret;
+    }
+
+    public static String getUserDetail(int userID, String field) {
+        String ret = "";
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_user where userID = " + userID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret = db.rs.getString(field);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static String getUserAddress(int userID) {
+        String ret = "";
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_user where userID = " + userID;
+            db.rs = db.stm.executeQuery(sql);
+            while (db.rs.next()) {
+                sql = "select * from address where addressID = " + db.rs.getInt("addressID");
+                db.rs = db.stm.executeQuery(sql);
+
+                while (db.rs.next()) {
+                    ret = "Address: " + db.rs.getString("ward") + ", " + db.rs.getString("district") + ", " + db.rs.getString("province");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static String getUserPlace(int userID) {
+        String ret = "";
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_user where userID = " + userID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                sql = "select * from place where placeID = " + db.rs.getInt("PlaceID");
+                db.rs = db.stm.executeQuery(sql);
+                while (db.rs.next()) {
+                    ret = "Place: " + db.rs.getString("name");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static ArrayList<Integer> getUserRelation(int userID) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from relation where userID = " + userID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt("relatedID"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
     }
 
     public static int getID() {
@@ -105,22 +190,25 @@ public class User extends CovidAccount {
         }
     }
 
-    public void displayNecessityList() {
+    public static ArrayList<String> displayNecessityList(String field) {
+        ArrayList<String> ret = new ArrayList<>();
+
         try {
             DataQuery db = new DataQuery();
             String sql = "select * from necessity";
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                System.out.print("ID: " + db.rs.getInt("necessityID"));
-                System.out.print(", Name: " + db.rs.getString("name"));
-                System.out.print(", Limit amout: " + db.rs.getInt("limitAmount"));
-                System.out.print(", Limit time: " + db.rs.getDate("limitTime"));
-                System.out.print(", Price: " + db.rs.getInt("price") + "\n");
+                if ("price".equals(field))
+                    ret.add(db.rs.getString(field)+"VNĐ");
+                else ret.add(db.rs.getString(field));
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return ret;
     }
 
     public void searchNecessityByName(String key) {

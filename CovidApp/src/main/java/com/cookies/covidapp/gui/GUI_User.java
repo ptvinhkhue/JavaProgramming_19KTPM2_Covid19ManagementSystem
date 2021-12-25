@@ -1,5 +1,6 @@
 package com.cookies.covidapp.gui;
 
+import com.cookies.covidapp.server.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 public class GUI_User {
 
+    static User user;
     static PanePasswordUser pPasswordUser;
     static PanePersonalInfo pPersonalInfo;
     static PaneBuyNecessity pBuyNecessity;
@@ -134,6 +136,7 @@ class PanePasswordUser extends JPanel {
 
     void addAllActionListener() {
         btn_login.addActionListener(e -> {
+
             if (!firstTime) {
                 /*
                 String[] iconName = {"male", "male", "female", "male", "female"};
@@ -146,25 +149,64 @@ class PanePasswordUser extends JPanel {
                 related[1] = name;
                 related[2] = label;
                  */
+                if (Login.handlePassword(username, tf_password.getText())) {
+                    GUI_User.user = new User(username);
+                    //ArrayList name = new ArrayList<>(Arrays.asList("Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
+                    //"Trinh Xuan F"));
+                    //ArrayList label = new ArrayList<>(Arrays.asList("2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
+                    //"2003 | District 1", "1980 | District 3"));
+                    //ArrayList iconName = new ArrayList<>(Arrays.asList("male", "male", "female", "male", "female", "male"));
 
-                ArrayList name = new ArrayList<>(Arrays.asList("Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                        "Trinh Xuan F"));
-                ArrayList label = new ArrayList<>(Arrays.asList("2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
-                        "2003 | District 1", "1980 | District 3"));
-                ArrayList iconName = new ArrayList<>(Arrays.asList("male", "male", "female", "male", "female", "male"));
+                    ArrayList<Integer> relatedID = User.getUserRelation(GUI_User.user.getID());
+                    ArrayList<String> name = new ArrayList<>();
+                    ArrayList<String> yob = new ArrayList<>();
+                    ArrayList<String> pID = new ArrayList<>();
+                    ArrayList<String> address = new ArrayList<>();
+                    ArrayList<String> status = new ArrayList<>();
+                    ArrayList<String> place = new ArrayList<>();
 
-                ArrayList<ArrayList<String>> related = new ArrayList<>(3);
-                related.add(iconName);
-                related.add(name);
-                related.add(label);
+                    for (int i = 0; i < relatedID.size(); i++) {
+                        name.add(User.getUserDetail(relatedID.get(i), "fullname"));
+                        yob.add(User.getUserDetail(relatedID.get(i), "yob"));
+                        pID.add(User.getUserDetail(relatedID.get(i), "personalID"));
+                        address.add(User.getUserDetail(relatedID.get(i), "addressID"));
+                        status.add(User.getUserDetail(relatedID.get(i), "status"));
+                        place.add(User.getUserDetail(relatedID.get(i), "placeID"));
+                    }
 
-                GUI_User.getPPersonalInfo().setInfo("Nguyen Van A", "2001 | District 1", related);
-                GUI_Master.changePanel(GUI_User.getPPersonalInfo());
+                    ArrayList<String> label = new ArrayList<>();
+                    for (int i = 0; i < relatedID.size(); i++) {
+                        label.add(yob.get(i) + " | " + pID.get(i));
+                    }
+
+                    ArrayList<String> iconName = new ArrayList<>();
+                    for (int k = 0; k < relatedID.size(); k++) {
+                        if (k % 2 == 0) {
+                            iconName.add("male");
+                        } else {
+                            iconName.add("female");
+                        }
+                    }
+                    int uID = GUI_User.user.getID();
+                    String subtitle = User.getUserDetail(uID, "yob") + " | " + User.getUserDetail(uID, "personalID") 
+                            + " | " + User.getUserAddress(uID);  
+                    String subtitle2 = "Status: F" + User.getUserDetail(uID, "status") + " | " + User.getUserPlace(uID);
+                    
+                    ArrayList<ArrayList<String>> related = new ArrayList<>(3);
+                    related.add(iconName);
+                    related.add(name);
+                    related.add(label);
+
+                    GUI_User.getPPersonalInfo().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), subtitle, subtitle2, related);
+                    GUI_Master.changePanel(GUI_User.getPPersonalInfo());
+                } else {
+                    tf_password.showHint(); // Show hint/error below if false
+                }
             } else {
                 resetSubtitle(username, false);
                 GUI_Master.changePanel(GUI_User.getPPasswordUser());
             }
-            //tf_password.showHint(); // Show hint/error below if false
+
         });
         btn_return.addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
     }
@@ -193,7 +235,7 @@ class PanePersonalInfo extends JPanel {
 
     private JSideBar sideBar;
     private JPanel ctn_lb;
-    private JNeoLabel lb_fullname, lb_subtitle;
+    private JNeoLabel lb_fullname, lb_subtitle, lb_subtitle2;
     private JNeoList list;
 
     PanePersonalInfo() {
@@ -214,15 +256,18 @@ class PanePersonalInfo extends JPanel {
         // labels
         lb_fullname = new JNeoLabel("", Global.fntHeader, Global.colDark);
         lb_subtitle = new JNeoLabel("", Global.fntButton, Global.colSecond);
+        lb_subtitle2 = new JNeoLabel("", Global.fntButton, Global.colSecond);
 
         // labels container
         ctn_lb = new JPanel();
         ctn_lb.setBackground(Color.WHITE);
-        GridLayout grid = new GridLayout(2, 1);
+        GridLayout grid = new GridLayout(3, 1);
+        grid.setVgap(-15);
         ctn_lb.setLayout(grid);
         ctn_lb.setAlignmentX(Component.LEFT_ALIGNMENT);
         ctn_lb.add(lb_fullname);
         ctn_lb.add(lb_subtitle);
+        ctn_lb.add(lb_subtitle2);
 
         // list
         /*
@@ -283,12 +328,14 @@ class PanePersonalInfo extends JPanel {
         add(list);
     }
 
-    void setInfo(String fullname, String subtitle, ArrayList<ArrayList<String>> related) {
+    void setInfo(String fullname, String subtitle, String subtitle2, ArrayList<ArrayList<String>> related) {
         // info
         lb_fullname.setText(fullname);
         lb_fullname.repaint();
         lb_subtitle.setText(subtitle);
         lb_subtitle.repaint();
+        lb_subtitle2.setText(subtitle2);
+        lb_subtitle2.repaint();
 
         // related
         list.setNewList(related.get(0), related.get(1), related.get(2), related.get(2));
@@ -337,10 +384,13 @@ class PaneBuyNecessity extends JPanel {
         String[] name = { "Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
         String[] label = { "$5", "$15", "$2", "$2", "$4", "$6", "$8",};
          */
-        ArrayList name = new ArrayList<>(Arrays.asList("Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"));
-        ArrayList label = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
-        ArrayList label_full = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
-        
+        //ArrayList name = new ArrayList<>(Arrays.asList("Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"));
+        //ArrayList label = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
+        //ArrayList label_full = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
+        ArrayList<String> name = User.displayNecessityList("name");
+        ArrayList<String> label = User.displayNecessityList("price");
+        ArrayList<String> label_full = User.displayNecessityList("price");
+
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
             iconName.add("sb_package");
@@ -676,17 +726,16 @@ class PaneCart extends JPanel {
         }
         String[] name = {"Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
         String[] label = {"$5", "$15", "$2", "$2", "$4", "$6", "$8",};
-        */
-        
+         */
         ArrayList name = new ArrayList<>(Arrays.asList("Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"));
         ArrayList label = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
         ArrayList label_full = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
-        
+
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
             iconName.add("sb_package");
         }
-        
+
         list = new JNeoList(iconName, name, label, label_full);
         list.removeAllBtnInfo();
         list.removeBtnAdd();
