@@ -67,7 +67,6 @@ public class Manager extends CovidAccount {
 
             while (db.rs.next()) {
                 ret.add(db.rs.getInt(field));
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,20 +111,22 @@ public class Manager extends CovidAccount {
         return ret;
     }
 
-    public static void searchUserByName(String key) {
+    public static ArrayList<Integer> searchUserByName(String key) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        
         try {
             DataQuery db = new DataQuery();
             String sql = "select * from acc_user where fullname like '%" + key + "%'";
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                System.out.print("ID: " + db.rs.getInt("userID"));
-                System.out.print("Username: " + db.rs.getString("username"));
-                System.out.print("Fullname: " + db.rs.getString("fullname") + "\n");
+                ret.add(db.rs.getInt("userID"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        return ret;
     }
 
     public static int existedAddress(String address) {
