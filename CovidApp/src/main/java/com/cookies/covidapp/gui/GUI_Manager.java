@@ -66,6 +66,15 @@ public class GUI_Manager {
     public static PanePatientInfo getPPatientInfo() {
         return pPatientInfo;
     }
+
+    public static PanePatientList getUpdatedPPatientList() {
+        return pPatientList = new PanePatientList();
+    }
+
+    public static PanePatientInfo getUpdatedPPatientInfo() {
+        pPatientList = new PanePatientList();
+        return pPatientInfo = new PanePatientInfo();
+    }
 }
 
 class PanePasswordManager extends JPanel {
@@ -550,6 +559,8 @@ class PaneNecessityList extends JPanel {
 
 class PanePatientForm extends JPanel {
 
+    int ID;
+
     JSideBar sideBar;
     JNeoLabel title;
     JNeoTextField tf_fullname, tf_birthyear, tf_personalID, tf_addressID;
@@ -676,7 +687,7 @@ class PanePatientForm extends JPanel {
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
             int addressID, placeID;
-            
+
             // check birthyear
             if (tf_birthyear.getText().matches("^[0-9]+$") && tf_birthyear.getText().length() == 4 && Integer.parseInt(tf_birthyear.getText()) < 2022) {
                 tf_birthyear.hideHint();
@@ -684,36 +695,32 @@ class PanePatientForm extends JPanel {
                 tf_birthyear.showHint();
                 return;
             }
-            
+
             // check addressID
             if (Manager.existedAddress(tf_addressID.getText()) > 0) {
                 addressID = Manager.existedAddress(tf_addressID.getText());
                 tf_addressID.hideHint();
-            }
-            else {
+            } else {
                 tf_addressID.showHint();
                 return;
             }
-            
+
             // check status
-            if (Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4) tf_status.hideHint();
-            else {
+            if (!"".equals(tf_status.getText()) && Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4) {
+                tf_status.hideHint();
+            } else {
                 tf_addressID.showHint();
                 return;
             }
-            
+
             // check placeID
             if (Manager.existedPlace(tf_place.getText()) > 0) {
-                 placeID = Manager.existedPlace(tf_place.getText());
+                placeID = Manager.existedPlace(tf_place.getText());
                 tf_place.hideHint();
-            }
-            else {
+            } else {
                 tf_place.showHint();
                 return;
             }
-            
-            // check existed user 
-            //exist = (Objects.equals(tf_personalID.getText(), "Tran Thanh Tung"));
 
             if (Manager.existedUser(tf_place.getText()) == 0) {
                 lb_error_add.setForeground(Color.WHITE);
@@ -722,19 +729,42 @@ class PanePatientForm extends JPanel {
                 lb_error_add.setForeground(Global.colError);
                 return;
             }
-            
+
             // create a user in database
             Manager.createUser(tf_fullname.getText(), tf_personalID.getText(), Integer.parseInt(tf_birthyear.getText()), addressID, Integer.parseInt(tf_status.getText()), placeID);
 
             // reset all text fields
-            GUI_Master.changePanel(GUI_Manager.getPPatientList());
+            PanePatientList.id = Manager.getUserIntList("userID");
+            GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientList());
             lb_error_add.setForeground(Color.WHITE);
             tf_fullname.setText("Full name");
             tf_birthyear.setText("Birth year (yyyy)");
             tf_personalID.setText("Personal ID");
             tf_addressID.setText("Address ID");
+            tf_status.setText("Status");
+            tf_place.setText("Treatment location");
         });
 
+        btn_updateStatus.addActionListener(e -> {
+            // check status
+            if (!"".equals(tf_status.getText()) && Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4
+                    && Integer.parseInt(tf_status.getText()) < Integer.parseInt(Manager.getUserDetail(ID, "status"))) {
+                // update DB
+                ArrayList<Integer> arr = new ArrayList<Integer>();
+                Manager.updateUserStatus(ID, Integer.parseInt(tf_status.getText()), arr);
+                tf_status.hideHint();
+
+                // reset panes
+                PanePatientInfo.ID = ID;
+                GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientInfo());
+                lb_error_add.setForeground(Color.WHITE);
+                tf_status.setText("Status");
+                tf_place.setText("Treatment location");
+            } else {
+                tf_status.showHint();
+                return;
+            }
+        });
     }
 
     void addAll() {
@@ -750,6 +780,9 @@ class PanePatientForm extends JPanel {
         }
     }
 
+    void assignID(int ID) {
+        this.ID = ID;
+    }
 }
 
 class PaneNecessityForm extends JPanel {
@@ -909,12 +942,11 @@ class PaneNecessityForm extends JPanel {
             add(btn_delete);
         }
     }
-
 }
 
 class PanePatientInfo extends JPanel {
 
-    static int ID;
+    static int ID = 1;
     static ArrayList<Integer> relatedID;
 
     private JSideBar sideBar;
@@ -953,18 +985,47 @@ class PanePatientInfo extends JPanel {
         ctn_lb.add(lb_subtitle);
 
         // list
-        /*
-        String[] iconName = {"male"};
-        String[] name = {"Nguyen Van Lee"};
-        String[] label = {"2001 | District 1"};
-         */
-        relatedID = new ArrayList<>(Arrays.asList(1));
-        
-        ArrayList<String> name = new ArrayList<>(Arrays.asList("Nguyen Van Lee"));
-        ArrayList<String> label = new ArrayList<>(Arrays.asList("2001 | District 1"));
-        ArrayList<String> label_full = new ArrayList<>(Arrays.asList("2001 | District 1 | F0"));
+        relatedID = Manager.getUserRelation(ID);
 
-        ArrayList<String> iconName = new ArrayList<>(Arrays.asList("male"));
+        lb_fullname.setText(Manager.getUserDetail(ID, "fullname"));
+        lb_fullname.repaint();
+        lb_subtitle.setText(Manager.getUserDetail(ID, "yob") + " | " + Manager.getUserDetail(ID, "personalID") + " | " + Manager.getUserDetail(ID, "addressID") + " | F" + Manager.getUserDetail(ID, "status") + " | " + Manager.getUserDetail(ID, "placeID"));
+        lb_fullname.repaint();
+
+        ArrayList<String> name = new ArrayList<>();
+        ArrayList<String> yob = new ArrayList<>();
+        ArrayList<String> pID = new ArrayList<>();
+        ArrayList<String> address = new ArrayList<>();
+        ArrayList<String> status = new ArrayList<>();
+        ArrayList<String> place = new ArrayList<>();
+
+        for (int k = 0; k < relatedID.size(); k++) {
+            name.add(Manager.getUserDetail(relatedID.get(k), "fullname"));
+            yob.add(Manager.getUserDetail(relatedID.get(k), "yob"));
+            pID.add(Manager.getUserDetail(relatedID.get(k), "personalID"));
+            address.add(Manager.getUserDetail(relatedID.get(k), "addressID"));
+            status.add(Manager.getUserDetail(relatedID.get(k), "status"));
+            place.add(Manager.getUserDetail(relatedID.get(k), "placeID"));
+        }
+
+        ArrayList<String> label = new ArrayList<>();
+        for (int k = 0; k < relatedID.size(); k++) {
+            label.add(yob.get(k) + " | " + pID.get(k));
+        }
+
+        ArrayList<String> label_full = new ArrayList<>();
+        for (int k = 0; k < relatedID.size(); k++) {
+            label_full.add(label.get(k) + " | " + address.get(k) + " | F" + status.get(k) + " | " + place.get(k));
+        }
+
+        ArrayList<String> iconName = new ArrayList<>();
+        for (int k = 0; k < relatedID.size(); k++) {
+            if (k % 2 == 0) {
+                iconName.add("male");
+            } else {
+                iconName.add("female");
+            }
+        }
 
         list = new JNeoList(iconName, name, label, label_full);
 
@@ -974,7 +1035,6 @@ class PanePatientInfo extends JPanel {
 
         // text field
         tf_add = new JNeoTextField("Add related patient ID", 12, false, "account", "Patient does not exist");
-
     }
 
     void organize() {
@@ -1022,6 +1082,7 @@ class PanePatientInfo extends JPanel {
 
     void addAllActionListener() {
         btn_edit.addActionListener(e -> {
+            GUI_Manager.getPPatientEdit().assignID(ID);
             GUI_Master.changePanel(GUI_Manager.getPPatientEdit());
         });
         addListActionListener();
@@ -1029,13 +1090,13 @@ class PanePatientInfo extends JPanel {
 
     void addListActionListener() {
         ArrayList<JNeoListItem> item = list.getItemList();
-        
+
         int count = 0;
         for (JNeoListItem i : item) {
             i.assignID(relatedID.get(count));
             count++;
         }
-        
+
         for (JNeoListItem i : item) {
             i.getBtnInfo().addActionListener(e -> {
                 /*
@@ -1105,9 +1166,8 @@ class PanePatientInfo extends JPanel {
         add(tf_add);
     }
 
-    void setInfo(int ID, String fullname, String subtitle, ArrayList<Integer> relatedID ,ArrayList<ArrayList<String>> related) {
+    void setInfo(int ID, String fullname, String subtitle, ArrayList<Integer> relatedID, ArrayList<ArrayList<String>> related) {
         PanePatientInfo.ID = ID;
-        
         PanePatientInfo.relatedID = relatedID;
 
         // info

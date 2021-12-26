@@ -21,7 +21,7 @@ public class Manager extends CovidAccount {
         super(username);
     }
 
-    /*
+    /*---Get---*/
     public static int getID() {
         try {
             DataQuery db = new DataQuery();
@@ -36,22 +36,8 @@ public class Manager extends CovidAccount {
 
         return 0;
     }
-    */
-    /*---User Management---*/
-    public static int getUserID(String username) {
-        try {
-            DataQuery db = new DataQuery();
-            String sql = "select * from acc_user where username = '" + username + "'";
-            db.rs = db.stm.executeQuery(sql);
-
-            db.rs.next();
-            return db.rs.getInt("userID");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
     
+    /*---User Management---*/   
     public static ArrayList<String> getUserStringList(String field) {
         ArrayList<String> ret = new ArrayList<>();
 
