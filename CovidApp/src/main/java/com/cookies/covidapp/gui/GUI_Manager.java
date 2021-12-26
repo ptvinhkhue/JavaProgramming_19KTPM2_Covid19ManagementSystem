@@ -759,9 +759,26 @@ class PanePatientForm extends JPanel {
                 GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientInfo());
                 lb_error_add.setForeground(Color.WHITE);
                 tf_status.setText("Status");
-                tf_place.setText("Treatment location");
             } else {
                 tf_status.showHint();
+                return;
+            }
+        });
+        
+        btn_updatePlace.addActionListener(e -> {
+            // check place
+            if (Manager.existedPlace(tf_place.getText()) > 0) {
+                // update DB
+                Manager.updateUserPlace(ID, Manager.existedPlace(tf_place.getText()));
+                tf_place.hideHint();
+
+                // reset panes
+                PanePatientInfo.ID = ID;
+                GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientInfo());
+                lb_error_add.setForeground(Color.WHITE);
+                tf_place.setText("Treatment location");
+            } else {
+                tf_place.showHint();
                 return;
             }
         });
