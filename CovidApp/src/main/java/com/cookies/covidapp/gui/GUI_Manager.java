@@ -720,7 +720,7 @@ class PanePatientForm extends JPanel {
             if (!"".equals(tf_status.getText()) && Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4) {
                 tf_status.hideHint();
             } else {
-                tf_addressID.showHint();
+                tf_status.showHint();
                 return;
             }
 
@@ -733,7 +733,8 @@ class PanePatientForm extends JPanel {
                 return;
             }
 
-            if (Manager.existedUser(tf_place.getText()) == 0) {
+            // check existed User
+            if (Manager.existedUser(tf_personalID.getText()) == 0) {
                 lb_error_add.setForeground(Color.WHITE);
             } else {
                 tf_personalID.showHint();

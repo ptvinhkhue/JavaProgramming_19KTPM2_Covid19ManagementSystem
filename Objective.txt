@@ -1,0 +1,24 @@
+Manager: 
+- Tạo lịch sử (Code) 
+- Sắp xếp theo tiêu chí (Code)
+- Trang sản phẩm (Code)
+- Thống kê (Code, UI)
+
+User: 
+- Xem lịch sử (Code, UI)
+- Mua hàng (Code, fix UI)
+- Tìm (Code)
+- Sắp xếp (Code)
+
+Admin: (Code, UI)
+- Tạo tài khoản Manager
+- Khóa tài khoản
+- Xem lịch sử Manager 
+- Thêm, Sửa place
+
+Hệ thống thanh toán (Code, UI)
+
+
+ 
+
+
