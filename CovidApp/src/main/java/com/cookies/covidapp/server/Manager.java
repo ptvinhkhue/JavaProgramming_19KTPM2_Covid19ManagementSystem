@@ -199,7 +199,7 @@ public class Manager extends CovidAccount {
             db.stm.executeUpdate(sql);
             
             // insert new User
-            sql = "insert into acc_covid (username) values ('" + personalID + "')";
+            sql = "insert into acc_covid (username, type) values ('" + personalID + "', " + 3 + ")";
             db.stm.executeUpdate(sql);
 
             sql = "insert into acc_user (username, fullname, personalID, yob, addressID, status, placeID, debt, loggedIn) values ('"
