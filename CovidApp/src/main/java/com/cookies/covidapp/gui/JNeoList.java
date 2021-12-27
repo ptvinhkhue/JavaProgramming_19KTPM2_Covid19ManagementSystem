@@ -207,11 +207,11 @@ class JNeoListItem extends JPanel {
 
         layout.putConstraint(SpringLayout.WEST, lb_name, 12,
                 SpringLayout.EAST, lb_img);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_name, 6,
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_name, -6,
                 SpringLayout.VERTICAL_CENTER, this);
-        layout.putConstraint(SpringLayout.WEST, lb_sub, 12,
-                SpringLayout.EAST, lb_name);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_sub, 0,
+        layout.putConstraint(SpringLayout.WEST, lb_sub, 0,
+                SpringLayout.WEST, lb_name);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_sub, 12,
                 SpringLayout.VERTICAL_CENTER, this);
 
     }

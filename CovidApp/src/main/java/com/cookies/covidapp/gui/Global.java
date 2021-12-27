@@ -91,8 +91,7 @@ public class Global {
         tfRadius = 8;
 
         // Integers - List
-        listHeight = 5;
-        displaySize = 5;
+        listHeight = displaySize = 4;
 
         // Integers - Screen resolution
         width = 640; height = 480;
