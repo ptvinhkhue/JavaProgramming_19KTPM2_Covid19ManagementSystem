@@ -904,7 +904,7 @@ class PaneNecessityForm extends JPanel {
         ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
         ctn_tf.add(tf_price);
 
-        layout.putConstraint(SpringLayout.WEST, ctn_tf, -32,
+        layout.putConstraint(SpringLayout.WEST, ctn_tf, 0,
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, ctn_tf, 24,
                 SpringLayout.SOUTH, title);

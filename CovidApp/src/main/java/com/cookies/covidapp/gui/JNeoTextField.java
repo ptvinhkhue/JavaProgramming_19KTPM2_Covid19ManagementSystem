@@ -55,7 +55,7 @@ public class JNeoTextField extends Container {
 
         add(lb_icon); add(tf);
         add(hint);
-        showHint();
+        hideHint();
     }
 
     void showHint() { hint.setForeground(Global.colError); }
