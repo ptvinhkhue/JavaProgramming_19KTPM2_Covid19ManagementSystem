@@ -3,9 +3,19 @@ package com.cookies.covidapp.gui;
 import com.cookies.covidapp.server.*;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
 
 import static javax.swing.BoxLayout.Y_AXIS;
 
@@ -19,6 +29,7 @@ public class GUI_Manager {
     static PanePatientForm pPatientAdd, pPatientEdit;
     static PaneNecessityForm pNecessityAdd, pNecessityEdit;
     static PanePatientInfo pPatientInfo;
+    static PaneChart pChart;
 
     void initPane() {
         pPasswordManager = new PanePasswordManager();
@@ -29,6 +40,7 @@ public class GUI_Manager {
         pNecessityAdd = new PaneNecessityForm(true);
         pNecessityEdit = new PaneNecessityForm(false);
         pPatientInfo = new PanePatientInfo();
+        pChart = new PaneChart();
     }
 
     void init() {
@@ -75,6 +87,8 @@ public class GUI_Manager {
         pPatientList = new PanePatientList();
         return pPatientInfo = new PanePatientInfo();
     }
+
+    public static PaneChart getPChart() { return pChart; }
 }
 
 class PanePasswordManager extends JPanel {
@@ -1224,5 +1238,152 @@ class PanePatientInfo extends JPanel {
         // related
         list.setNewList(related.get(0), related.get(1), related.get(2), related.get(3));
         addListActionListener();
+    }
+}
+
+class PaneChart extends JPanel {
+
+
+    JSideBar sideBar;
+    JNeoLabel title;
+    Container ctn_btn;
+    JNeoButton btn_count, btn_status, btn_necessity, btn_debt;
+    ChartPanel chart;
+    SpringLayout layout;
+
+    PaneChart() {
+        super();
+
+        init();
+        organize();
+        addAllActionListener();
+        addAll();
+    }
+
+    void init() {
+        this.setBackground(Color.WHITE);
+
+        // sideBar
+        sideBar = new JSideBar(Global.itemIcon_Manager, 1, 2);
+
+        // title
+        title = new JNeoLabel("Chart", Global.fntHeader, Global.colDark);
+
+        // buttons
+        btn_count = new JNeoButton("Count", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_status = new JNeoButton("Status", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_necessity = new JNeoButton("Necessity", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_debt = new JNeoButton("Debt", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        ctn_btn = new Container(); ctn_btn.setLayout(new FlowLayout());
+        ctn_btn.add(btn_count); ctn_btn.add(btn_status);
+        ctn_btn.add(btn_necessity); ctn_btn.add(btn_debt);
+
+        // chart
+        chart = createChart(0);
+    }
+
+    void organize() {
+        layout = new SpringLayout();
+        this.setLayout(layout);
+
+        // sideBar
+        layout.putConstraint(SpringLayout.WEST, sideBar, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.EAST, sideBar, 48,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, sideBar, 0,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
+                SpringLayout.SOUTH, this);
+
+        // title
+        layout.putConstraint(SpringLayout.WEST, title, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, title, 32,
+                SpringLayout.NORTH, this);
+
+        // buttons
+        layout.putConstraint(SpringLayout.WEST, ctn_btn, 8,
+                SpringLayout.EAST, title);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, ctn_btn, -4,
+                SpringLayout.VERTICAL_CENTER, title);
+
+        // chart
+        layout.putConstraint(SpringLayout.WEST, chart, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, chart, 4,
+                SpringLayout.SOUTH, title);
+    }
+
+    void addAllActionListener() {
+        btn_count.addActionListener(e -> {
+            chart = createChart(0);
+            chart.repaint();
+            revalidate();
+            repaint();
+            System.out.println("Chart 0");
+        });
+        btn_status.addActionListener(e -> {
+            chart = createChart(1);
+            chart.repaint();
+            revalidate();
+            repaint();
+            System.out.println("Chart 1");
+        });
+    }
+
+    void addAll() {
+        add(sideBar);
+        add(title);
+        add(ctn_btn);
+        add(chart);
+    }
+
+    ChartPanel createChart(int type) {
+
+        // Create dataset here
+        DefaultCategoryDataset data = new DefaultCategoryDataset();
+        switch (type) {
+            case 0 -> {
+                data.addValue(300, "Patient count", "26/12");
+                data.addValue(295, "Patient count", "27/12");
+                data.addValue(142, "Patient count", "28/12");
+                data.addValue(357, "Patient count", "29/12");
+                data.addValue(324, "Patient count", "30/12");
+            }
+            case 1 -> {
+                data.addValue(300, "F0", "26/12");
+                data.addValue(295, "F0", "27/12");
+                data.addValue(142, "F0", "28/12");
+                data.addValue(357, "F0", "29/12");
+                data.addValue(324, "F0", "30/12");
+                data.addValue(251, "F1", "26/12");
+                data.addValue(312, "F1", "27/12");
+                data.addValue(111, "F1", "28/12");
+                data.addValue(751, "F1", "29/12");
+                data.addValue(231, "F1", "30/12");
+            }
+        }
+
+        // Create chart
+        JFreeChart lineChart = ChartFactory.createLineChart(
+                "Patient count by Date",
+                "Date", "Patient count",
+                data, PlotOrientation.VERTICAL,
+                true, true, false);
+
+        lineChart.getPlot().setBackgroundPaint(Global.colLight);
+        ChartPanel newChart = new ChartPanel(lineChart);
+        newChart.setPreferredSize(new Dimension(Global.chartW, Global.chartH));
+
+        // Save to file
+        try {
+            ChartUtilities.saveChartAsPNG(new File("LineChart.png"), lineChart,
+                    Global.chartW, Global.chartH);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return newChart;
     }
 }

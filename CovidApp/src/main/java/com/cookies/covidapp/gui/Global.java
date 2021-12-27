@@ -14,7 +14,7 @@ public class Global {
     public static String pathFont, pathIcon, pathImage;
 
     // Color
-    public static Color colPrimary, colPrimaryMild, colSecond, colSubtle, colError, colDark;
+    public static Color colPrimary, colPrimaryMild, colSecond, colSubtle, colLight, colError, colDark;
 
     // Font
     public static Font fntPrimary, fntSecond, fntButton, fntTitle, fntSub, fntHeader, fntHint;
@@ -32,11 +32,14 @@ public class Global {
     // Integer - Screen resolution
     public static int width, height;
 
+    // Integer - Chart size
+    public static int chartW, chartH;
+
     // Integer - Side bar
     public static int sb_height;
 
     // String - Side bar items
-    public static String[] itemIcon_Manager = {"list", "package", "logout"};
+    public static String[] itemIcon_Manager = {"list", "package", "chart", "logout"};
     public static String[] itemIcon_User = {"info", "package", "wallet", "logout"};
 
     Global() {
@@ -57,6 +60,7 @@ public class Global {
         // Color
         colPrimary = new Color(99, 214, 179);
         colPrimaryMild = new Color(130, 220, 178);
+        colLight = new Color(197, 217, 213);
         colSecond = new Color(78, 96, 88);
         colDark = colPrimary.darker().darker();
         colSubtle = new Color(200, 200, 200);
@@ -98,6 +102,9 @@ public class Global {
 
         // Integer - Side bar
         sb_height = 10;
+
+        // Integer - Chart size
+        chartW = 480; chartH = 360;
     }
 
     Font createFont(String fontName) {
