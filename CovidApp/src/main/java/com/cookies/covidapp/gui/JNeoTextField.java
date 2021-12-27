@@ -18,10 +18,8 @@ public class JNeoTextField extends Container {
 
     JNeoTextField(String str, int col, boolean isPassword, String iconName, String hintStr) {
         super();
-
-        // text field container (icon + tf)
-        Container ctn_tf = new Container();
-        ctn_tf.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 0));
+        SpringLayout layout = new SpringLayout();
+        setLayout(layout);
 
         // icon
         JLabel lb_icon = new JLabel("");
@@ -31,14 +29,33 @@ public class JNeoTextField extends Container {
         tf.setFont(Global.fntPrimary);
         tf.setBorder(new BubbleBorder());
 
-        ctn_tf.add(lb_icon);
-        ctn_tf.add(tf);
-
-        // master container
         hint = new JNeoLabel(hintStr, Global.fntHint, Global.colError);
         hint.setForeground(Color.WHITE);
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(ctn_tf); add(Box.createRigidArea(new Dimension(0, 4))); add(hint);
+
+        layout.putConstraint(SpringLayout.WEST, lb_icon, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, lb_icon, 0,
+                SpringLayout.NORTH, this);
+
+        layout.putConstraint(SpringLayout.WEST, tf, 4,
+                SpringLayout.EAST, lb_icon);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, tf, 0,
+                SpringLayout.VERTICAL_CENTER, lb_icon);
+
+        layout.putConstraint(SpringLayout.WEST, hint, 0,
+                SpringLayout.WEST, tf);
+        layout.putConstraint(SpringLayout.NORTH, hint, 4,
+                SpringLayout.SOUTH, tf);
+
+        layout.putConstraint(SpringLayout.EAST, this, 0,
+                SpringLayout.EAST, tf);
+        layout.putConstraint(SpringLayout.SOUTH, this, 0,
+                SpringLayout.SOUTH, hint);
+
+
+        add(lb_icon); add(tf);
+        add(hint);
+        showHint();
     }
 
     void showHint() { hint.setForeground(Global.colError); }

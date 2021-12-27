@@ -655,29 +655,42 @@ class PanePatientForm extends JPanel {
             ctn_tf.add(tf_personalID);
             ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
             ctn_tf.add(tf_addressID);
-            ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
-            ctn_tf.add(btn_add);
             ctn_tf_2.add(tf_place);
             ctn_tf_2.add(Box.createRigidArea(new Dimension(0, 4)));
-            ctn_tf_2.add(tf_status);
         } else {
             ctn_tf.add(tf_place);
-            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
-            ctn_tf.add(btn_updatePlace);
-            ctn_tf.add(Box.createRigidArea(new Dimension(0, 32)));
-            ctn_tf.add(tf_status);
-            ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
-            ctn_tf.add(btn_updateStatus);
         }
+        ctn_tf_2.add(tf_status);
 
-        layout.putConstraint(SpringLayout.WEST, ctn_tf, (isAdd) ? -48 : 0,
+        layout.putConstraint(SpringLayout.WEST, ctn_tf, 0,
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, ctn_tf, 24,
                 SpringLayout.SOUTH, title);
-        layout.putConstraint(SpringLayout.WEST, ctn_tf_2, -48,
-                SpringLayout.EAST, ctn_tf);
-        layout.putConstraint(SpringLayout.NORTH, ctn_tf_2, 0,
-                SpringLayout.NORTH, ctn_tf);
+
+        if (isAdd) {
+            layout.putConstraint(SpringLayout.WEST, btn_add, 0,
+                    SpringLayout.WEST, title);
+            layout.putConstraint(SpringLayout.NORTH, btn_add, 16,
+                    SpringLayout.SOUTH, ctn_tf);
+            layout.putConstraint(SpringLayout.WEST, ctn_tf_2, 8,
+                    SpringLayout.EAST, ctn_tf);
+            layout.putConstraint(SpringLayout.NORTH, ctn_tf_2, 0,
+                    SpringLayout.NORTH, ctn_tf);
+        } else {
+            layout.putConstraint(SpringLayout.WEST, btn_updatePlace, 0,
+                    SpringLayout.WEST, title);
+            layout.putConstraint(SpringLayout.WEST, btn_updateStatus, 0,
+                    SpringLayout.WEST, title);
+            layout.putConstraint(SpringLayout.NORTH, btn_updatePlace, 8,
+                    SpringLayout.SOUTH, ctn_tf);
+            layout.putConstraint(SpringLayout.WEST, ctn_tf_2, 0,
+                    SpringLayout.WEST, ctn_tf);
+            layout.putConstraint(SpringLayout.NORTH, ctn_tf_2, 32,
+                    SpringLayout.SOUTH, btn_updatePlace);
+            layout.putConstraint(SpringLayout.NORTH, btn_updateStatus, 8,
+                    SpringLayout.SOUTH, ctn_tf_2);
+        }
+
 
         // label
         layout.putConstraint(SpringLayout.WEST, lb_error_add, 16,
@@ -800,12 +813,15 @@ class PanePatientForm extends JPanel {
         add(sideBar);
         add(title);
         add(ctn_tf);
+        add(ctn_tf_2);
         if (isAdd) {
-            add(ctn_tf_2);
             add(lb_error_add);
+            add(btn_add);
         } else {
             add(lb_error_place);
             add(lb_error_status);
+            add(btn_updatePlace);
+            add(btn_updateStatus);
         }
     }
 

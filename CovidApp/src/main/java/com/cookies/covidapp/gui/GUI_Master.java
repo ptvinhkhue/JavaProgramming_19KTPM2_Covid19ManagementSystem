@@ -83,7 +83,7 @@ class PaneUsername extends JPanel {
         btnContainer.add(btn_continue); btnContainer.add(btn_exit);
 
         // text fields
-        tf_username = new JNeoTextField("Username", 16, false, "account", "Account does not exist.");
+        tf_username = new JNeoTextField("Username", 16, false, "account", "Account does not exist or does it?");
 
         // labels
         lb_credit = new JNeoLabel("Developed by Cookies", Global.fntSecond, Global.colSecond);
