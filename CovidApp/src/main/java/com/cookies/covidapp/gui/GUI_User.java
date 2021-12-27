@@ -16,6 +16,7 @@ public class GUI_User {
     static PaneNecessityInfo pNecessityInfo;
     static PanePayment pPayment;
     static PaneCart pCart;
+    static PaneHistory pHistory;
 
     void initPane() {
         pPasswordUser = new PanePasswordUser();
@@ -24,6 +25,7 @@ public class GUI_User {
         pNecessityInfo = new PaneNecessityInfo();
         pPayment = new PanePayment();
         pCart = new PaneCart();
+        pHistory = new PaneHistory();
     }
 
     void init() {
@@ -53,6 +55,8 @@ public class GUI_User {
     public static PaneCart getPCart() {
         return pCart;
     }
+
+    public static PaneHistory getPHistory() { return pHistory; }
 
 }
 
@@ -237,6 +241,7 @@ class PanePersonalInfo extends JPanel {
     private JPanel ctn_lb;
     private JNeoLabel lb_fullname, lb_subtitle, lb_subtitle2;
     private JNeoList list;
+    private JNeoButton btn_history;
 
     PanePersonalInfo() {
         super();
@@ -268,6 +273,10 @@ class PanePersonalInfo extends JPanel {
         ctn_lb.add(lb_fullname);
         ctn_lb.add(lb_subtitle);
         ctn_lb.add(lb_subtitle2);
+
+        // button
+        btn_history = new JNeoButton("History", Global.colPrimary, Color.WHITE,
+                Global.btnRadius, 8, Global.fntButton, false);
 
         // list
         /*
@@ -316,16 +325,41 @@ class PanePersonalInfo extends JPanel {
                 SpringLayout.SOUTH, ctn_lb);
         layout.putConstraint(SpringLayout.SOUTH, list, -24,
                 SpringLayout.SOUTH, this);
+
+        // button
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, btn_history, 0,
+                SpringLayout.HORIZONTAL_CENTER, this);
+        layout.putConstraint(SpringLayout.SOUTH, btn_history, -24,
+                SpringLayout.SOUTH, this);
     }
 
     void addAllActionListener() {
+        btn_history.addActionListener(e -> {
 
+            ArrayList<ArrayList<String>> related = new ArrayList<>();
+            ArrayList<String> iconName = new ArrayList<>();
+            for (int k = 0; k < 1; k++) {
+                iconName.add("sb_package");
+            }
+            ArrayList<String> title =  new ArrayList<>();
+            for (int k = 0; k < 1; k++) title.add("F1 -> F0");
+            ArrayList<String> subtitle = new ArrayList<>();
+            for (int k = 0; k < 1; k++) subtitle.add("27/12/2021");
+
+            related.add(iconName);
+            related.add(title);
+            related.add(subtitle);
+
+            GUI_User.getPHistory().setInfo("Trần Thanh Tùng", "Management History", related);
+            GUI_Master.changePanel(GUI_User.getPHistory());
+        });
     }
 
     void addAll() {
         add(sideBar);
         add(ctn_lb);
         add(list);
+        add(btn_history);
     }
 
     void setInfo(String fullname, String subtitle, String subtitle2, ArrayList<ArrayList<String>> related) {
@@ -336,6 +370,127 @@ class PanePersonalInfo extends JPanel {
         lb_subtitle.repaint();
         lb_subtitle2.setText(subtitle2);
         lb_subtitle2.repaint();
+
+        // related
+        list.setNewList(related.get(0), related.get(1), related.get(2), related.get(2));
+        list.removeBtnAdd();
+        list.removeAllBtnInfo();
+    }
+
+}
+
+class PaneHistory extends JPanel {
+
+    private JSideBar sideBar;
+    private JPanel ctn_lb;
+    private JNeoLabel lb_fullname, lb_subtitle;
+    private JNeoList list;
+    private JNeoButton btn_change;
+
+    PaneHistory() {
+        super();
+
+        init();
+        addAllActionListener();
+        organize();
+        addAll();
+    }
+
+    void init() {
+        this.setBackground(Color.WHITE);
+
+        // sideBar
+        sideBar = new JSideBar(Global.itemIcon_User, 0, -1);
+
+        // labels
+        lb_fullname = new JNeoLabel("", Global.fntHeader, Global.colDark);
+        lb_subtitle = new JNeoLabel("Management History", Global.fntButton, Global.colSecond);
+
+        // labels container
+        ctn_lb = new JPanel();
+        ctn_lb.setBackground(Color.WHITE);
+        GridLayout grid = new GridLayout(2, 1);
+        grid.setVgap(-15);
+        ctn_lb.setLayout(grid);
+        ctn_lb.setAlignmentX(Component.LEFT_ALIGNMENT);
+        ctn_lb.add(lb_fullname);
+        ctn_lb.add(lb_subtitle);
+
+        // buttons
+        btn_change = new JNeoButton("Change type", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+
+        // list
+        /*
+        String[] iconName = { "male"};
+        String[] name = { "Nguyen Van Lee"};
+        String[] label = { "2001 | District 1"};
+         */
+        ArrayList<String> name = new ArrayList<>(Arrays.asList("Nguyen Van Lee"));
+        ArrayList<String> label = new ArrayList<>(Arrays.asList("2001 | District 1"));
+        ArrayList<String> label_full = new ArrayList<>(Arrays.asList("2001"));
+
+        ArrayList<String> iconName = new ArrayList<>(Arrays.asList("male"));
+
+        list = new JNeoList(iconName, name, label, label_full);
+        list.removeBtnAdd();
+        list.removeAllBtnInfo();
+
+    }
+
+    void organize() {
+        SpringLayout layout = new SpringLayout();
+        this.setLayout(layout);
+
+        // sideBar
+        layout.putConstraint(SpringLayout.WEST, sideBar, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.EAST, sideBar, 48,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, sideBar, 0,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, sideBar, 0,
+                SpringLayout.SOUTH, this);
+
+        // labels container
+        layout.putConstraint(SpringLayout.WEST, ctn_lb, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.NORTH, ctn_lb, 32,
+                SpringLayout.NORTH, this);
+
+        // list
+        layout.putConstraint(SpringLayout.WEST, list, 48,
+                SpringLayout.EAST, sideBar);
+        layout.putConstraint(SpringLayout.EAST, list, -48,
+                SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.NORTH, list, 12,
+                SpringLayout.SOUTH, ctn_lb);
+        layout.putConstraint(SpringLayout.SOUTH, list, -24,
+                SpringLayout.SOUTH, this);
+
+        // buttons
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, btn_change, 0,
+                SpringLayout.HORIZONTAL_CENTER, this);
+        layout.putConstraint(SpringLayout.SOUTH, btn_change, -24,
+                SpringLayout.SOUTH, this);
+    }
+
+    void addAllActionListener() {
+
+    }
+
+    void addAll() {
+        add(sideBar);
+        add(ctn_lb);
+        add(list);
+        add(btn_change);
+    }
+
+    void setInfo(String fullname, String subtitle, ArrayList<ArrayList<String>> related) {
+        // info
+        lb_fullname.setText(fullname);
+        lb_fullname.repaint();
+        lb_subtitle.setText(subtitle);
+        lb_subtitle.repaint();
 
         // related
         list.setNewList(related.get(0), related.get(1), related.get(2), related.get(2));
