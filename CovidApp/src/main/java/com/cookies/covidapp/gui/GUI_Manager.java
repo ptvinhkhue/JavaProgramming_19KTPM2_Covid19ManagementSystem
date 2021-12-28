@@ -1,8 +1,11 @@
 package com.cookies.covidapp.gui;
 
 import com.cookies.covidapp.server.*;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1248,7 +1251,7 @@ class PaneChart extends JPanel {
     JNeoLabel title;
     Container ctn_btn;
     JNeoButton btn_count, btn_status, btn_necessity, btn_debt;
-    ChartPanel chart;
+    JLabel chart;
     SpringLayout layout;
 
     PaneChart() {
@@ -1279,7 +1282,9 @@ class PaneChart extends JPanel {
         ctn_btn.add(btn_necessity); ctn_btn.add(btn_debt);
 
         // chart
-        chart = createChart(0);
+        createChart(0);
+        chart = new JLabel();
+        getChart(0);
     }
 
     void organize() {
@@ -1317,18 +1322,14 @@ class PaneChart extends JPanel {
 
     void addAllActionListener() {
         btn_count.addActionListener(e -> {
-            chart = createChart(0);
-            chart.repaint();
-            revalidate();
-            repaint();
             System.out.println("Chart 0");
+            createChart(0);
+            getChart(0);
         });
         btn_status.addActionListener(e -> {
-            chart = createChart(1);
-            chart.repaint();
-            revalidate();
-            repaint();
             System.out.println("Chart 1");
+            createChart(1);
+            getChart(1);
         });
     }
 
@@ -1339,7 +1340,7 @@ class PaneChart extends JPanel {
         add(chart);
     }
 
-    ChartPanel createChart(int type) {
+    void createChart(int type) {
 
         // Create dataset here
         DefaultCategoryDataset data = new DefaultCategoryDataset();
@@ -1365,25 +1366,45 @@ class PaneChart extends JPanel {
             }
         }
 
+        // Chart information
+        String title = "", category = "", value = "";
+        switch (type) {
+            case 0:
+                title = "Patient count by Date";
+                category = "Date";
+                value = "Patient count";
+                break;
+            case 1:
+                title = "Status change by Date";
+                category = "Date";
+                value = "Status count";
+                break;
+        }
+
         // Create chart
         JFreeChart lineChart = ChartFactory.createLineChart(
-                "Patient count by Date",
-                "Date", "Patient count",
+                title, category, value,
                 data, PlotOrientation.VERTICAL,
                 true, true, false);
 
-        lineChart.getPlot().setBackgroundPaint(Global.colLight);
-        ChartPanel newChart = new ChartPanel(lineChart);
-        newChart.setPreferredSize(new Dimension(Global.chartW, Global.chartH));
 
         // Save to file
         try {
-            ChartUtilities.saveChartAsPNG(new File("LineChart.png"), lineChart,
-                    Global.chartW, Global.chartH);
+            ChartUtilities.saveChartAsPNG(new File(System.getProperty("user.dir") + Global.pathImage + "LineChart-" + type + ".png"),
+                    lineChart, Global.chartW, Global.chartH);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
 
-        return newChart;
+    void getChart(int type) {
+        try {
+            BufferedImage img = ImageIO.read(
+                    new File(System.getProperty("user.dir") +
+                            Global.pathImage + "LineChart-" + type + ".png"));
+            chart.setIcon(new ImageIcon(img));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
