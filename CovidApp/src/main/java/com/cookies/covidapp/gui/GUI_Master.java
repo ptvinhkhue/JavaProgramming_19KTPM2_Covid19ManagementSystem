@@ -3,6 +3,7 @@ package com.cookies.covidapp.gui;
 import com.cookies.covidapp.server.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.zip.GZIPInputStream;
 
 public class GUI_Master {
 
@@ -49,6 +50,8 @@ public class GUI_Master {
             GUI_Master gui = new GUI_Master();
             GUI_Manager gui_manager = new GUI_Manager();
             GUI_User gui_user = new GUI_User();
+            GUI_Admin gui_admin = new GUI_Admin();
+            gui_admin.init();
             gui_user.init();
             gui_manager.init();
             gui.init();
@@ -83,7 +86,7 @@ class PaneUsername extends JPanel {
         btnContainer.add(btn_continue); btnContainer.add(btn_exit);
 
         // text fields
-        tf_username = new JNeoTextField("Username", 16, false, "account", "Account does not exist or does it?");
+        tf_username = new JNeoTextField("Username", 16, false, "account", "Account does not exist");
 
         // labels
         lb_credit = new JNeoLabel("Developed by Cookies", Global.fntSecond, Global.colSecond);
@@ -133,7 +136,7 @@ class PaneUsername extends JPanel {
         btn_continue.addActionListener(e -> {
             //System.out.println(tf_username.getText());
             
-            int role = Login.handleUsername(tf_username.getText());
+            int role = 2;//Login.handleUsername(tf_username.getText());
 
             switch (role) {
                 case 0: // user
@@ -146,7 +149,9 @@ class PaneUsername extends JPanel {
                     GUI_Master.changePanel(GUI_Manager.getPPasswordManager());
                     break;
                 case 2: // admin
-
+                    PanePasswordAdmin.assignUsername(tf_username.getText());
+                    PanePasswordAdmin.resetSubtitle(tf_username.getText());
+                    GUI_Master.changePanel(GUI_Admin.getPPasswordAdmin());
                     break;
             }
         });
