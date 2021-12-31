@@ -92,6 +92,40 @@ public class Manager extends CovidAccount {
 
         return ret;
     }
+    
+    public static String getFullAddress(int addressID) {
+        String ret = "";
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from address where addressID = " + addressID;
+            db.rs = db.stm.executeQuery(sql);
+
+            db.rs.next();
+            ret = db.rs.getString("ward") + ", " + db.rs.getString("district") + ", " + db.rs.getString("province");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static String getFullPlace(int placeID) {
+        String ret = "";
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from place where placeID = " + placeID;
+            db.rs = db.stm.executeQuery(sql);
+
+            db.rs.next();
+            ret = db.rs.getString("name");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
 
     public static ArrayList<Integer> getUserRelation(int userID) {
         ArrayList<Integer> ret = new ArrayList<>();
