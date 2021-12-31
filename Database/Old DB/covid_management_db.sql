@@ -134,7 +134,7 @@ CREATE TABLE `acc_manager` (
   PRIMARY KEY (`managerID`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   CONSTRAINT `fk_acc_covid_username_acc_manager` FOREIGN KEY (`username`) REFERENCES `acc_covid` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -143,7 +143,7 @@ CREATE TABLE `acc_manager` (
 
 LOCK TABLES `acc_manager` WRITE;
 /*!40000 ALTER TABLE `acc_manager` DISABLE KEYS */;
-INSERT INTO `acc_manager` VALUES (1,'ptvkhue'),(2,'tdhtrung'),(3,'tttung');
+INSERT INTO `acc_manager` VALUES (1,'ptvkhue'),(2,'tdhtrung'),(4,'test'),(3,'tttung');
 /*!40000 ALTER TABLE `acc_manager` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,7 +198,7 @@ CREATE TABLE `acc_user` (
   CONSTRAINT `fk_acc_covid_username_acc_user` FOREIGN KEY (`username`) REFERENCES `acc_covid` (`username`),
   CONSTRAINT `fk_address_addressID_acc_user` FOREIGN KEY (`addressID`) REFERENCES `address` (`addressID`),
   CONSTRAINT `fk_place_placeID_acc_user` FOREIGN KEY (`placeID`) REFERENCES `place` (`placeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +207,7 @@ CREATE TABLE `acc_user` (
 
 LOCK TABLES `acc_user` WRITE;
 /*!40000 ALTER TABLE `acc_user` DISABLE KEYS */;
-INSERT INTO `acc_user` VALUES (1,'261548924','Phạm Trọng Vinh Khuê','261548924',2001,1,4,2,0,0),(2,'261548596','Phạm Hoàng Anh','261548596',1996,3,2,1,0,0),(3,'261547286','Trần Đại Hoàng Trung','261547286',2001,2,3,2,0,0),(4,'261547311','Trần Thanh Tùng','261547311',2001,8,1,4,0,0);
+INSERT INTO `acc_user` VALUES (1,'261548924','Phạm Trọng Vinh Khuê','261548924',2001,1,1,1,0,0),(2,'261548596','Phạm Hoàng Anh','261548596',1996,3,2,1,0,0),(3,'261547286','Trần Đại Hoàng Trung','261547286',2001,2,2,2,0,0),(4,'261547311','Trần Thanh Tùng','261547311',2001,8,2,4,0,0);
 /*!40000 ALTER TABLE `acc_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -239,40 +239,6 @@ INSERT INTO `address` VALUES (1,'Bình Thuận','Phan Thiết','Xuân An'),(2,'B
 UNLOCK TABLES;
 
 --
--- Table structure for table `history_covid`
---
-
-DROP TABLE IF EXISTS `history_covid`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `history_covid` (
-  `historyID` int NOT NULL,
-  `userID` int DEFAULT NULL,
-  `statusOld` varchar(10) DEFAULT NULL,
-  `statusNew` varchar(10) DEFAULT NULL,
-  `placeOld` int DEFAULT NULL,
-  `placeNew` int DEFAULT NULL,
-  `datetime` datetime DEFAULT NULL,
-  PRIMARY KEY (`historyID`),
-  KEY `fk_place_placeOld_history_covid_idx` (`placeOld`),
-  KEY `fk_place_placeNew_history_covid_idx` (`placeNew`),
-  KEY `fk_acc_user_userID_history_covid_idx` (`userID`),
-  CONSTRAINT `fk_acc_user_userID_history_covid` FOREIGN KEY (`userID`) REFERENCES `acc_user` (`userID`),
-  CONSTRAINT `fk_place_placeNew_history_covid` FOREIGN KEY (`placeNew`) REFERENCES `place` (`placeID`),
-  CONSTRAINT `fk_place_placeOld_history_covid` FOREIGN KEY (`placeOld`) REFERENCES `place` (`placeID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `history_covid`
---
-
-LOCK TABLES `history_covid` WRITE;
-/*!40000 ALTER TABLE `history_covid` DISABLE KEYS */;
-/*!40000 ALTER TABLE `history_covid` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `history_manager`
 --
 
@@ -300,6 +266,64 @@ LOCK TABLES `history_manager` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `history_place`
+--
+
+DROP TABLE IF EXISTS `history_place`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `history_place` (
+  `history_placeID` int NOT NULL AUTO_INCREMENT,
+  `userID` int DEFAULT NULL,
+  `placeOldID` int DEFAULT NULL,
+  `placeNewID` int DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`history_placeID`),
+  KEY `fk_place_placeOldID_history_place_idx` (`placeOldID`),
+  KEY `fk_place_placeNewID_history_place_idx` (`placeNewID`),
+  CONSTRAINT `fk_place_placeNewID_history_place` FOREIGN KEY (`placeNewID`) REFERENCES `place` (`placeID`),
+  CONSTRAINT `fk_place_placeOldID_history_place` FOREIGN KEY (`placeOldID`) REFERENCES `place` (`placeID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `history_place`
+--
+
+LOCK TABLES `history_place` WRITE;
+/*!40000 ALTER TABLE `history_place` DISABLE KEYS */;
+/*!40000 ALTER TABLE `history_place` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `history_status`
+--
+
+DROP TABLE IF EXISTS `history_status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `history_status` (
+  `history_statusID` int NOT NULL AUTO_INCREMENT,
+  `userID` int DEFAULT NULL,
+  `statusOld` int DEFAULT NULL,
+  `statusNew` int DEFAULT NULL,
+  `datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`history_statusID`),
+  KEY `fk_acc_user_userID_history_covid_idx` (`userID`),
+  CONSTRAINT `fk_acc_user_userID_history_status` FOREIGN KEY (`userID`) REFERENCES `acc_user` (`userID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `history_status`
+--
+
+LOCK TABLES `history_status` WRITE;
+/*!40000 ALTER TABLE `history_status` DISABLE KEYS */;
+/*!40000 ALTER TABLE `history_status` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `necessity`
 --
 
@@ -314,7 +338,7 @@ CREATE TABLE `necessity` (
   `price` int DEFAULT NULL,
   PRIMARY KEY (`necessityID`),
   UNIQUE KEY `id_UNIQUE` (`necessityID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -323,7 +347,7 @@ CREATE TABLE `necessity` (
 
 LOCK TABLES `necessity` WRITE;
 /*!40000 ALTER TABLE `necessity` DISABLE KEYS */;
-INSERT INTO `necessity` VALUES (1,'Gạo (1kg)',50,NULL,10000),(2,'Muối (1kg)',10,'2022-06-24 00:00:00',10000),(3,'Dầu ăn (1l)',20,NULL,50000),(4,'Nước rửa tay (1 chai)',50,NULL,30000);
+INSERT INTO `necessity` VALUES (1,'Gạo (1kg)',50,NULL,10000),(2,'Muối (1kg)',10,'2022-06-24 00:00:00',10000),(3,'Dầu ăn (1l)',20,NULL,50000),(4,'Nước rửa tay (1 chai)',50,NULL,30000),(9,'Thuốc men',NULL,NULL,75000);
 /*!40000 ALTER TABLE `necessity` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -335,13 +359,13 @@ DROP TABLE IF EXISTS `order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `order` (
-  `orderID` int NOT NULL,
+  `orderID` int NOT NULL AUTO_INCREMENT,
   `userID` int DEFAULT NULL,
   `sum` int DEFAULT NULL,
   PRIMARY KEY (`orderID`),
   KEY `fk_acc_user_userID_order_idx` (`userID`),
   CONSTRAINT `fk_acc_user_userID_order` FOREIGN KEY (`userID`) REFERENCES `acc_user` (`userID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -473,4 +497,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-07 22:31:37
+-- Dump completed on 2021-12-31 15:24:15

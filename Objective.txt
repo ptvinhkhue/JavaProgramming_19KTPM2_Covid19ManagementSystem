@@ -2,27 +2,24 @@ Auth:
 - Hash password (Code)
 
 Manager:
-- Hiển thị fullsize (Code)
 - Thêm relation (Code)
 - Tạo lịch sử (Code) 
 - Sắp xếp theo tiêu chí (Code)
-- Trang sản phẩm (Code)
-- Thống kê (Code, UI)
+* Thống kê (Code, UI)
 
 User: 
-- Xem lịch sử (Code, UI)
-- Mua hàng (Code, fix UI)
+- Xem lịch sử trạng thái (Code, UI)
+- Xem lịch sử mua hàng (Code, UI)
 - Tìm (Code)
 - Sắp xếp (Code)
 
-Admin: (Code, UI)
+[[Admin: (Code, UI)]]
 - Tạo tài khoản Manager
 - Khóa tài khoản
-- Xem lịch sử Manager 
+- Xem lịch sử Manager
 - Thêm, Sửa place
 
-Hệ thống thanh toán (Code, UI)
-
+Hệ thống thanh toán (Code, UI) {ask other group}
 
  
 
