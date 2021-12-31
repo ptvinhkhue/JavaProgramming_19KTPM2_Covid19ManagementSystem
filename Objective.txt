@@ -1,4 +1,9 @@
-Manager: 
+Auth:
+- Hash password (Code)
+
+Manager:
+- Hiển thị fullsize (Code)
+- Thêm relation (Code)
 - Tạo lịch sử (Code) 
 - Sắp xếp theo tiêu chí (Code)
 - Trang sản phẩm (Code)

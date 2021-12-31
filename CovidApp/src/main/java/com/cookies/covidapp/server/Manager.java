@@ -38,6 +38,24 @@ public class Manager extends CovidAccount {
     }
 
     /*---User Management---*/
+    public static ArrayList<Integer> getUserIntList(String field) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_user";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt(field));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
     public static ArrayList<String> getUserStringList(String field) {
         ArrayList<String> ret = new ArrayList<>();
 
@@ -49,24 +67,6 @@ public class Manager extends CovidAccount {
             while (db.rs.next()) {
                 ret.add(db.rs.getString(field));
 
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return ret;
-    }
-
-    public static ArrayList<Integer> getUserIntList(String field) {
-        ArrayList<Integer> ret = new ArrayList<>();
-
-        try {
-            DataQuery db = new DataQuery();
-            String sql = "select * from acc_user";
-            db.rs = db.stm.executeQuery(sql);
-
-            while (db.rs.next()) {
-                ret.add(db.rs.getInt(field));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -293,18 +293,25 @@ public class Manager extends CovidAccount {
     }
 
     /*---Necessity Management---*/
-    public void createNecessity(String name, int limitAmount, Date limitTime, int price) {
+    public static ArrayList<Integer> getNecessityIntList(String field) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
         try {
             DataQuery db = new DataQuery();
-            String sql = "insert into necessity (name, limitAmount, limitTime, price) values ('"
-                    + name + "'," + limitAmount + "','" + limitTime + "'," + price + ")";
-            db.stm.executeUpdate(sql);
+            String sql = "select * from necessity";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt(field));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
-    public static ArrayList<String> displayNecessityList(String field) {
+        return ret;
+    }
+    
+    public static ArrayList<String> getNecessityStringList(String field) {
         ArrayList<String> ret = new ArrayList<>();
 
         try {
@@ -314,7 +321,24 @@ public class Manager extends CovidAccount {
 
             while (db.rs.next()) {
                 ret.add(db.rs.getString(field));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+        return ret;
+    }
+    
+    public static String getNecessityDetail(int necessityID, String field) {
+        String ret = "";
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from necessity where necessityID = " + necessityID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret = db.rs.getString(field);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -323,48 +347,68 @@ public class Manager extends CovidAccount {
         return ret;
     }
 
-    public void displayNecessityDetail(int necessityID) {
-        try {
-            DataQuery db = new DataQuery();
-            String sql = "select * from necessity where necessityID =" + necessityID;
-            db.rs = db.stm.executeQuery(sql);
-
-            while (db.rs.next()) {
-                System.out.println("ID: " + db.rs.getInt("necessityID"));
-                System.out.println(", Name: " + db.rs.getString("name"));
-                System.out.println(", Limit amout: " + db.rs.getInt("limitAmount"));
-                System.out.println(", Limit time: " + db.rs.getDate("limitTime"));
-                System.out.println(", Price: " + db.rs.getInt("price"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void searchNecessityByName(String key) {
+    public static ArrayList<Integer> searchNecessityByName(String key) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        
         try {
             DataQuery db = new DataQuery();
             String sql = "select * from necessity where name like '%" + key + "%'";
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                System.out.print("ID: " + db.rs.getInt("necessityID"));
-                System.out.print(", Name: " + db.rs.getString("name"));
-                System.out.print(", Limit amout: " + db.rs.getInt("limitAmount"));
-                System.out.print(", Limit time: " + db.rs.getDate("limitTime"));
-                System.out.println(", Price: " + db.rs.getInt("price") + "\n");
+                ret.add(db.rs.getInt("necessityID"));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return ret;
+    }
+    
+    public static int existedNecessity(String name) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from necessity";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                if (db.rs.getString("name") == null ? name == null : db.rs.getString("name").equals(name)) {
+                    return db.rs.getInt("necessityID");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+    
+    public static void createNecessity(String name, int price) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "insert into necessity (name, price) values ('"
+                    + name + "'," + price + ")";
+            db.stm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updateNecessity(int necessityID, String name, int limitAmount, Date limitTime, int price) {
+    public static void updateNecessity(int necessityID, String name, int price) {
         try {
             DataQuery db = new DataQuery();
-            String sql = "update necessity"
-                    + "set name ='" + name + "', limitAmount =" + limitAmount + ", limitTime =" + limitTime + ", price =" + price
-                    + "where userID =" + necessityID;
+            String sql = "update necessity "
+                    + "set name ='" + name + "', price =" + price + " where necessityID =" + necessityID;
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void deleteNecessity(int necessityID) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "delete from necessity where necessityID =" + necessityID;
             db.stm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();

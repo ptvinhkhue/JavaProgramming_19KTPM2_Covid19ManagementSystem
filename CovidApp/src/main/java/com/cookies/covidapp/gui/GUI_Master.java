@@ -136,7 +136,7 @@ class PaneUsername extends JPanel {
         btn_continue.addActionListener(e -> {
             //System.out.println(tf_username.getText());
             
-            int role = 2;//Login.handleUsername(tf_username.getText());
+            int role = Login.handleUsername(tf_username.getText());
 
             switch (role) {
                 case 0: // user

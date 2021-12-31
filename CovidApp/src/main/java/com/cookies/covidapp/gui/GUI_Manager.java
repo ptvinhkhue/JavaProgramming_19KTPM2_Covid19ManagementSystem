@@ -86,12 +86,18 @@ public class GUI_Manager {
         return pPatientList = new PanePatientList();
     }
 
+    public static PaneNecessityList getUpdatedPNecessityList() {
+        return pNecessityList = new PaneNecessityList();
+    }
+
     public static PanePatientInfo getUpdatedPPatientInfo() {
         pPatientList = new PanePatientList();
         return pPatientInfo = new PanePatientInfo();
     }
 
-    public static PaneChart getPChart() { return pChart; }
+    public static PaneChart getPChart() {
+        return pChart;
+    }
 }
 
 class PanePasswordManager extends JPanel {
@@ -364,14 +370,14 @@ class PanePatientList extends JPanel {
             }
 
             list.setNewList(iconName, name, label, label_full);
-            
+
             addListActionListener();
         });
 
         list.getBtnAdd().addActionListener(e -> {
             GUI_Master.changePanel(GUI_Manager.getPPatientAdd());
         });
-        
+
         addListActionListener();
     }
 
@@ -465,6 +471,8 @@ class PanePatientList extends JPanel {
 
 class PaneNecessityList extends JPanel {
 
+    static ArrayList<Integer> id;
+
     JSideBar sideBar;
     JNeoList list;
     JNeoLabel title;
@@ -493,17 +501,11 @@ class PaneNecessityList extends JPanel {
         searchBar = new JNeoSearchBar("Search...", 15, filter_names);
 
         // list
-        /*
-        String[] iconName = new String[7];
-        for (int i = 0; i < 7; i++) {
-            iconName[i] = "sb_package";
-        }
-        String[] name = {"Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
-        String[] label = {"$5", "$15", "$2", "$2", "$4", "$6", "$8",};
-         */
-        ArrayList<String> name = Manager.displayNecessityList("name");
-        ArrayList<String> label = Manager.displayNecessityList("price");
-        ArrayList<String> label_full = Manager.displayNecessityList("price");
+        id = Manager.getNecessityIntList("necessityID");
+
+        ArrayList<String> name = Manager.getNecessityStringList("name");
+        ArrayList<String> label = Manager.getNecessityStringList("price");
+        ArrayList<String> label_full = Manager.getNecessityStringList("price");
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
@@ -558,19 +560,47 @@ class PaneNecessityList extends JPanel {
 
     void addAllActionListener() {
         searchBar.getTf().addActionListener(e -> {
+            id = Manager.searchNecessityByName(searchBar.getTf().getText());
 
+            ArrayList<String> name = new ArrayList<>();
+            ArrayList<String> label = new ArrayList<>();
+            ArrayList<String> label_full = new ArrayList<>();
+
+            for (int i = 0; i < id.size(); i++) {
+                name.add(Manager.getNecessityDetail(id.get(i), "name"));
+                label.add(Manager.getNecessityDetail(id.get(i), "price"));
+                label_full.add(Manager.getNecessityDetail(id.get(i), "price"));
+            }
+
+            ArrayList<String> iconName = new ArrayList<>();
+            for (int i = 0; i < id.size(); i++) {
+                iconName.add("sb_package");
+            }
+
+            list.setNewList(iconName, name, label, label_full);
+
+            addListActionListener();
         });
+
         list.getBtnAdd().addActionListener(e -> {
             GUI_Master.changePanel(GUI_Manager.getPNecessityAdd());
-
         });
+
         addListActionListener();
     }
 
     void addListActionListener() {
         ArrayList<JNeoListItem> item = list.getItemList();
+        
+        int count = 0;
+        for (JNeoListItem i : item) {
+            i.assignID(id.get(count));
+            count++;
+        }
+        
         for (JNeoListItem i : item) {
             i.getBtnInfo().addActionListener(e -> {
+                GUI_Manager.getPNecessityEdit().assignID(i.getID());
                 GUI_Master.changePanel(GUI_Manager.getPNecessityEdit());
             });
         }
@@ -708,7 +738,6 @@ class PanePatientForm extends JPanel {
                     SpringLayout.SOUTH, ctn_tf_2);
         }
 
-
         // label
         layout.putConstraint(SpringLayout.WEST, lb_error_add, 16,
                 SpringLayout.EAST, btn_add);
@@ -788,6 +817,7 @@ class PanePatientForm extends JPanel {
         });
 
         btn_updateStatus.addActionListener(e -> {
+            System.out.println(ID);
             // check status
             if (!"".equals(tf_status.getText()) && Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4
                     && Integer.parseInt(tf_status.getText()) < Integer.parseInt(Manager.getUserDetail(ID, "status"))) {
@@ -849,6 +879,8 @@ class PanePatientForm extends JPanel {
 
 class PaneNecessityForm extends JPanel {
 
+    int ID = 0;
+
     JSideBar sideBar;
     JNeoLabel title;
     JNeoTextField tf_name, tf_limit, tf_price;
@@ -882,6 +914,7 @@ class PaneNecessityForm extends JPanel {
         tf_name = new JNeoTextField("Necessity name", 20, false, "account", "!NULL");
         tf_limit = new JNeoTextField("Limit", 20, false, "account", "Must be a positive number");
         tf_price = new JNeoTextField("Price", 20, false, "account", "Must be a positive number");
+        
 
         // button
         btn_add = new JNeoButton(str_btn, Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -951,46 +984,76 @@ class PaneNecessityForm extends JPanel {
 
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
-            String str;
-            boolean valid = true;
-            boolean exist = false;
+            // add state
+            if (isAdd == true) {
+                // check valid price
+                if (tf_price.getText().matches("^[0-9]+$") && Integer.parseInt(tf_price.getText()) > 0) {
+                    tf_price.hideHint();
+                } else {
+                    tf_price.showHint();
+                    return;
+                }
 
-            // check birthyear
-            str = tf_limit.getText();
-            if (str.matches("^[0-9]+$") && Integer.parseInt(str) > 0) {
-                tf_limit.hideHint();
-            } else {
-                tf_limit.showHint();
-                valid = false;
-            }
+                // check existed necessity
+                if (Manager.existedNecessity(tf_name.getText()) > 0) {
+                    lb_error.setForeground(Global.colError);
+                    return;
+                } else {
+                    lb_error.setForeground(Color.WHITE);
+                }
 
-            str = tf_price.getText();
-            if (str.matches("^[0-9]+$") && Integer.parseInt(str) > 0) {
-                tf_price.hideHint();
-            } else {
-                tf_price.showHint();
-                valid = false;
-            }
+                // create necessity
+                Manager.createNecessity(tf_name.getText(), Integer.parseInt(tf_price.getText()));
 
-            exist = (Objects.equals(tf_name.getText(), "Rice"));
-
-            if (exist) {
-                lb_error.setForeground(Global.colError);
-                valid = false;
-            } else {
+                // reset all text fields
+                PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
+                GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
                 lb_error.setForeground(Color.WHITE);
+                tf_name.setText("Necessity name");
+                tf_limit.setText("Limit");
+                tf_price.setText("Price");
             }
+            
+            // update state 
+            else {
+                // check valid price
+                if (tf_price.getText().matches("^[0-9]+$") && Integer.parseInt(tf_price.getText()) > 0) {
+                    tf_price.hideHint();
+                } else {
+                    tf_price.showHint();
+                    return;
+                }
+                
+                // check existed necessity
+                if (tf_name.getText().equals(Manager.getNecessityDetail(ID, "name")) || Manager.existedNecessity(tf_name.getText()) == 0) {
+                    lb_error.setForeground(Color.WHITE);
+                } else {
+                    lb_error.setForeground(Global.colError);
+                    return;
+                }
+                
+                // update necessity
+                //System.out.println(ID + tf_name.getText() + Integer.parseInt(tf_price.getText()));
+                Manager.updateNecessity(ID, tf_name.getText(), Integer.parseInt(tf_price.getText()));
 
-            if (!valid) {
-                return;
+                // reset all text fields
+                PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
+                GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
+                lb_error.setForeground(Color.WHITE);
+                tf_name.setText("Necessity name");
+                tf_limit.setText("Limit");
+                tf_price.setText("Price");
             }
-
-            // reset all text fields
-            GUI_Master.changePanel(GUI_Manager.getPNecessityList());
-            lb_error.setForeground(Color.WHITE);
-            tf_name.setText("Necessity name");
-            tf_limit.setText("Limit");
-            tf_price.setText("Price");
+        });
+        
+        btn_delete.addActionListener(e -> {
+            // delete necessity
+            System.out.println(ID);
+            Manager.deleteNecessity(ID);
+            
+            // reset panel
+            PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
+            GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
         });
     }
 
@@ -1003,6 +1066,14 @@ class PaneNecessityForm extends JPanel {
         if (!isAdd) {
             add(btn_delete);
         }
+    }
+    
+    void assignID(int ID) {
+        this.ID = ID;
+        
+        // set text
+        tf_name.setText(Manager.getNecessityDetail(ID, "name"));
+        tf_price.setText(Manager.getNecessityDetail(ID, "price"));
     }
 }
 
@@ -1246,7 +1317,6 @@ class PanePatientInfo extends JPanel {
 
 class PaneChart extends JPanel {
 
-
     JSideBar sideBar;
     JNeoLabel title;
     Container ctn_btn;
@@ -1277,9 +1347,12 @@ class PaneChart extends JPanel {
         btn_status = new JNeoButton("Status", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
         btn_necessity = new JNeoButton("Necessity", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
         btn_debt = new JNeoButton("Debt", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
-        ctn_btn = new Container(); ctn_btn.setLayout(new FlowLayout());
-        ctn_btn.add(btn_count); ctn_btn.add(btn_status);
-        ctn_btn.add(btn_necessity); ctn_btn.add(btn_debt);
+        ctn_btn = new Container();
+        ctn_btn.setLayout(new FlowLayout());
+        ctn_btn.add(btn_count);
+        ctn_btn.add(btn_status);
+        ctn_btn.add(btn_necessity);
+        ctn_btn.add(btn_debt);
 
         // chart
         createChart(0);
@@ -1387,7 +1460,6 @@ class PaneChart extends JPanel {
                 data, PlotOrientation.VERTICAL,
                 true, true, false);
 
-
         // Save to file
         try {
             ChartUtilities.saveChartAsPNG(new File(System.getProperty("user.dir") + Global.pathImage + "LineChart-" + type + ".png"),
@@ -1400,8 +1472,8 @@ class PaneChart extends JPanel {
     void getChart(int type) {
         try {
             BufferedImage img = ImageIO.read(
-                    new File(System.getProperty("user.dir") +
-                            Global.pathImage + "LineChart-" + type + ".png"));
+                    new File(System.getProperty("user.dir")
+                            + Global.pathImage + "LineChart-" + type + ".png"));
             chart.setIcon(new ImageIcon(img));
         } catch (IOException ex) {
             ex.printStackTrace();
