@@ -209,23 +209,45 @@ public class User extends CovidAccount {
 
         return ret;
     }
+    
+    public static String getNecessityDetail(int necessityID, String field) {
+        String ret = "";
 
-    public void searchNecessityByName(String key) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from necessity where necessityID = " + necessityID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                if ("price".equals(field)) {
+                    ret = db.rs.getString(field) + "VNĐ";
+                } else {
+                    ret = db.rs.getString(field);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static ArrayList<Integer> searchNecessityByName(String key) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        
         try {
             DataQuery db = new DataQuery();
             String sql = "select * from necessity where name like '%" + key + "%'";
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                System.out.print("ID: " + db.rs.getInt("necessityID"));
-                System.out.print(", Name: " + db.rs.getString("name"));
-                System.out.print(", Limit amout: " + db.rs.getInt("limitAmount"));
-                System.out.print(", Limit time: " + db.rs.getDate("limitTime"));
-                System.out.println(", Price: " + db.rs.getInt("price") + "\n");
+                ret.add(db.rs.getInt("necessityID"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        return ret;
     }
 
     public int getNecessityID(String name) {

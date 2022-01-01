@@ -510,7 +510,8 @@ class PaneHistory extends JPanel {
 }
 
 class PaneBuyNecessity extends JPanel {
-
+    
+    static ArrayList<Integer> id;
     JSideBar sideBar;
     JNeoList list;
     JNeoLabel title;
@@ -608,7 +609,24 @@ class PaneBuyNecessity extends JPanel {
 
     void addAllActionListener() {
         searchBar.getTf().addActionListener(e -> {
+            id = User.searchNecessityByName(searchBar.getTf().getText());
 
+            ArrayList<String> name = new ArrayList<>();
+            ArrayList<String> label = new ArrayList<>();
+            ArrayList<String> label_full = new ArrayList<>();
+
+            for (int i = 0; i < id.size(); i++) {
+                name.add(User.getNecessityDetail(id.get(i), "name"));
+                label.add(User.getNecessityDetail(id.get(i), "price"));
+                label_full.add(User.getNecessityDetail(id.get(i), "price"));
+            }
+
+            ArrayList<String> iconName = new ArrayList<>();
+            for (int i = 0; i < id.size(); i++) {
+                iconName.add("sb_package");
+            }
+
+            list.setNewList(iconName, name, label, label_full);
         });
         list.getBtnAdd().addActionListener(e -> {
             GUI_Master.changePanel(GUI_Manager.getPNecessityAdd());
