@@ -14,11 +14,8 @@ import java.util.ArrayList;
  */
 public class User extends CovidAccount {
 
-    ArrayList<Necessity> n;
-
     public User(String username, String password) {
         super(username, password);
-        n = new ArrayList<>();
     }
 
     public User(String username) {
@@ -199,9 +196,11 @@ public class User extends CovidAccount {
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                if ("price".equals(field))
-                    ret.add(db.rs.getString(field)+"VNĐ");
-                else ret.add(db.rs.getString(field));
+                if ("price".equals(field)) {
+                    ret.add(db.rs.getString(field) + "VNĐ");
+                } else {
+                    ret.add(db.rs.getString(field));
+                }
 
             }
         } catch (Exception e) {
@@ -229,40 +228,59 @@ public class User extends CovidAccount {
         }
     }
 
-    public void chooseyNecessity() {
-        Necessity necessity = new Necessity();
-        n.add(necessity);
-    }
-
-    public void buyNecessity(int userID) {
+    public int getNecessityID(String name) {
         try {
-            int sum = 0;
-            for (int i = 0; i < n.size(); i++) {
-                sum += n.get(i).amount * n.get(i).price;
-            }
             DataQuery db = new DataQuery();
-            String sql = "insert into order(userID,sum) values(?,?)";
+            String sql = "select * from necessity";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                if (name.equals(db.rs.getString("name"))) {
+                    return db.rs.getInt("necessityID");
+                }
+                
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+    
+    public static void createOrder(int userID, int sum) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "insert into covid_management.order (userID,sum) values (?,?)";
             PreparedStatement pstmt = db.con.prepareStatement(sql);
             pstmt.setInt(1, userID);
             pstmt.setInt(2, sum);
             pstmt.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void buyNecessity(int userID, ArrayList<Necessity> cart) {
+        try {
+            
             int orderID = 0;
-            sql = "select * from order where userID = " + userID + "order by orderID desc limit 1";
+            DataQuery db = new DataQuery();
+            String sql = "select * from covid_management.order where userID = " + userID + " order by orderID desc limit 1";
             db.rs = db.stm.executeQuery(sql);
-
+            
             while (db.rs.next()) {
                 orderID = db.rs.getInt("orderID");
             }
-            for (int i = 0; i < n.size(); i++) {
-                sql = "insert into order_detail(orderID,neccessityID,amount) values(?,?,?)";
+            PreparedStatement pstmt;
+            for (int i = 0; i < cart.size(); i++) {
+                sql = "insert into order_detail(orderID,necessityID,amount) values(?,?,?)";
                 pstmt = db.con.prepareStatement(sql);
                 pstmt.setInt(1, orderID);
-                pstmt.setInt(2, n.get(i).NID);
-                pstmt.setInt(3, n.get(i).amount);
+                pstmt.setInt(2, cart.get(i).NID);
+                pstmt.setInt(3, cart.get(i).amount);
                 pstmt.execute();
             }
-            n.clear();
+            //n.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }

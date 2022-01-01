@@ -1,5 +1,6 @@
 package com.cookies.covidapp.gui;
 
+import Necessity.Necessity;
 import com.cookies.covidapp.server.*;
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,7 @@ import java.util.Objects;
 public class GUI_User {
 
     static User user;
+    static ArrayList<Necessity> cart;
     static PanePasswordUser pPasswordUser;
     static PanePersonalInfo pPersonalInfo;
     static PaneBuyNecessity pBuyNecessity;
@@ -19,6 +21,7 @@ public class GUI_User {
     static PaneHistory pHistory;
 
     void initPane() {
+        cart = new ArrayList<>();
         pPasswordUser = new PanePasswordUser();
         pPersonalInfo = new PanePersonalInfo();
         pBuyNecessity = new PaneBuyNecessity();
@@ -56,7 +59,9 @@ public class GUI_User {
         return pCart;
     }
 
-    public static PaneHistory getPHistory() { return pHistory; }
+    public static PaneHistory getPHistory() {
+        return pHistory;
+    }
 
 }
 
@@ -192,10 +197,10 @@ class PanePasswordUser extends JPanel {
                         }
                     }
                     int uID = GUI_User.user.getID();
-                    String subtitle = User.getUserDetail(uID, "yob") + " | " + User.getUserDetail(uID, "personalID") 
-                            + " | " + User.getUserAddress(uID);  
+                    String subtitle = User.getUserDetail(uID, "yob") + " | " + User.getUserDetail(uID, "personalID")
+                            + " | " + User.getUserAddress(uID);
                     String subtitle2 = "Status: F" + User.getUserDetail(uID, "status") + " | " + User.getUserPlace(uID);
-                    
+
                     ArrayList<ArrayList<String>> related = new ArrayList<>(3);
                     related.add(iconName);
                     related.add(name);
@@ -341,10 +346,14 @@ class PanePersonalInfo extends JPanel {
             for (int k = 0; k < 1; k++) {
                 iconName.add("sb_package");
             }
-            ArrayList<String> title =  new ArrayList<>();
-            for (int k = 0; k < 1; k++) title.add("F1 -> F0");
+            ArrayList<String> title = new ArrayList<>();
+            for (int k = 0; k < 1; k++) {
+                title.add("F1 -> F0");
+            }
             ArrayList<String> subtitle = new ArrayList<>();
-            for (int k = 0; k < 1; k++) subtitle.add("27/12/2021");
+            for (int k = 0; k < 1; k++) {
+                subtitle.add("27/12/2021");
+            }
 
             related.add(iconName);
             related.add(title);
@@ -531,17 +540,6 @@ class PaneBuyNecessity extends JPanel {
         searchBar = new JNeoSearchBar("Search...", 15, filter_names);
 
         // list
-        /*
-        String[] iconName = new String[7];
-        for (int i = 0; i < 7; i++) {
-            iconName[i] = "sb_package";
-        }
-        String[] name = { "Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
-        String[] label = { "$5", "$15", "$2", "$2", "$4", "$6", "$8",};
-         */
-        //ArrayList name = new ArrayList<>(Arrays.asList("Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"));
-        //ArrayList label = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
-        //ArrayList label_full = new ArrayList<>(Arrays.asList("$5", "$15", "$2", "$2", "$4", "$6", "$8"));
         ArrayList<String> name = User.displayNecessityList("name");
         ArrayList<String> label = User.displayNecessityList("price");
         ArrayList<String> label_full = User.displayNecessityList("price");
@@ -718,7 +716,24 @@ class PaneNecessityInfo extends JPanel {
     }
 
     void addAllActionListener() {
-
+        btn_add.addActionListener(e -> {
+            boolean checkCart = true;
+            for (int i = 0; i < GUI_User.cart.size(); i++) {
+                if (lb_fullname.getText().equals(GUI_User.cart.get(i).name)) {
+                    GUI_User.cart.get(i).amount = Integer.parseInt(tf_count.getText());
+                    GUI_User.getPCart().setInfo(GUI_User.cart);
+                    checkCart = false;
+                    break;
+                }
+            }
+            if (checkCart == true) {
+                String[] price = lb_subtitle.getText().split("VNĐ");
+                Necessity necessity = new Necessity(GUI_User.user.getNecessityID(lb_fullname.getText()),
+                        lb_fullname.getText(), Integer.parseInt(tf_count.getText()), Integer.parseInt(price[0]));
+                GUI_User.cart.add(necessity);
+                GUI_User.getPCart().setInfo(GUI_User.cart);
+            }
+        });
     }
 
     void addAll() {
@@ -938,6 +953,19 @@ class PaneCart extends JPanel {
     }
 
     void addAllActionListener() {
+        btn_buy.addActionListener(e -> {
+            int sum =0;
+            for (int i = 0; i < GUI_User.cart.size(); i++) {
+                sum += GUI_User.cart.get(i).amount * GUI_User.cart.get(i).price;
+            }
+            if (sum != 0)
+            {
+                GUI_User.user.createOrder(GUI_User.user.getID(), sum);
+                GUI_User.user.buyNecessity(GUI_User.user.getID(), GUI_User.cart);
+            }
+            GUI_User.cart.clear();
+            GUI_User.getPCart().setInfo(GUI_User.cart);
+        });
 
     }
 
@@ -946,5 +974,30 @@ class PaneCart extends JPanel {
         add(ctn_lb);
         add(list);
         add(btn_buy);
+    }
+
+    void setInfo(ArrayList<Necessity> cart) {
+        ArrayList<String> name = new ArrayList<>();
+        for (int i = 0; i < GUI_User.cart.size(); i++) {
+            name.add(GUI_User.cart.get(i).name);
+        }
+
+        ArrayList<String> label = new ArrayList<>();
+        for (int i = 0; i < GUI_User.cart.size(); i++) {
+            label.add(GUI_User.cart.get(i).price + " | Amount: " + GUI_User.cart.get(i).amount);
+        }
+        ArrayList<String> label_full = new ArrayList<>();
+
+        for (int i = 0; i < GUI_User.cart.size(); i++) {
+            label_full.add(GUI_User.cart.get(i).price + " | Amount: " + GUI_User.cart.get(i).amount);
+        }
+        ArrayList<String> iconName = new ArrayList<>();
+        for (int i = 0; i < name.size(); i++) {
+            iconName.add("sb_package");
+        }
+
+        list.setNewList(iconName, name, label, label_full);
+        list.removeBtnAdd();
+        list.removeAllBtnInfo();
     }
 }
