@@ -4,6 +4,8 @@
  */
 package com.cookies.covidapp.server;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
+
 /**
  *
  * @author ptvin
@@ -24,8 +26,10 @@ public class Login {
 
             if (db.rs.next()) {
                 // check admin
-                if ("admin".equals(db.rs.getString("username"))) return 2;
-                
+                if ("admin".equals(db.rs.getString("username"))) {
+                    return 2;
+                }
+
                 // check manager or user
                 try {
                     int x = Integer.parseInt(db.rs.getString("username"));
@@ -37,7 +41,7 @@ public class Login {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return -1;
     }
 
@@ -47,16 +51,15 @@ public class Login {
             String sql = "select password from acc_covid where username = '" + username + "'";
             db.rs = db.stm.executeQuery(sql);
 
-            while (db.rs.next()) {
-                //Display values
-                if (db.rs.getString("password") == null ? password == null : db.rs.getString("password").equals(password)) {
+            db.rs.next();
+            BCrypt.Result result = BCrypt.verifyer().verify(password.toCharArray(), db.rs.getString("password"));
 
-                    return true;
-                } else {
-                    return false;
-                }
+            //Display values
+            if (result.verified == true) {
+                return true;
+            } else {
+                return false;
             }
-            return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
