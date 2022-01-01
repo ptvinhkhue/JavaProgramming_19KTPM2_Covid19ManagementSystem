@@ -17,4 +17,11 @@ public class Necessity {
     public Necessity() {
         name = "";
     }
+    
+    public Necessity(int ID, String name, int amount, int price) {
+        NID = ID;
+        this.name = name;
+        this.amount =  amount;
+        this.price = price;
+    }
 }
