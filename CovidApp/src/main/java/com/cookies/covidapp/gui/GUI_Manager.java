@@ -273,7 +273,7 @@ class PanePatientList extends JPanel {
 
         ArrayList<String> label_full = new ArrayList<>();
         for (int i = 0; i < id.size(); i++) {
-            label_full.add(label.get(i) + " | " + address.get(i) + " | F" + status.get(i) + " | " + place.get(i));
+            label_full.add(label.get(i) + " | " + address.get(i) + "\nF" + status.get(i) + " | " + place.get(i));
         }
 
         ArrayList<String> iconName = new ArrayList<>();
@@ -357,7 +357,7 @@ class PanePatientList extends JPanel {
 
             ArrayList<String> label_full = new ArrayList<>();
             for (int k = 0; k < id.size(); k++) {
-                label_full.add(label.get(k) + " | " + address.get(k) + " | F" + status.get(k) + " | " + place.get(k));
+                label_full.add(label.get(k) + " | " + address.get(k) + "\nF" + status.get(k) + " | " + place.get(k));
             }
 
             ArrayList<String> iconName = new ArrayList<>();
@@ -417,7 +417,7 @@ class PanePatientList extends JPanel {
 
                 ArrayList<String> label_full = new ArrayList<>();
                 for (int k = 0; k < relatedID.size(); k++) {
-                    label_full.add(label.get(k) + " | " + address.get(k) + " | F" + status.get(k) + " | " + place.get(k));
+                    label_full.add(label.get(k) + " | " + address.get(k) + "\nF" + status.get(k) + " | " + place.get(k));
                 }
 
                 ArrayList<String> iconName = new ArrayList<>();
@@ -435,7 +435,7 @@ class PanePatientList extends JPanel {
                 related.add(label);
                 related.add(label_full);
 
-                GUI_Manager.getPPatientInfo().setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), i.getLbSubFull(), relatedID, related);
+                GUI_Manager.getPPatientInfo().setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), i.getLbSubFull2(), relatedID, related);
                 GUI_Master.changePanel(GUI_Manager.getPPatientInfo());
             });
         }
@@ -638,7 +638,7 @@ class PanePatientForm extends JPanel {
 
         tf_place = new JNeoTextField("Treatment location", 14, false, "account", "Location does not exist");
         tf_status = new JNeoTextField("Status", 14, false, "account", "Invalid status (0 -> 3)");
-
+        
         // button
         btn_add = new JNeoButton("Add", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
         btn_updatePlace = new JNeoButton("Update", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -854,6 +854,9 @@ class PanePatientForm extends JPanel {
 
     void assignID(int ID) {
         this.ID = ID;
+        
+        this.tf_status.setText(Manager.getUserDetail(ID, "status"));
+        this.tf_place.setText(Manager.getFullPlace(Integer.parseInt(Manager.getUserDetail(ID, "placeID"))));
     }
 }
 
@@ -1096,8 +1099,8 @@ class PanePatientInfo extends JPanel {
 
         lb_fullname.setText(Manager.getUserDetail(ID, "fullname"));
         lb_fullname.repaint();
-        lb_subtitle.setText(Manager.getUserDetail(ID, "yob") + " | " + Manager.getUserDetail(ID, "personalID") + " | " + Manager.getFullAddress(Integer.parseInt(Manager.getUserDetail(ID, "addressID"))) 
-                + " | F" + Manager.getUserDetail(ID, "status") + " | " + Manager.getFullPlace(Integer.parseInt(Manager.getUserDetail(ID, "placeID"))));
+        lb_subtitle.setText(Manager.getUserDetail(ID, "yob") + " | " + Manager.getUserDetail(ID, "personalID") + " | " + Manager.getFullAddress(Integer.parseInt(Manager.getUserDetail(ID, "addressID"))));
+        lb_subtitle2.setText("F" + Manager.getUserDetail(ID, "status") + " | " + Manager.getFullPlace(Integer.parseInt(Manager.getUserDetail(ID, "placeID"))));
         lb_fullname.repaint();
 
         ArrayList<String> name = new ArrayList<>();
@@ -1123,7 +1126,7 @@ class PanePatientInfo extends JPanel {
 
         ArrayList<String> label_full = new ArrayList<>();
         for (int k = 0; k < relatedID.size(); k++) {
-            label_full.add(label.get(k) + " | " + address.get(k) + " | F" + status.get(k) + " | " + place.get(k));
+            label_full.add(label.get(k) + " | " + address.get(k) + "\nF" + status.get(k) + " | " + place.get(k));
         }
 
         ArrayList<String> iconName = new ArrayList<>();
@@ -1232,7 +1235,7 @@ class PanePatientInfo extends JPanel {
 
                 ArrayList<String> label_full = new ArrayList<>();
                 for (int k = 0; k < relatedID.size(); k++) {
-                    label_full.add(label.get(k) + " | " + address.get(k) + " | F" + status.get(k) + " | " + place.get(k));
+                    label_full.add(label.get(k) + " | " + address.get(k) + "\nF" + status.get(k) + " | " + place.get(k));
                 }
 
                 ArrayList<String> iconName = new ArrayList<>();
@@ -1250,7 +1253,7 @@ class PanePatientInfo extends JPanel {
                 related.add(label);
                 related.add(label_full);
 
-                setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), i.getLbSubFull(), relatedID, related);
+                setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), i.getLbSubFull2(), relatedID, related);
             });
         }
     }

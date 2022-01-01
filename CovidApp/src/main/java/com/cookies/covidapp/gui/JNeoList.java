@@ -148,7 +148,7 @@ class JNeoListItem extends JPanel {
     private JLabel lb_img;
     private JNeoLabel lb_name;
     private JNeoLabel lb_sub;
-    private String lb_sub_full;
+    private String lb_sub_full, lb_sub_full_2;
     private final SpringLayout layout;
 
     // info button
@@ -180,8 +180,14 @@ class JNeoListItem extends JPanel {
         // name & label
         lb_name = new JNeoLabel(name, Global.fntListName, Global.colDark);
         lb_sub = new JNeoLabel(sub, Global.fntListSub, Global.colSecond);
-        lb_sub_full = sub_full;
-
+        
+        String[] str = sub_full.split("\n");
+        lb_sub_full = str[0];
+        if (str.length == 2) { 
+            lb_sub_full_2 = str[1];
+        }
+        else lb_sub_full_2 = str[0];
+        
         // info button
         btn_info = new JNeoButton("", Global.colPrimary.darker(), getBackground(), 0, 8, Global.fntButton, false);
         btn_info.setIcon("info");
@@ -228,6 +234,7 @@ class JNeoListItem extends JPanel {
     JNeoLabel getLbName() {return lb_name;}
     JNeoLabel getLbSub() {return lb_sub;}
     String getLbSubFull() { return lb_sub_full; }
+    String getLbSubFull2() { return lb_sub_full_2; }
     int getID() { return ID; } 
 
     void removeBtnInfo() {
