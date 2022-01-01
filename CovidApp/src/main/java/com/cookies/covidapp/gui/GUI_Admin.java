@@ -159,7 +159,6 @@ class PaneManagerList extends JPanel {
     private JSideBar sideBar;
     private JNeoList list;
     private JNeoLabel title;
-    private JNeoSearchBar searchBar;
 
     PaneManagerList() {
         super();
@@ -181,7 +180,6 @@ class PaneManagerList extends JPanel {
 
         // search bar
         String[] filter_names = {"Name", "Birthyear", "Personal ID", "Address ID"};
-        searchBar = new JNeoSearchBar("Search...", 15, filter_names);
 
         // list
         /*
@@ -246,78 +244,19 @@ class PaneManagerList extends JPanel {
         layout.putConstraint(SpringLayout.NORTH, title, 32,
                 SpringLayout.NORTH, this);
 
-        // search bar
-        layout.putConstraint(SpringLayout.WEST, searchBar, 8,
-                SpringLayout.WEST, title);
-        layout.putConstraint(SpringLayout.EAST, searchBar, -44,
-                SpringLayout.EAST, this);
-        layout.putConstraint(SpringLayout.NORTH, searchBar, -8,
-                SpringLayout.NORTH, title);
-        layout.putConstraint(SpringLayout.SOUTH, searchBar, 12,
-                SpringLayout.SOUTH, title);
-
         // list
         layout.putConstraint(SpringLayout.WEST, list, 48,
                 SpringLayout.EAST, sideBar);
         layout.putConstraint(SpringLayout.EAST, list, -48,
                 SpringLayout.EAST, this);
         layout.putConstraint(SpringLayout.NORTH, list, 12,
-                SpringLayout.SOUTH, searchBar);
+                SpringLayout.SOUTH, title);
         layout.putConstraint(SpringLayout.SOUTH, list, -24,
                 SpringLayout.SOUTH, this);
 
     }
 
     void addAllActionListener() {
-        searchBar.getTf().addActionListener(e -> {
-            /*
-            String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female"};
-            String[] name = { "Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                    "Trinh Xuan F", "Le G", "Vo Lien H"};
-            String[] label = { "1995", "1998", "1996", "2002", "1999", "2000", "2001", "1993"};
-             */
-            id = Manager.searchUserByName(searchBar.getTf().getText());
-
-            ArrayList<String> name = new ArrayList<>();
-            ArrayList<String> yob = new ArrayList<>();
-            ArrayList<String> pID = new ArrayList<>();
-            ArrayList<String> address = new ArrayList<>();
-            ArrayList<String> status = new ArrayList<>();
-            ArrayList<String> place = new ArrayList<>();
-
-            for (int k = 0; k < id.size(); k++) {
-                name.add(Manager.getUserDetail(id.get(k), "fullname"));
-                yob.add(Manager.getUserDetail(id.get(k), "yob"));
-                pID.add(Manager.getUserDetail(id.get(k), "personalID"));
-                address.add(Manager.getUserDetail(id.get(k), "addressID"));
-                status.add(Manager.getUserDetail(id.get(k), "status"));
-                place.add(Manager.getUserDetail(id.get(k), "placeID"));
-            }
-
-            ArrayList<String> label = new ArrayList<>();
-            for (int k = 0; k < id.size(); k++) {
-                label.add(yob.get(k) + " | " + pID.get(k));
-            }
-
-            ArrayList<String> label_full = new ArrayList<>();
-            for (int k = 0; k < id.size(); k++) {
-                label_full.add(label.get(k) + " | " + address.get(k) + " | F" + status.get(k) + " | " + place.get(k));
-            }
-
-            ArrayList<String> iconName = new ArrayList<>();
-            for (int k = 0; k < id.size(); k++) {
-                if (k % 2 == 0) {
-                    iconName.add("male");
-                } else {
-                    iconName.add("female");
-                }
-            }
-
-            list.setNewList(iconName, name, label, label_full);
-
-            addListActionListener();
-        });
-
         list.getBtnAdd().addActionListener(e -> {
             GUI_Master.changePanel(GUI_Admin.getPManagerForm());
         });
@@ -408,7 +347,6 @@ class PaneManagerList extends JPanel {
         add(sideBar);
         add(title);
         add(list);
-        add(searchBar);
     }
 
 }
@@ -534,6 +472,7 @@ class PaneManagerInfo extends JPanel {
     private JNeoLabel lb_fullname, lb_subtitle, lb_subtitle2;
     private JNeoList list;
     private JNeoButton btn_lock;
+    private JNeoLabel lb_lock;
 
     PaneManagerInfo() {
         super();
@@ -569,6 +508,7 @@ class PaneManagerInfo extends JPanel {
         // button
         btn_lock = new JNeoButton("Lock", Global.colPrimary, Color.WHITE,
                 Global.btnRadius, 8, Global.fntButton, false);
+        lb_lock = new JNeoLabel("Status: Unlocked", Global.fntButton, Global.colDark);
 
         // list
         /*
@@ -618,19 +558,25 @@ class PaneManagerInfo extends JPanel {
         layout.putConstraint(SpringLayout.SOUTH, list, -24,
                 SpringLayout.SOUTH, this);
 
-        // button
-        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, btn_lock, 0,
+        // button - lock
+        layout.putConstraint(SpringLayout.EAST, btn_lock, -32,
                 SpringLayout.HORIZONTAL_CENTER, this);
         layout.putConstraint(SpringLayout.SOUTH, btn_lock, -24,
                 SpringLayout.SOUTH, this);
+        layout.putConstraint(SpringLayout.WEST, lb_lock, -16,
+                SpringLayout.HORIZONTAL_CENTER, this);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_lock, 0,
+                SpringLayout.VERTICAL_CENTER, btn_lock);
     }
 
     void addAllActionListener() {
         btn_lock.addActionListener(e -> {
             if (btn_lock.getText().equals("Lock")) {
                 btn_lock.setText("Unlock");
+                lb_lock.setText("Status: Locked");
             } else {
                 btn_lock.setText("Lock");
+                lb_lock.setText("Status: Unlocked");
             }
         });
     }
@@ -640,6 +586,7 @@ class PaneManagerInfo extends JPanel {
         add(ctn_lb);
         add(list);
         add(btn_lock);
+        add(lb_lock);
     }
 
     void setInfo(String fullname, String subtitle, String subtitle2, ArrayList<ArrayList<String>> related) {
@@ -680,7 +627,7 @@ class PanePlaceList extends JPanel {
         this.setBackground(Color.WHITE);
 
         // sideBar
-        sideBar = new JSideBar(Global.itemIcon_Admin, 2, 0);
+        sideBar = new JSideBar(Global.itemIcon_Admin, 2, 1);
 
         // title
         title = new JNeoLabel("Treatment location list", Global.fntHeader, Global.colDark);
