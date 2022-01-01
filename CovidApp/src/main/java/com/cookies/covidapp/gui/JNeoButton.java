@@ -13,11 +13,12 @@ public class JNeoButton extends JButton {
 
     boolean isTag, enabled;
     Color colBack;
+    JNeoSearchBar master;
 
     JNeoButton(String label, Color colBack, Color colFront, int radius, int insets, Font fnt, boolean isTag) {
         super(label);
         this.isTag = isTag;
-        this.enabled = true;
+        this.enabled = false;
         this.colBack = colBack;
 
         // color
@@ -64,15 +65,30 @@ public class JNeoButton extends JButton {
 
     void addAllActionListener() {
         if (isTag) addActionListener(e -> {
+            if (!enabled) master.resetTags();
             enabled = !enabled;
-            Color col = (enabled) ? colBack : colBack.darker().darker();
-            setBackground(col);
-            repaint();
+            changeState();
         });
+    }
+
+    void changeState() {
+        Color col = (!enabled) ? colBack : colBack.darker().darker().darker();
+        setBackground(col);
+        repaint();
     }
 
     void setIcon(String iconName) {
         setIcon(new ImageIcon(Objects.requireNonNull(Global.getIcon(iconName))));
+    }
+
+    // functions only for tags
+    void setMaster(JNeoSearchBar master) {
+        this.master = master;
+    }
+
+    void turnOff() {
+        enabled = false;
+        changeState();
     }
 }
 

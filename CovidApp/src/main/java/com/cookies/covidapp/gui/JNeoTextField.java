@@ -67,6 +67,8 @@ public class JNeoTextField extends Container {
     }
 
     void setText(String str) { tf.setText(str); }
+
+    void setHint(String str) { hint.setText(str); }
 }
 
 class JNeoSearchBar extends Container {
@@ -76,6 +78,7 @@ class JNeoSearchBar extends Container {
     ArrayList<JNeoButton> filter_tags;
     Container ctn_search, ctn_tags;
     SpringLayout layout;
+    int filter = 0;
 
     JNeoSearchBar(String str, int col, String[] filter_names) {
         super();
@@ -104,6 +107,7 @@ class JNeoSearchBar extends Container {
 
         for (String filter_name : filter_names) {
             JNeoButton tag = new JNeoButton(filter_name, Global.colSecond, Color.WHITE, 4, 2, Global.fntHint, true);
+            tag.setMaster(this);
             filter_tags.add(tag);
             ctn_tags.add(tag);
         }
@@ -129,6 +133,11 @@ class JNeoSearchBar extends Container {
     }
 
     JTextField getTf() { return tf; }
+
+    void resetTags() {
+        for (JNeoButton tag: filter_tags)
+            tag.turnOff();
+    }
 }
 
 class BubbleBorder extends AbstractBorder {

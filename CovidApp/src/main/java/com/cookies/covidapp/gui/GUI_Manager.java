@@ -435,7 +435,7 @@ class PanePatientList extends JPanel {
                 related.add(label);
                 related.add(label_full);
 
-                GUI_Manager.getPPatientInfo().setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), relatedID, related);
+                GUI_Manager.getPPatientInfo().setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), i.getLbSubFull(), relatedID, related);
                 GUI_Master.changePanel(GUI_Manager.getPPatientInfo());
             });
         }
@@ -863,7 +863,7 @@ class PaneNecessityForm extends JPanel {
 
     JSideBar sideBar;
     JNeoLabel title;
-    JNeoTextField tf_name, tf_limit, tf_price;
+    JNeoTextField tf_name, tf_price;
     Container ctn_tf;
     JNeoButton btn_add, btn_delete;
     JNeoLabel lb_error;
@@ -892,7 +892,6 @@ class PaneNecessityForm extends JPanel {
 
         // text fields
         tf_name = new JNeoTextField("Necessity name", 20, false, "account", "!NULL");
-        tf_limit = new JNeoTextField("Limit", 20, false, "account", "Must be a positive number");
         tf_price = new JNeoTextField("Price", 20, false, "account", "Must be a positive number");
 
         // button
@@ -929,8 +928,6 @@ class PaneNecessityForm extends JPanel {
         ctn_tf.setLayout(new BoxLayout(ctn_tf, BoxLayout.Y_AXIS));
         ctn_tf.add(tf_name);
         ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
-        ctn_tf.add(tf_limit);
-        ctn_tf.add(Box.createRigidArea(new Dimension(0, 12)));
         ctn_tf.add(tf_price);
 
         layout.putConstraint(SpringLayout.WEST, ctn_tf, 0,
@@ -943,7 +940,7 @@ class PaneNecessityForm extends JPanel {
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, btn_add, 24,
                 SpringLayout.SOUTH, ctn_tf);
-        layout.putConstraint(SpringLayout.WEST, btn_delete, 8,
+        layout.putConstraint(SpringLayout.WEST, btn_delete, 144,
                 SpringLayout.EAST, btn_add);
         layout.putConstraint(SpringLayout.VERTICAL_CENTER, btn_delete, 0,
                 SpringLayout.VERTICAL_CENTER, btn_add);
@@ -989,7 +986,6 @@ class PaneNecessityForm extends JPanel {
                 GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
                 lb_error.setForeground(Color.WHITE);
                 tf_name.setText("Necessity name");
-                tf_limit.setText("Limit");
                 tf_price.setText("Price");
             } // update state 
             else {
@@ -1018,7 +1014,6 @@ class PaneNecessityForm extends JPanel {
                 GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
                 lb_error.setForeground(Color.WHITE);
                 tf_name.setText("Necessity name");
-                tf_limit.setText("Limit");
                 tf_price.setText("Price");
             }
         });
@@ -1061,7 +1056,7 @@ class PanePatientInfo extends JPanel {
     private JSideBar sideBar;
     private JPanel ctn_lb;
     private JNeoButton btn_edit;
-    private JNeoLabel lb_fullname, lb_subtitle;
+    private JNeoLabel lb_fullname, lb_subtitle, lb_subtitle2;
     private JNeoList list;
     private JNeoTextField tf_add;
 
@@ -1083,15 +1078,18 @@ class PanePatientInfo extends JPanel {
         // labels
         lb_fullname = new JNeoLabel("", Global.fntHeader, Global.colDark);
         lb_subtitle = new JNeoLabel("", Global.fntButton, Global.colSecond);
+        lb_subtitle2 = new JNeoLabel("", Global.fntButton, Global.colSecond);
 
         // labels container
         ctn_lb = new JPanel();
         ctn_lb.setBackground(Color.WHITE);
-        GridLayout grid = new GridLayout(2, 1);
+        GridLayout grid = new GridLayout(3, 1);
+        grid.setVgap(-15);
         ctn_lb.setLayout(grid);
         ctn_lb.setAlignmentX(Component.LEFT_ALIGNMENT);
         ctn_lb.add(lb_fullname);
         ctn_lb.add(lb_subtitle);
+        ctn_lb.add(lb_subtitle2);
 
         // list
         relatedID = Manager.getUserRelation(ID);
@@ -1180,8 +1178,8 @@ class PanePatientInfo extends JPanel {
         // button
         layout.putConstraint(SpringLayout.EAST, btn_edit, -48,
                 SpringLayout.EAST, this);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, btn_edit, 0,
-                SpringLayout.VERTICAL_CENTER, ctn_lb);
+        layout.putConstraint(SpringLayout.NORTH, btn_edit, 0,
+                SpringLayout.NORTH, ctn_lb);
 
         // text field
         layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, tf_add, -32,
@@ -1252,7 +1250,7 @@ class PanePatientInfo extends JPanel {
                 related.add(label);
                 related.add(label_full);
 
-                setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), relatedID, related);
+                setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), i.getLbSubFull(), relatedID, related);
             });
         }
     }
@@ -1265,7 +1263,7 @@ class PanePatientInfo extends JPanel {
         add(tf_add);
     }
 
-    void setInfo(int ID, String fullname, String subtitle, ArrayList<Integer> relatedID, ArrayList<ArrayList<String>> related) {
+    void setInfo(int ID, String fullname, String subtitle, String subtitle2, ArrayList<Integer> relatedID, ArrayList<ArrayList<String>> related) {
         PanePatientInfo.ID = ID;
         PanePatientInfo.relatedID = relatedID;
 
@@ -1274,6 +1272,8 @@ class PanePatientInfo extends JPanel {
         lb_fullname.repaint();
         lb_subtitle.setText(subtitle);
         lb_subtitle.repaint();
+        lb_subtitle2.setText(subtitle2);
+        lb_subtitle2.repaint();
 
         // related
         list.setNewList(related.get(0), related.get(1), related.get(2), related.get(3));
