@@ -9,4 +9,16 @@ public class JNeoLabel extends JLabel {
         setFont(font);
         setForeground(col);
     }
+
+    void setHide() {
+        setForeground(Color.WHITE);
+    }
+
+    void setSuccess() {
+        setForeground(Global.colPrimary);
+    }
+
+    void setError() {
+        setForeground(Global.colError);
+    }
 }

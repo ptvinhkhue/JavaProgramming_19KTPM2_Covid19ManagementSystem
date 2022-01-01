@@ -878,7 +878,8 @@ class PaneCart extends JPanel {
     private JPanel ctn_lb;
     JNeoList list;
     private JNeoLabel lb_title;
-    private JNeoButton btn_buy;
+    private JNeoButton btn_buy, btn_history;
+    private JNeoLabel lb_success;
 
     PaneCart() {
         super();
@@ -897,6 +898,7 @@ class PaneCart extends JPanel {
 
         // labels
         lb_title = new JNeoLabel("Cart", Global.fntHeader, Global.colDark);
+        lb_success = new JNeoLabel("Necessity bought!", Global.fntSecond, Color.WHITE);
 
         // labels container
         ctn_lb = new JPanel();
@@ -930,6 +932,7 @@ class PaneCart extends JPanel {
 
         // button
         btn_buy = new JNeoButton("Buy", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_history = new JNeoButton("History", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
     }
 
     void organize() {
@@ -967,6 +970,15 @@ class PaneCart extends JPanel {
                 SpringLayout.EAST, sideBar);
         layout.putConstraint(SpringLayout.NORTH, btn_buy, 0,
                 SpringLayout.SOUTH, list);
+        layout.putConstraint(SpringLayout.EAST, btn_history, 0,
+                SpringLayout.EAST, list);
+        layout.putConstraint(SpringLayout.SOUTH, btn_history, 32,
+                SpringLayout.SOUTH, lb_title);
+        layout.putConstraint(SpringLayout.WEST, lb_success, 16,
+                SpringLayout.EAST, btn_buy);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_success, 0,
+                SpringLayout.VERTICAL_CENTER, btn_buy);
+
 
     }
 
@@ -980,18 +992,45 @@ class PaneCart extends JPanel {
             {
                 GUI_User.user.createOrder(GUI_User.user.getID(), sum);
                 GUI_User.user.buyNecessity(GUI_User.user.getID(), GUI_User.cart);
+                lb_success.setSuccess();
             }
             GUI_User.cart.clear();
             GUI_User.getPCart().setInfo(GUI_User.cart);
         });
 
+        btn_history.addActionListener(e -> {
+
+
+            ArrayList<ArrayList<String>> related = new ArrayList<>();
+            ArrayList<String> iconName = new ArrayList<>();
+            for (int k = 0; k < 1; k++) {
+                iconName.add("sb_package");
+            }
+            ArrayList<String> title = new ArrayList<>();
+            for (int k = 0; k < 1; k++) {
+                title.add("Rice");
+            }
+            ArrayList<String> subtitle = new ArrayList<>();
+            for (int k = 0; k < 1; k++) {
+                subtitle.add("2 | 27/12/2021");
+            }
+
+            related.add(iconName);
+            related.add(title);
+            related.add(subtitle);
+
+            GUI_User.getPHistory().setInfo("Trần Thanh Tùng", "Buy History", related);
+            GUI_Master.changePanel(GUI_User.getPHistory());
+        });
     }
 
     void addAll() {
         add(sideBar);
-        add(ctn_lb);
         add(list);
+        add(ctn_lb);
         add(btn_buy);
+        add(btn_history);
+        add(lb_success);
     }
 
     void setInfo(ArrayList<Necessity> cart) {
