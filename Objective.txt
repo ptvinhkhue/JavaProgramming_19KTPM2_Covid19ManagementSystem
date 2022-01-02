@@ -1,8 +1,7 @@
 Auth:
-- Hash password (Code)
+- Hash password (User)
 
 Manager:
-- Thêm relation (Code)
 - Tạo lịch sử (Code) 
 - Sắp xếp theo tiêu chí (Code)
 * Thống kê (Code, UI)
@@ -19,7 +18,9 @@ User:
 - Xem lịch sử Manager
 - Thêm, Sửa place
 
-Hệ thống thanh toán (Code, UI) {ask other group}
+Hệ thống thanh toán (Code, UI)
+- Tạo server class
+- Tích hợp GUI_Master với Client
 
  
 

@@ -1196,6 +1196,33 @@ class PanePatientInfo extends JPanel {
             GUI_Manager.getPPatientEdit().assignID(ID);
             GUI_Master.changePanel(GUI_Manager.getPPatientEdit());
         });
+        
+        list.getBtnAdd().addActionListener(e -> {
+            ArrayList<Integer> userID = Manager.getUserIntList("userID");
+            int inputID = Manager.getUserID(tf_add.getText());
+            
+            if (inputID != 0 && !relatedID.contains(inputID)) {
+                Manager.addRelatedID(ID, inputID);
+                Manager.addRelatedID(inputID, ID);
+                
+                if (Integer.parseInt(Manager.getUserDetail(ID, "status")) < Integer.parseInt(Manager.getUserDetail(inputID, "status")) - 1) {
+                    ArrayList<Integer> arr = new ArrayList<>();
+                    Manager.updateUserStatus(inputID, Integer.parseInt(Manager.getUserDetail(inputID, "status")) - 1, arr);
+                }
+                else if (Integer.parseInt(Manager.getUserDetail(ID, "status")) - 1 > Integer.parseInt(Manager.getUserDetail(inputID, "status"))) {
+                    ArrayList<Integer> arr = new ArrayList<>();
+                    Manager.updateUserStatus(ID, Integer.parseInt(Manager.getUserDetail(ID, "status")) - 1, arr);
+                }
+                
+                GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientInfo());
+                tf_add.setText("Add related patient ID");
+            }
+            else {
+                tf_add.showHint();
+                return;
+            }
+        });
+        
         addListActionListener();
     }
 

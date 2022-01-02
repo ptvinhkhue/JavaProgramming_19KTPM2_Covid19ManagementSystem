@@ -38,6 +38,24 @@ public class Manager extends CovidAccount {
     }
 
     /*---User Management---*/
+    public static int getUserID(String username) {
+        int ret = 0;
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_user where username = '" + username + "'";
+            db.rs = db.stm.executeQuery(sql);
+            
+            if (db.rs.next()) {
+                ret = db.rs.getInt("userID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
     public static ArrayList<Integer> getUserIntList(String field) {
         ArrayList<Integer> ret = new ArrayList<>();
 
@@ -326,6 +344,17 @@ public class Manager extends CovidAccount {
         }
     }
 
+    public static void addRelatedID(int userID, int relatedID) {
+        try {
+            DataQuery db = new DataQuery();
+
+            String sql = "insert into relation (userID, relatedID) values (" + userID + ", " + relatedID + ")";
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     /*---Necessity Management---*/
     public static ArrayList<Integer> getNecessityIntList(String field) {
         ArrayList<Integer> ret = new ArrayList<>();
