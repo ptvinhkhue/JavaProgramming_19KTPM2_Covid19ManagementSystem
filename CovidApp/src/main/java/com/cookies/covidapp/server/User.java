@@ -103,6 +103,23 @@ public class User extends CovidAccount {
 
         return ret;
     }
+    
+    public static String getFullPlace(int placeID) {
+        String ret = "";
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from place where placeID = " + placeID;
+            db.rs = db.stm.executeQuery(sql);
+
+            db.rs.next();
+            ret = db.rs.getString("name");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
 
     public static ArrayList<Integer> getUserRelation(int userID) {
         ArrayList<Integer> ret = new ArrayList<>();
@@ -137,6 +154,60 @@ public class User extends CovidAccount {
         return 0;
     }
 
+    public static ArrayList<String> displayStatusHistory(int userID) {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from history_status";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {  
+                    ret.add("F" + db.rs.getString("statusOld") + " -> F" + db.rs.getString("statusNew"));    
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getOldPlaceList(int userID) {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from history_place";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {  
+                    ret.add("Old: " + getFullPlace(db.rs.getInt("placeOldID")));    
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getNewPlaceList(int userID) {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from history_place";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {  
+                    ret.add("New: " +getFullPlace(db.rs.getInt("placeNewID")));    
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
     public void displayManagedHistory(int userID) {
         try {
             DataQuery db = new DataQuery();

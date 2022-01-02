@@ -343,23 +343,21 @@ class PanePersonalInfo extends JPanel {
 
             ArrayList<ArrayList<String>> related = new ArrayList<>();
             ArrayList<String> iconName = new ArrayList<>();
-            for (int k = 0; k < 1; k++) {
-                iconName.add("sb_package");
-            }
-            ArrayList<String> title = new ArrayList<>();
-            for (int k = 0; k < 1; k++) {
-                title.add("F1 -> F0");
-            }
+            
+            //ArrayList<String> name = User.displayNecessityList("name");
+            ArrayList<String> title = User.displayStatusHistory(GUI_User.user.getID());
             ArrayList<String> subtitle = new ArrayList<>();
-            for (int k = 0; k < 1; k++) {
+            for (int k = 0; k < title.size(); k++) {
                 subtitle.add("27/12/2021");
             }
-
+            for (int k = 0; k < title.size(); k++) {
+                iconName.add("sb_package");
+            }
             related.add(iconName);
             related.add(title);
             related.add(subtitle);
 
-            GUI_User.getPHistory().setInfo("Trần Thanh Tùng", "Management History", related);
+            GUI_User.getPHistory().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), "Management History", related);
             GUI_Master.changePanel(GUI_User.getPHistory());
         });
     }
@@ -484,7 +482,30 @@ class PaneHistory extends JPanel {
     }
 
     void addAllActionListener() {
+        btn_change.addActionListener(e -> {
 
+            ArrayList<ArrayList<String>> related = new ArrayList<>();
+            ArrayList<String> iconName = new ArrayList<>();
+            
+            //ArrayList<String> name = User.displayNecessityList("name");
+            ArrayList<String> title = User.getNewPlaceList(GUI_User.user.getID());
+            ArrayList<String> subtitle = User.getOldPlaceList(GUI_User.user.getID());
+            /*
+            ArrayList<String> subtitle = new ArrayList<>();
+            for (int k = 0; k < title.size(); k++) {
+                subtitle.add("27/12/2021");
+            }
+            */
+            for (int k = 0; k < title.size(); k++) {
+                iconName.add("sb_package");
+            }
+            related.add(iconName);
+            related.add(title);
+            related.add(subtitle);
+
+            GUI_User.getPHistory().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), "Management History", related);
+            GUI_Master.changePanel(GUI_User.getPHistory());
+        });
     }
 
     void addAll() {
