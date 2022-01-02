@@ -140,7 +140,8 @@ class PaneUsername extends JPanel {
 
             switch (role) {
                 case 0: // user
-                    PanePasswordUser.resetSubtitle(tf_username.getText(), false);
+                    //if (User.checkFirstTime(tf_username.getText()))
+                    PanePasswordUser.resetSubtitle(tf_username.getText(), User.checkFirstTime(tf_username.getText()));
                     GUI_Master.changePanel(GUI_User.getPPasswordUser());
                     break;
                 case 1: // manager

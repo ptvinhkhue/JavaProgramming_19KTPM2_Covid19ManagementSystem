@@ -1,6 +1,7 @@
 package com.cookies.covidapp.server;
 
 import Necessity.Necessity;
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 
@@ -20,6 +21,50 @@ public class User extends CovidAccount {
 
     public User(String username) {
         super(username);
+    }
+    
+    public static boolean checkFirstTime(String username) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select loggedIn from acc_user where username = " + username;
+            db.rs = db.stm.executeQuery(sql);
+
+            db.rs.next();
+            if (db.rs.getInt("loggedIn") == 0) return true;
+            else return false;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public static void setPassword(String username, String password) {
+
+        try {
+            String passHash = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+            DataQuery db = new DataQuery();
+            String sql = "update acc_covid "
+                        + "set password = '" + passHash + "' where username = '" + username + "'";
+            db.stm.executeUpdate(sql);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void setLoggedIn(String username) {
+
+        try {
+            int loggedIn = 1;
+            DataQuery db = new DataQuery();
+            String sql = "update acc_user "
+                        + "set loggedIn = '" + loggedIn + "' where username = '" + username + "'";
+            db.stm.executeUpdate(sql);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static ArrayList<Integer> getUserIntList(String field) {

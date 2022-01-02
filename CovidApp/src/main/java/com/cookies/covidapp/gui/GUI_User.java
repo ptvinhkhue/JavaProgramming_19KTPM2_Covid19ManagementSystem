@@ -212,8 +212,54 @@ class PanePasswordUser extends JPanel {
                     tf_password.showHint(); // Show hint/error below if false
                 }
             } else {
-                resetSubtitle(username, false);
-                GUI_Master.changePanel(GUI_User.getPPasswordUser());
+                User.setPassword(username, tf_password.getText());
+                User.setLoggedIn(username);
+                GUI_User.user = new User(username);
+                ArrayList<Integer> relatedID = User.getUserRelation(GUI_User.user.getID());
+                    ArrayList<String> name = new ArrayList<>();
+                    ArrayList<String> yob = new ArrayList<>();
+                    ArrayList<String> pID = new ArrayList<>();
+                    ArrayList<String> address = new ArrayList<>();
+                    ArrayList<String> status = new ArrayList<>();
+                    ArrayList<String> place = new ArrayList<>();
+
+                    for (int i = 0; i < relatedID.size(); i++) {
+                        name.add(User.getUserDetail(relatedID.get(i), "fullname"));
+                        yob.add(User.getUserDetail(relatedID.get(i), "yob"));
+                        pID.add(User.getUserDetail(relatedID.get(i), "personalID"));
+                        address.add(User.getUserDetail(relatedID.get(i), "addressID"));
+                        status.add(User.getUserDetail(relatedID.get(i), "status"));
+                        place.add(User.getUserDetail(relatedID.get(i), "placeID"));
+                    }
+
+                    ArrayList<String> label = new ArrayList<>();
+                    for (int i = 0; i < relatedID.size(); i++) {
+                        label.add(yob.get(i) + " | " + pID.get(i));
+                    }
+
+                    ArrayList<String> iconName = new ArrayList<>();
+                    for (int k = 0; k < relatedID.size(); k++) {
+                        if (k % 2 == 0) {
+                            iconName.add("male");
+                        } else {
+                            iconName.add("female");
+                        }
+                    }
+                    int uID = GUI_User.user.getID();
+                    String subtitle = User.getUserDetail(uID, "yob") + " | " + User.getUserDetail(uID, "personalID")
+                            + " | " + User.getUserAddress(uID);
+                    String subtitle2 = "Status: F" + User.getUserDetail(uID, "status") + " | " + User.getUserPlace(uID);
+
+                    ArrayList<ArrayList<String>> related = new ArrayList<>(3);
+                    related.add(iconName);
+                    related.add(name);
+                    related.add(label);
+
+                    GUI_User.getPPersonalInfo().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), subtitle, subtitle2, related);
+                    GUI_Master.changePanel(GUI_User.getPPersonalInfo());
+                
+                //resetSubtitle(username, false);
+                //GUI_Master.changePanel(GUI_User.getPPasswordUser());
             }
 
         });
