@@ -2,14 +2,13 @@ Auth:
 - Hash password (User)
 
 Manager:
-- Tạo lịch sử (Code) 
+- Tạo lịch sử cho Admin (Code) 
 - Sắp xếp theo tiêu chí (Code)
 * Thống kê (Code, UI)
 
 User: 
 - Xem lịch sử trạng thái (Code, UI)
 - Xem lịch sử mua hàng (Code, UI)
-- Tìm (Code)
 - Sắp xếp (Code)
 
 [[Admin: (Code, UI)]]
@@ -19,8 +18,11 @@ User:
 - Thêm, Sửa place
 
 Hệ thống thanh toán (Code, UI)
-- Tạo server class
+- Tạo server class 
+	+ Server
+	+ Multithread
 - Tích hợp GUI_Master với Client
+	+ Client
 
  
 
