@@ -2,12 +2,17 @@ package com.cookies.covidapp.server;
 
 import java.util.ArrayList;
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
  * @author ptvin
  */
 public class Manager extends CovidAccount {
+    
+    static long millis = System.currentTimeMillis();
+    static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     /*---Constructor---*/
     public Manager(String username, String password) {
@@ -256,6 +261,9 @@ public class Manager extends CovidAccount {
 
             sql = "insert into acc_user (username, fullname, personalID, yob, addressID, status, placeID, debt, loggedIn) values ('"
                     + personalID + "','" + fullname + "','" + personalID + "'," + yob + "," + addressID + "," + status + "," + placeID + "," + 0 + "," + 0 + ")";
+            
+            // handle history
+            Manager.logCreateUser(personalID);
             db.stm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
@@ -292,6 +300,7 @@ public class Manager extends CovidAccount {
                 
                 // handle history
                 Manager.logUserStatusUpdate(userID, statusOld, status);
+                Manager.logUpdateStatus(userID, statusOld, status);
 
                 // handle relation
                 sql = "select * from relation where userID =" + userID;
@@ -345,6 +354,7 @@ public class Manager extends CovidAccount {
                 
                 // handle history
                 Manager.logUserPlaceUpdate(userID, oldPlaceID, placeID);
+                Manager.logUpdatePlace(userID, oldPlaceID, placeID);
             }
 
         } catch (Exception e) {
@@ -354,10 +364,13 @@ public class Manager extends CovidAccount {
 
     public static void addRelatedID(int userID, int relatedID) {
         try {
+            // add relation
             DataQuery db = new DataQuery();
-
             String sql = "insert into relation (userID, relatedID) values (" + userID + ", " + relatedID + ")";
             db.stm.executeUpdate(sql);
+            
+            // handle history
+            Manager.logAddRelation(userID, relatedID);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -456,10 +469,14 @@ public class Manager extends CovidAccount {
     
     public static void createNecessity(String name, int price) {
         try {
+            // create necessity
             DataQuery db = new DataQuery();
             String sql = "insert into necessity (name, price) values ('"
                     + name + "'," + price + ")";
             db.stm.executeUpdate(sql);
+            
+            // handle history
+            Manager.logCreateNecessity(name);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -467,10 +484,14 @@ public class Manager extends CovidAccount {
 
     public static void updateNecessity(int necessityID, String name, int price) {
         try {
+            // update necessity
             DataQuery db = new DataQuery();
             String sql = "update necessity "
                     + "set name ='" + name + "', price =" + price + " where necessityID =" + necessityID;
             db.stm.executeUpdate(sql);
+            
+            // handle history
+            Manager.logUpdateNecessity(necessityID, name, price);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -478,9 +499,13 @@ public class Manager extends CovidAccount {
     
     public static void deleteNecessity(int necessityID) {
         try {
+            // delete history
             DataQuery db = new DataQuery();
             String sql = "delete from necessity where necessityID =" + necessityID;
             db.stm.executeUpdate(sql);
+            
+            // handle history
+            Manager.logDeleteNecessity(necessityID);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -489,8 +514,8 @@ public class Manager extends CovidAccount {
     /*---History Management*/
     public static void logUserStatusUpdate(int userID, int statusOld, int statusNew) {
         try {
-            DataQuery db = new DataQuery();
-            long millis = System.currentTimeMillis();  
+            DataQuery db = new DataQuery();  
+            
             String sql = "insert into history_status (userID, statusOld, statusNew, datetime) values ("
                     + userID + "," + statusOld + "," + statusNew + ",'" + new java.sql.Date(millis) + "')";
             db.stm.executeUpdate(sql);
@@ -502,9 +527,100 @@ public class Manager extends CovidAccount {
     public static void logUserPlaceUpdate(int userID, int placeOldID, int placeNewID) {
         try {
             DataQuery db = new DataQuery();
-            long millis = System.currentTimeMillis();  
+            
             String sql = "insert into history_place (userID, placeOldID, placeNewID, datetime) values ("
                     + userID + "," + placeOldID + "," + placeNewID + ",'" + new java.sql.Date(millis) + "')";
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void logCreateUser(String username) {
+        try {
+            DataQuery db = new DataQuery();
+            String content = "Create User: " + username;
+            
+            String sql = "insert into history_manager (managerID, activity, datetime) values ("
+                    + Manager.getID() + ",'" + content + "', '" + dtf.format(LocalDateTime.now()) + "')";
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void logUpdateStatus(int userID, int statusOld, int statusNew) {
+        try {
+            DataQuery db = new DataQuery();
+            String content = "Update UserID = " + userID +  " status: F" + statusOld + " -> F" + statusNew;
+            
+            String sql = "insert into history_manager (managerID, activity, datetime) values ("
+                    + Manager.getID() + ",'" + content + "', '" + dtf.format(LocalDateTime.now()) + "')";
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void logUpdatePlace(int userID, int placeOldID, int placeNewID) {
+        try {
+            DataQuery db = new DataQuery();
+            String content = "Update UserID = " + userID +  " placeID: " + placeOldID + " -> " + placeNewID;
+            
+            String sql = "insert into history_manager (managerID, activity, datetime) values ("
+                    + Manager.getID() + ",'" + content + "', '" + dtf.format(LocalDateTime.now()) + "')";
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void logAddRelation(int userID, int relatedID) {
+        try {
+            DataQuery db = new DataQuery();
+            String content = "Update UserID = " + userID +  " new relatedID = " + relatedID;
+            
+            String sql = "insert into history_manager (managerID, activity, datetime) values ("
+                    + Manager.getID() + ",'" + content + "', '" + dtf.format(LocalDateTime.now()) + "')";
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void logCreateNecessity(String name) {
+        try {
+            DataQuery db = new DataQuery();
+            String content = "Create Necessity: " + name + "";
+            
+            String sql = "insert into history_manager (managerID, activity, datetime) values ("
+                    + Manager.getID() + ",'" + content + "', '" + dtf.format(LocalDateTime.now()) + "')";
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void logUpdateNecessity(int necessityID, String name, int price) {
+        try {
+            DataQuery db = new DataQuery();
+            String content = "Update NecessityID = " + necessityID +  ": name = " + name + ", price = " + price;
+            
+            String sql = "insert into history_manager (managerID, activity, datetime) values ("
+                    + Manager.getID() + ",'" + content + "', '" + dtf.format(LocalDateTime.now()) + "')";
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void logDeleteNecessity(int necessityID) {
+        try {
+            DataQuery db = new DataQuery();
+            String content = "Delete NecessityID = " + necessityID;
+            
+            String sql = "insert into history_manager (managerID, activity, datetime) values ("
+                    + Manager.getID() + ",'" + content + "', '" + dtf.format(LocalDateTime.now()) + "')";
             db.stm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();

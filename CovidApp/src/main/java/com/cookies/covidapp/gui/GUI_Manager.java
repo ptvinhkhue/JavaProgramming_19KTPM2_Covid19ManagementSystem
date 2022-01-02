@@ -188,6 +188,7 @@ class PanePasswordManager extends JPanel {
                 tf_password.showHint(); // Show hint/error below if false
             }
         });
+        
         btn_return.addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
     }
 
