@@ -358,6 +358,7 @@ class PanePersonalInfo extends JPanel {
             related.add(subtitle);
 
             GUI_User.getPHistory().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), "Management History", related);
+            GUI_User.getPHistory().addBtnChange();
             GUI_Master.changePanel(GUI_User.getPHistory());
         });
     }
@@ -393,6 +394,7 @@ class PaneHistory extends JPanel {
     private JNeoLabel lb_fullname, lb_subtitle;
     private JNeoList list;
     private JNeoButton btn_change;
+    private SpringLayout layout;
 
     PaneHistory() {
         super();
@@ -445,7 +447,7 @@ class PaneHistory extends JPanel {
     }
 
     void organize() {
-        SpringLayout layout = new SpringLayout();
+        layout = new SpringLayout();
         this.setLayout(layout);
 
         // sideBar
@@ -522,10 +524,64 @@ class PaneHistory extends JPanel {
         lb_subtitle.setText(subtitle);
         lb_subtitle.repaint();
 
+        // change button
+        removeBtnChange();
+
         // related
         list.setNewList(related.get(0), related.get(1), related.get(2), related.get(2));
         list.removeBtnAdd();
         list.removeAllBtnInfo();
+    }
+
+    void addAllBtnInfo() {
+        addListActionListener();
+        list.addAllBtnInfo();
+    }
+
+    void addBtnChange() {
+
+        // buttons
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, btn_change, 0,
+                SpringLayout.HORIZONTAL_CENTER, this);
+        layout.putConstraint(SpringLayout.SOUTH, btn_change, -24,
+                SpringLayout.SOUTH, this);
+        add(btn_change);
+        repaint();
+    }
+
+    void removeBtnChange() {
+        remove(btn_change);
+        repaint();
+    }
+
+    void addListActionListener() {
+        ArrayList<JNeoListItem> item = list.getItemList();
+        for (JNeoListItem i : item) {
+            i.getBtnInfo().addActionListener(e -> {
+
+
+                ArrayList<ArrayList<String>> related = new ArrayList<>();
+                ArrayList<String> iconName = new ArrayList<>();
+                for (int k = 0; k < 1; k++) {
+                    iconName.add("sb_package");
+                }
+                ArrayList<String> title = new ArrayList<>();
+                for (int k = 0; k < 1; k++) {
+                    title.add("Rice");
+                }
+                ArrayList<String> subtitle = new ArrayList<>();
+                for (int k = 0; k < 1; k++) {
+                    subtitle.add("Amount: 1");
+                }
+
+                related.add(iconName);
+                related.add(title);
+                related.add(subtitle);
+
+                GUI_User.getPHistory().setInfo("Trần Thanh Tùng", "001 | 27/12/2021", related);
+                GUI_Master.changePanel(GUI_User.getPHistory());
+            });
+        }
     }
 
 }
@@ -1029,11 +1085,11 @@ class PaneCart extends JPanel {
             }
             ArrayList<String> title = new ArrayList<>();
             for (int k = 0; k < 1; k++) {
-                title.add("Rice");
+                title.add("Trần Thanh Tùng");
             }
             ArrayList<String> subtitle = new ArrayList<>();
             for (int k = 0; k < 1; k++) {
-                subtitle.add("2 | 27/12/2021");
+                subtitle.add("001 | 27/12/2021");
             }
 
             related.add(iconName);
@@ -1041,6 +1097,7 @@ class PaneCart extends JPanel {
             related.add(subtitle);
 
             GUI_User.getPHistory().setInfo("Trần Thanh Tùng", "Buy History", related);
+            GUI_User.getPHistory().addAllBtnInfo();
             GUI_Master.changePanel(GUI_User.getPHistory());
         });
     }

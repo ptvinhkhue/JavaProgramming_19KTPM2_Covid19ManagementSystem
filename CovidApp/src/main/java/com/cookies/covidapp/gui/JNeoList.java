@@ -131,6 +131,10 @@ public class JNeoList extends Container {
         ctn_btn.remove(btn_add);
         ctn_btn.repaint();
     }
+    void addAllBtnInfo() {
+        for (JNeoListItem i : item) i.addBtnInfo();
+        repaint();
+    }
     void removeAllBtnInfo() {
         for (JNeoListItem i : item) i.removeBtnInfo();
         repaint();
@@ -237,6 +241,19 @@ class JNeoListItem extends JPanel {
     String getLbSubFull2() { return lb_sub_full_2; }
     int getID() { return ID; } 
 
+    void addBtnInfo() {
+        layout.putConstraint(SpringLayout.WEST, btn_info, -48,
+                SpringLayout.EAST, this);
+        layout.putConstraint(SpringLayout.EAST, btn_info, 0,
+                SpringLayout.EAST, this);
+
+        layout.putConstraint(SpringLayout.NORTH, btn_info, 0,
+                SpringLayout.NORTH, this);
+        layout.putConstraint(SpringLayout.SOUTH, btn_info, 0,
+                SpringLayout.SOUTH, this);
+        add(btn_info);
+        repaint();
+    }
     void removeBtnInfo() {
         remove(btn_info);
         repaint();
