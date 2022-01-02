@@ -1,7 +1,7 @@
 package com.cookies.covidapp.server;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -282,11 +282,16 @@ public class Manager extends CovidAccount {
             db.rs = db.stm.executeQuery(sql);
             db.rs.next();
             if (db.rs.getInt("status") > status) {
-
+                int statusOld = db.rs.getInt("status");
+                
+                // handle update
                 sql = "update acc_user "
                         + "set status = " + status + " where userID =" + userID;
                 db.stm.executeUpdate(sql);
                 arr.add(userID);
+                
+                // handle history
+                Manager.logUserStatusUpdate(userID, statusOld, status);
 
                 // handle relation
                 sql = "select * from relation where userID =" + userID;
@@ -337,6 +342,9 @@ public class Manager extends CovidAccount {
                 sql = "update acc_user "
                         + "set placeID = " + placeID + " where userID =" + userID;
                 db.stm.executeUpdate(sql);
+                
+                // handle history
+                Manager.logUserPlaceUpdate(userID, oldPlaceID, placeID);
             }
 
         } catch (Exception e) {
@@ -478,6 +486,31 @@ public class Manager extends CovidAccount {
         }
     }
 
+    /*---History Management*/
+    public static void logUserStatusUpdate(int userID, int statusOld, int statusNew) {
+        try {
+            DataQuery db = new DataQuery();
+            long millis = System.currentTimeMillis();  
+            String sql = "insert into history_status (userID, statusOld, statusNew, datetime) values ("
+                    + userID + "," + statusOld + "," + statusNew + ",'" + new java.sql.Date(millis) + "')";
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void logUserPlaceUpdate(int userID, int placeOldID, int placeNewID) {
+        try {
+            DataQuery db = new DataQuery();
+            long millis = System.currentTimeMillis();  
+            String sql = "insert into history_place (userID, placeOldID, placeNewID, datetime) values ("
+                    + userID + "," + placeOldID + "," + placeNewID + ",'" + new java.sql.Date(millis) + "')";
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     public static void main(String args[]) {
 
         //ArrayList<Integer> arr = new ArrayList<Integer>();

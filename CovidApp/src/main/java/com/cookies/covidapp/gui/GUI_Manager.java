@@ -1202,9 +1202,11 @@ class PanePatientInfo extends JPanel {
             int inputID = Manager.getUserID(tf_add.getText());
             
             if (inputID != 0 && !relatedID.contains(inputID)) {
+                // add new relation
                 Manager.addRelatedID(ID, inputID);
                 Manager.addRelatedID(inputID, ID);
                 
+                // update status
                 if (Integer.parseInt(Manager.getUserDetail(ID, "status")) < Integer.parseInt(Manager.getUserDetail(inputID, "status")) - 1) {
                     ArrayList<Integer> arr = new ArrayList<>();
                     Manager.updateUserStatus(inputID, Integer.parseInt(Manager.getUserDetail(inputID, "status")) - 1, arr);
