@@ -600,29 +600,36 @@ class PaneHistory extends JPanel {
 
     void addListActionListener() {
         ArrayList<JNeoListItem> item = list.getItemList();
+        ArrayList<Integer> id = GUI_User.user.getOrderIntList(GUI_User.user.getID());
+        int count = 0;
+        for (JNeoListItem i : item) {
+            i.assignID(id.get(count));
+            count++;
+        }
         for (JNeoListItem i : item) {
             i.getBtnInfo().addActionListener(e -> {
 
 
                 ArrayList<ArrayList<String>> related = new ArrayList<>();
+                
+                ArrayList<String> title = GUI_User.user.getOrderDetail(i.getID(), "necessityID");
+                //for (int k = 0; k < 1; k++) {
+                    //title.add("Rice");
+                //}
+                ArrayList<String> subtitle = GUI_User.user.getOrderDetail(i.getID(), "amount");
+                //for (int k = 0; k < 1; k++) {
+                    //subtitle.add("Amount: 1");
+                //}
                 ArrayList<String> iconName = new ArrayList<>();
-                for (int k = 0; k < 1; k++) {
+                for (int k = 0; k < title.size(); k++) {
                     iconName.add("sb_package");
-                }
-                ArrayList<String> title = new ArrayList<>();
-                for (int k = 0; k < 1; k++) {
-                    title.add("Rice");
-                }
-                ArrayList<String> subtitle = new ArrayList<>();
-                for (int k = 0; k < 1; k++) {
-                    subtitle.add("Amount: 1");
                 }
 
                 related.add(iconName);
                 related.add(title);
                 related.add(subtitle);
 
-                GUI_User.getPHistory().setInfo("Trần Thanh Tùng", "001 | 27/12/2021", related);
+                GUI_User.getPHistory().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), "Order Detail", related);
                 GUI_Master.changePanel(GUI_User.getPHistory());
             });
         }
@@ -1123,24 +1130,26 @@ class PaneCart extends JPanel {
 
 
             ArrayList<ArrayList<String>> related = new ArrayList<>();
+            
+            ArrayList<String> title = GUI_User.user.getOrderInfo(GUI_User.user.getID(), "orderID");
+            //ArrayList<String> title = new ArrayList<>();
+            //for (int k = 0; k < 1; k++) {
+                //title.add("Trần Thanh Tùng");
+            //}
+            //ArrayList<String> subtitle = User.getSumOrder();
+            ArrayList<String> subtitle = GUI_User.user.getOrderInfo(GUI_User.user.getID(), "sum");;
+            //for (int k = 0; k < title.size(); k++) {
+                //subtitle.add("001 | 27/12/2021");
+            //}
             ArrayList<String> iconName = new ArrayList<>();
-            for (int k = 0; k < 1; k++) {
+            for (int k = 0; k < title.size(); k++) {
                 iconName.add("sb_package");
             }
-            ArrayList<String> title = new ArrayList<>();
-            for (int k = 0; k < 1; k++) {
-                title.add("Trần Thanh Tùng");
-            }
-            ArrayList<String> subtitle = new ArrayList<>();
-            for (int k = 0; k < 1; k++) {
-                subtitle.add("001 | 27/12/2021");
-            }
-
             related.add(iconName);
             related.add(title);
             related.add(subtitle);
 
-            GUI_User.getPHistory().setInfo("Trần Thanh Tùng", "Buy History", related);
+            GUI_User.getPHistory().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), "Buy History", related);
             GUI_User.getPHistory().addAllBtnInfo();
             GUI_Master.changePanel(GUI_User.getPHistory());
         });

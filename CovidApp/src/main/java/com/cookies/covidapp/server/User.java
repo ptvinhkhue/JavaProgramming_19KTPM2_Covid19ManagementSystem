@@ -270,25 +270,6 @@ public class User extends CovidAccount {
 
         return ret;
     }
-    
-    public void displayManagedHistory(int userID) {
-        try {
-            DataQuery db = new DataQuery();
-            String sql = "select * from history_covid where userID = " + userID;
-            db.rs = db.stm.executeQuery(sql);
-
-            while (db.rs.next()) {
-                System.out.println("ID: " + db.rs.getInt("historyID"));
-                System.out.println("Old status: " + db.rs.getString("statusOld"));
-                System.out.println("New status: " + db.rs.getString("statusNew"));
-                //System.out.println("Old place: " + db.rs.getInt("placeOld"));
-                //System.out.println("New place: " + db.rs.getString("placeNew"));
-                //System.out.println("Date: " + db.rs.getDate("datetime"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void displayNecessityHistory(int userID) {
         try {
@@ -305,6 +286,95 @@ public class User extends CovidAccount {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    public static ArrayList<Integer> getOrderIntList(int userID) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from covid_management.order where userID = " + userID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt("orderID"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getOrderInfo(int userID, String field) {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from covid_management.order where userID = " + userID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                if ("orderID".equals(field))
+                {
+                    ret.add("Order " + db.rs.getInt("orderID"));
+                }
+                else if ("sum".equals(field))
+                {
+                    ret.add("Total: " + db.rs.getInt("sum"));
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getSumOrder() {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from covid_management.order";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add("Total: " +db.rs.getInt("sum"));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getOrderDetail(int orderID, String field) {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from order_detail where orderID = " + orderID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                if ("necessityID".equals(field))
+                {
+                    ret.add(getNecessityDetail(db.rs.getInt("necessityID"), "name"));
+                }
+                else if ("amount".equals(field))
+                {
+                    ret.add("Price: " + getNecessityDetail(db.rs.getInt("necessityID"), "price") + " | Amount: " +  db.rs.getInt("amount"));
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
     }
 
     public void displayDebt(String username) {
