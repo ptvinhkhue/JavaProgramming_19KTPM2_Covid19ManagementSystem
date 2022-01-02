@@ -346,10 +346,8 @@ class PanePersonalInfo extends JPanel {
             
             //ArrayList<String> name = User.displayNecessityList("name");
             ArrayList<String> title = User.displayStatusHistory(GUI_User.user.getID());
-            ArrayList<String> subtitle = new ArrayList<>();
-            for (int k = 0; k < title.size(); k++) {
-                subtitle.add("27/12/2021");
-            }
+            ArrayList<String> subtitle = User.getTimeStatusHistory(GUI_User.user.getID());
+            
             for (int k = 0; k < title.size(); k++) {
                 iconName.add("sb_package");
             }

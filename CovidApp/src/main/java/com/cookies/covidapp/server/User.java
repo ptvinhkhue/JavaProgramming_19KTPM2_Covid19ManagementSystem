@@ -159,11 +159,29 @@ public class User extends CovidAccount {
 
         try {
             DataQuery db = new DataQuery();
-            String sql = "select * from history_status";
+            String sql = "select * from history_status where userID = " + userID;
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {  
                     ret.add("F" + db.rs.getString("statusOld") + " -> F" + db.rs.getString("statusNew"));    
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getTimeStatusHistory(int userID) {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from history_status where userID = " + userID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {  
+                    ret.add(db.rs.getString("datetime"));    
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -177,11 +195,11 @@ public class User extends CovidAccount {
 
         try {
             DataQuery db = new DataQuery();
-            String sql = "select * from history_place";
+            String sql = "select * from history_place where userID = " + userID;
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {  
-                    ret.add("Old: " + getFullPlace(db.rs.getInt("placeOldID")));    
+                    ret.add("Old: " + getFullPlace(db.rs.getInt("placeOldID")) + " | " + db.rs.getString("datetime"));    
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -195,7 +213,7 @@ public class User extends CovidAccount {
 
         try {
             DataQuery db = new DataQuery();
-            String sql = "select * from history_place";
+            String sql = "select * from history_place where userID = " + userID;
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {  
