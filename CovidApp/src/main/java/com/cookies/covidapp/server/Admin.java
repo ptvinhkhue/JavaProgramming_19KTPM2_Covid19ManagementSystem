@@ -116,4 +116,26 @@ public class Admin extends CovidAccount {
 
         return ret;
     }
+    
+    public static void lockManager(int managerID) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "update acc_manager "
+                    + "set locked = " + 1 + " where managerID = " + managerID;
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void unlockManager(int managerID) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "update acc_manager "
+                    + "set locked = " + 0 + " where managerID =" + managerID;
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

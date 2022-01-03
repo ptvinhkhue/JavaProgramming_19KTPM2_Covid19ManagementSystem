@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GUI_Admin {
-    
+
     static Admin admin;
 
     static PanePasswordAdmin pPasswordAdmin;
@@ -36,12 +36,30 @@ public class GUI_Admin {
     public static PanePasswordAdmin getPPasswordAdmin() {
         return pPasswordAdmin;
     }
-    public static PaneManagerList getPManagerList() { return pManagerList; }
-    public static PaneManagerForm getPManagerForm() { return pManagerForm; }
-    public static PaneManagerInfo getPManagerInfo() { return pManagerInfo; }
-    public static PanePlaceList getPPlaceList() { return pPlaceList; }
-    public static PanePlaceForm getPPlaceAdd() { return pPlaceAdd; }
-    public static PanePlaceForm getPPlaceEdit() { return pPlaceEdit; }
+
+    public static PaneManagerList getPManagerList() {
+        return pManagerList;
+    }
+
+    public static PaneManagerForm getPManagerForm() {
+        return pManagerForm;
+    }
+
+    public static PaneManagerInfo getPManagerInfo() {
+        return pManagerInfo;
+    }
+
+    public static PanePlaceList getPPlaceList() {
+        return pPlaceList;
+    }
+
+    public static PanePlaceForm getPPlaceAdd() {
+        return pPlaceAdd;
+    }
+
+    public static PanePlaceForm getPPlaceEdit() {
+        return pPlaceEdit;
+    }
 }
 
 class PanePasswordAdmin extends JPanel {
@@ -131,7 +149,7 @@ class PanePasswordAdmin extends JPanel {
                 tf_password.showHint(); // Show hint/error below if false
             }
         });
-        
+
         btn_return.addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
     }
 
@@ -277,7 +295,7 @@ class PaneManagerList extends JPanel {
                 related.add(label);
                 related.add(label_full);
 
-                GUI_Admin.getPManagerInfo().setInfo(i.getLbName().getText(), i.getLbSubFull(), "", related);
+                GUI_Admin.getPManagerInfo().setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), "", related);
                 GUI_Master.changePanel(GUI_Admin.getPManagerInfo());
             });
         }
@@ -375,7 +393,6 @@ class PaneManagerForm extends JPanel {
                     SpringLayout.SOUTH, ctn_tf);
         }
 
-
         // label
         layout.putConstraint(SpringLayout.WEST, lb_error_add, 16,
                 SpringLayout.EAST, btn_add);
@@ -406,6 +423,8 @@ class PaneManagerForm extends JPanel {
 }
 
 class PaneManagerInfo extends JPanel {
+    
+    static int ID = 1;
 
     private JSideBar sideBar;
     private JPanel ctn_lb;
@@ -449,23 +468,34 @@ class PaneManagerInfo extends JPanel {
         btn_lock = new JNeoButton("Lock", Global.colPrimary, Color.WHITE,
                 Global.btnRadius, 8, Global.fntButton, false);
         lb_lock = new JNeoLabel("Status: Unlocked", Global.fntButton, Global.colDark);
+        
+        if (Integer.parseInt(Admin.getManagerDetail(ID, "locked")) == 0) {
+            btn_lock.setText("Lock");
+            lb_lock.setText("Status: Unlocked");
+        }
+        else {
+            btn_lock.setText("Unlock");
+            lb_lock.setText("Status: Locked");
+        }
 
         // list
-        /*
-        String[] iconName = { "male"};
-        String[] name = { "Nguyen Van Lee"};
-        String[] label = { "2001 | District 1"};
-         */
-        ArrayList<String> name = new ArrayList<>(Arrays.asList("Nguyen Van Lee"));
-        ArrayList<String> label = new ArrayList<>(Arrays.asList("2001 | District 1"));
-        ArrayList<String> label_full = new ArrayList<>(Arrays.asList("2001"));
+        ArrayList<Integer> historyID = Admin.getManagerHistoryID(ID);
+        ArrayList<String> name = Admin.getManagerHistoryInfo(ID, "activity");
+        ArrayList<String> label = Admin.getManagerHistoryInfo(ID, "datetime");
+        ArrayList<String> label_full = label;
 
-        ArrayList<String> iconName = new ArrayList<>(Arrays.asList("male"));
+        ArrayList<String> iconName = new ArrayList<>();
+        for (int k = 0; k < historyID.size(); k++) {
+            if (k % 2 == 0) {
+                iconName.add("male");
+            } else {
+                iconName.add("female");
+            }
+        }
 
         list = new JNeoList(iconName, name, label, label_full);
         list.removeBtnAdd();
         list.removeAllBtnInfo();
-
     }
 
     void organize() {
@@ -512,9 +542,14 @@ class PaneManagerInfo extends JPanel {
     void addAllActionListener() {
         btn_lock.addActionListener(e -> {
             if (btn_lock.getText().equals("Lock")) {
+                // lock manager
+                Admin.lockManager(ID);
                 btn_lock.setText("Unlock");
                 lb_lock.setText("Status: Locked");
-            } else {
+            } 
+            else {
+                // unlock manager
+                Admin.unlockManager(ID);
                 btn_lock.setText("Lock");
                 lb_lock.setText("Status: Unlocked");
             }
@@ -529,7 +564,9 @@ class PaneManagerInfo extends JPanel {
         add(lb_lock);
     }
 
-    void setInfo(String fullname, String subtitle, String subtitle2, ArrayList<ArrayList<String>> related) {
+    void setInfo(int ID, String fullname, String subtitle, String subtitle2, ArrayList<ArrayList<String>> related) {
+        PaneManagerInfo.ID = ID;
+
         // info
         lb_fullname.setText(fullname);
         lb_fullname.repaint();
@@ -822,7 +859,6 @@ class PanePlaceForm extends JPanel {
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, btn_add, 16,
                 SpringLayout.SOUTH, ctn_tf);
-
 
         // label
         layout.putConstraint(SpringLayout.WEST, lb_error_add, 16,
