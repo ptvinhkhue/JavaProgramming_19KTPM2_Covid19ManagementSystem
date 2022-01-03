@@ -81,7 +81,7 @@ public class Admin extends CovidAccount {
         return ret;
     }
     
-    public static ArrayList<Integer> getManagerHistory(int managerID) {
+    public static ArrayList<Integer> getManagerHistoryID(int managerID) {
         ArrayList<Integer> ret = new ArrayList<>();
 
         try {
@@ -90,7 +90,25 @@ public class Admin extends CovidAccount {
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {
-                ret.add(db.rs.getInt("activity"));
+                ret.add(db.rs.getInt("historyID"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getManagerHistoryInfo(int managerID, String field) {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from history_manager where managerID = " + managerID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getString(field));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -332,6 +332,10 @@ class PanePatientList extends JPanel {
     }
 
     void addAllActionListener() {
+        for (JNeoButton tag : searchBar.filter_tags) {
+            
+        }
+        
         searchBar.getTf().addActionListener(e -> {
             id = Manager.searchUserByName(searchBar.getTf().getText());
 

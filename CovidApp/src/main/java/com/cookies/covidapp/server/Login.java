@@ -32,10 +32,13 @@ public class Login {
 
                 // check manager or user
                 try {
+                    // check user
                     int x = Integer.parseInt(db.rs.getString("username"));
                     return 0; //String is an Integer
                 } catch (NumberFormatException e) {
-                    return 1; //String is not an Integer
+                    // check manager
+                    if (Manager.locked(db.rs.getString("username")) == false) 
+                        return 1; //String is not an Integer
                 }
             }
         } catch (Exception e) {

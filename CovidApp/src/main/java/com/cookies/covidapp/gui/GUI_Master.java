@@ -143,17 +143,22 @@ class PaneUsername extends JPanel {
                     //if (User.checkFirstTime(tf_username.getText()))
                     PanePasswordUser.resetSubtitle(tf_username.getText(), User.checkFirstTime(tf_username.getText()));
                     GUI_Master.changePanel(GUI_User.getPPasswordUser());
+                    tf_username.hideHint();
                     break;
                 case 1: // manager
                     PanePasswordManager.assignUsername(tf_username.getText());
                     PanePasswordManager.resetSubtitle(tf_username.getText());
                     GUI_Master.changePanel(GUI_Manager.getPPasswordManager());
+                    tf_username.hideHint();
                     break;
                 case 2: // admin
                     PanePasswordAdmin.assignUsername(tf_username.getText());
                     PanePasswordAdmin.resetSubtitle(tf_username.getText());
                     GUI_Master.changePanel(GUI_Admin.getPPasswordAdmin());
+                    tf_username.hideHint();
                     break;
+                case -1:
+                    tf_username.showHint();
             }
         });
         btn_exit.addActionListener(e -> System.exit(0));

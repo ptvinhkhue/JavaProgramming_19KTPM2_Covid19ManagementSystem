@@ -188,7 +188,7 @@ class PaneManagerList extends JPanel {
 
         ArrayList<String> label = new ArrayList<>();
         for (int i = 0; i < id.size(); i++) {
-            label.add("ID: " + id.get(i).toString());
+            label.add("Manager ID: " + id.get(i).toString());
         }
 
         ArrayList<String> label_full = label;
@@ -257,36 +257,13 @@ class PaneManagerList extends JPanel {
 
         for (JNeoListItem i : item) {
             i.getBtnInfo().addActionListener(e -> {
-                ArrayList<Integer> relatedID = Manager.getUserRelation(i.getID());
-
-                ArrayList<String> name = new ArrayList<>();
-                ArrayList<String> yob = new ArrayList<>();
-                ArrayList<String> pID = new ArrayList<>();
-                ArrayList<String> address = new ArrayList<>();
-                ArrayList<String> status = new ArrayList<>();
-                ArrayList<String> place = new ArrayList<>();
-
-                for (int k = 0; k < relatedID.size(); k++) {
-                    name.add(Manager.getUserDetail(relatedID.get(k), "fullname"));
-                    yob.add(Manager.getUserDetail(relatedID.get(k), "yob"));
-                    pID.add(Manager.getUserDetail(relatedID.get(k), "personalID"));
-                    address.add(Manager.getUserDetail(relatedID.get(k), "addressID"));
-                    status.add(Manager.getUserDetail(relatedID.get(k), "status"));
-                    place.add(Manager.getUserDetail(relatedID.get(k), "placeID"));
-                }
-
-                ArrayList<String> label = new ArrayList<>();
-                for (int k = 0; k < relatedID.size(); k++) {
-                    label.add(yob.get(k) + " | " + pID.get(k));
-                }
-
-                ArrayList<String> label_full = new ArrayList<>();
-                for (int k = 0; k < relatedID.size(); k++) {
-                    label_full.add(label.get(k) + " | " + address.get(k) + " | F" + status.get(k) + " | " + place.get(k));
-                }
+                ArrayList<Integer> historyID = Admin.getManagerHistoryID(i.getID());
+                ArrayList<String> name = Admin.getManagerHistoryInfo(i.getID(), "activity");
+                ArrayList<String> label = Admin.getManagerHistoryInfo(i.getID(), "datetime");
+                ArrayList<String> label_full = label;
 
                 ArrayList<String> iconName = new ArrayList<>();
-                for (int k = 0; k < relatedID.size(); k++) {
+                for (int k = 0; k < historyID.size(); k++) {
                     if (k % 2 == 0) {
                         iconName.add("male");
                     } else {
@@ -294,20 +271,13 @@ class PaneManagerList extends JPanel {
                     }
                 }
 
-                /*
-                ArrayList name = new ArrayList<>(Arrays.asList("Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                        "Trinh Xuan F"));
-                ArrayList label = new ArrayList<>(Arrays.asList("2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
-                        "2003 | District 1", "1980 | District 3"));
-                ArrayList iconName = new ArrayList<>(Arrays.asList("male", "male", "female", "male", "female", "male"));
-                 */
                 ArrayList<ArrayList<String>> related = new ArrayList<>(4);
                 related.add(iconName);
                 related.add(name);
                 related.add(label);
                 related.add(label_full);
 
-                GUI_Admin.getPManagerInfo().setInfo("Manager name", i.getLbName().getText(), i.getLbSubFull(), related);
+                GUI_Admin.getPManagerInfo().setInfo(i.getLbName().getText(), i.getLbSubFull(), "", related);
                 GUI_Master.changePanel(GUI_Admin.getPManagerInfo());
             });
         }

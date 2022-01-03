@@ -41,6 +41,24 @@ public class Manager extends CovidAccount {
 
         return 0;
     }
+    
+    /*---Authentication---*/
+    public static boolean locked(String username) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_manager where username = '" + username + "'";
+            db.rs = db.stm.executeQuery(sql);
+            
+            if (db.rs.next()) {
+                if (db.rs.getInt("locked") == 1) return true;
+                else return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return true;
+    }
 
     /*---User Management---*/
     public static int getUserID(String username) {
