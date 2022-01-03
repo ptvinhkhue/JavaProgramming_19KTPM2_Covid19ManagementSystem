@@ -4,6 +4,7 @@
  */
 package com.cookies.covidapp.server;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import java.util.ArrayList;
 
 /**
@@ -133,6 +134,39 @@ public class Admin extends CovidAccount {
             DataQuery db = new DataQuery();
             String sql = "update acc_manager "
                     + "set locked = " + 0 + " where managerID =" + managerID;
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static int existedManager(String username) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_manager";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                if (db.rs.getString("username") == null ? username == null : db.rs.getString("username").equals(username)) {
+                    return db.rs.getInt("managerID");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+    
+    public static void createManager(String username, String password) {
+        try {
+            DataQuery db = new DataQuery();
+            String hassPass = BCrypt.withDefaults().hashToString(12, password.toCharArray());
+                    
+            String sql = "insert into acc_covid (username, password, type) values ('" + username + "', '" + hassPass + "', " + 2 + ")";
+            db.stm.executeUpdate(sql);
+            
+            sql = "insert into acc_manager (username, locked) values ('" + username + "', " + 0 + ")";
             db.stm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();

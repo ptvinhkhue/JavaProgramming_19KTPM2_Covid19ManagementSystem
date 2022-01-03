@@ -60,6 +60,10 @@ public class GUI_Admin {
     public static PanePlaceForm getPPlaceEdit() {
         return pPlaceEdit;
     }
+    
+    public static PaneManagerList getUpdatedPManagerList() {
+        return pManagerList = new PaneManagerList();
+    }
 }
 
 class PanePasswordAdmin extends JPanel {
@@ -403,7 +407,46 @@ class PaneManagerForm extends JPanel {
 
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
-
+            boolean valid = true;
+            
+            // check username
+            if (!"".equals(tf_username.getText())) {
+                tf_username.hideHint();
+            }
+            else {
+                valid = false;
+                tf_username.showHint();
+            }
+            
+            // check password
+            if (!"".equals(tf_password.getText())) {
+                tf_password.hideHint();
+            }
+            else {
+                valid = false;
+                tf_password.showHint();
+            }
+            
+            // check existed manager
+            if (Admin.existedManager(tf_username.getText()) == 0) {
+                lb_error_add.setForeground(Color.WHITE);
+            }
+            else {
+                valid = false;
+                lb_error_add.setForeground(Global.colError);
+            }
+            
+            if (valid) {
+                // create manager
+                Admin.createManager(tf_username.getText(), tf_password.getText());
+                
+                // reset panel
+                PaneManagerList.id = Admin.getManagerIDList();
+                GUI_Master.changePanel(GUI_Admin.getUpdatedPManagerList());
+                lb_error_add.setForeground(Color.WHITE);
+                tf_username.setText("Username");
+                tf_password.setText("Password");
+            }
         });
     }
 
@@ -580,7 +623,6 @@ class PaneManagerInfo extends JPanel {
         list.removeBtnAdd();
         list.removeAllBtnInfo();
     }
-
 }
 
 class PanePlaceList extends JPanel {
