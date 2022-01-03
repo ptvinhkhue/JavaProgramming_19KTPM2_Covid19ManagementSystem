@@ -59,7 +59,8 @@ public class JSideBar extends JPanel {
                 break;
             case 2: // manager
                 item.get(0).addActionListener(e -> GUI_Master.changePanel(GUI_Admin.getPManagerList()));
-                item.get(1).addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
+                item.get(1).addActionListener(e -> GUI_Master.changePanel(GUI_Admin.getPPlaceList()));
+                item.get(2).addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
                 break;
         }
     }
