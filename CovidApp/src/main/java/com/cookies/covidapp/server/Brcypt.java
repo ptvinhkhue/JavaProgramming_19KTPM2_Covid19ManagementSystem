@@ -28,8 +28,8 @@ public class Brcypt {
         
         try {
             
-            String username = "261548924";
-            String pass = "191201";
+            String username = "admin";
+            String pass = "admin";
             String passHash = BCrypt.withDefaults().hashToString(12, pass.toCharArray());
             System.out.println(passHash);
             

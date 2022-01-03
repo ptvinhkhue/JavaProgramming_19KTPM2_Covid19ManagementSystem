@@ -1,6 +1,6 @@
 package com.cookies.covidapp.gui;
 
-import com.cookies.covidapp.server.Manager;
+import com.cookies.covidapp.server.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GUI_Admin {
+    
+    static Admin admin;
 
     static PanePasswordAdmin pPasswordAdmin;
     static PaneManagerList pManagerList;
@@ -122,15 +124,14 @@ class PanePasswordAdmin extends JPanel {
 
     void addAllActionListener() {
         btn_login.addActionListener(e -> {
-//            if (Login.handlePassword(username, tf_password.getText())) {
-//                GUI_Manager.manager = new Manager(username);
-//                //System.out.println(username + " " + Manager.getID());
-//                GUI_Master.changePanel(GUI_Manager.getPPatientList());
-//            } else {
-//                tf_password.showHint(); // Show hint/error below if false
-//            }
-            GUI_Master.changePanel(GUI_Admin.getPManagerList());
+            if (Login.handlePassword(username, tf_password.getText())) {
+                GUI_Admin.admin = new Admin();
+                GUI_Master.changePanel(GUI_Admin.getPManagerList());
+            } else {
+                tf_password.showHint(); // Show hint/error below if false
+            }
         });
+        
         btn_return.addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
     }
 
@@ -147,7 +148,7 @@ class PanePasswordAdmin extends JPanel {
     }
 
     public static void assignUsername(String username) {
-        PanePasswordManager.username = username;
+        PanePasswordAdmin.username = username;
     }
 
 }
@@ -182,34 +183,15 @@ class PaneManagerList extends JPanel {
         String[] filter_names = {"Name", "Birthyear", "Personal ID", "Address ID"};
 
         // list
-        /*
-        String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female",
-                "male" , "male", "female", "female"};
-        String[] name = { "Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                    "Trinh Xuan F", "Le G", "Vo Lien H", "Nguyen Van A", "Tran Thanh B", "Le G", "Vo Lien H"};
-        String[] label = { "2001 | District 1", "1995 | District 7","1987 | District 4","1999 | District 6",
-                "2003 | District 1","1980 | District 3","1970 | District 4", "2001 | District 1", "1995 | District 7","1987 | District 4","1999 | District 6",
-                "2003 | District 1"};
-         */
-        id = Manager.getUserIntList("userID");
-        ArrayList<String> name = Manager.getUserStringList("fullname");
-
-        ArrayList<String> yob = Manager.getUserStringList("yob");
-        ArrayList<String> pID = Manager.getUserStringList("personalID");
-        ArrayList<String> address = Manager.getUserStringList("addressID");
-        ArrayList<String> status = Manager.getUserStringList("status");
-        ArrayList<String> place = Manager.getUserStringList("placeID");
-        //ArrayList<String> debt = Manager.getUserStringList("debt");
+        id = Admin.getManagerIDList();
+        ArrayList<String> name = Admin.getManagerNameList();
 
         ArrayList<String> label = new ArrayList<>();
         for (int i = 0; i < id.size(); i++) {
-            label.add(yob.get(i) + " | " + pID.get(i));
+            label.add("ID: " + id.get(i).toString());
         }
 
-        ArrayList<String> label_full = new ArrayList<>();
-        for (int i = 0; i < id.size(); i++) {
-            label_full.add(label.get(i) + " | " + address.get(i) + " | F" + status.get(i) + " | " + place.get(i));
-        }
+        ArrayList<String> label_full = label;
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < id.size(); i++) {
@@ -275,18 +257,6 @@ class PaneManagerList extends JPanel {
 
         for (JNeoListItem i : item) {
             i.getBtnInfo().addActionListener(e -> {
-                /*
-                String[] iconName = {"male", "male", "female", "male", "female", "male"};
-                String[] name = {"Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                    "Trinh Xuan F"};
-                String[] label = {"2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
-                    "2003 | District 1", "1980 | District 3"};
-
-                String[][] related = new String[3][iconName.size()];
-                related[0] = iconName.get(0);
-                related[1] = name;
-                related[2] = label;
-                 */
                 ArrayList<Integer> relatedID = Manager.getUserRelation(i.getID());
 
                 ArrayList<String> name = new ArrayList<>();

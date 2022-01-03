@@ -4,37 +4,98 @@
  */
 package com.cookies.covidapp.server;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author ptvin
  */
 public class Admin extends CovidAccount {
     
+     /*---Constructor---*/
     public Admin(String username, String password) {
         super(username, password);
     }
-    
-    public void signup() {
-        try {
-            DataQuery db = new DataQuery();
-            String sql1 = "insert into acc_covid values ('" + username + "','" + password + "'," + 1 + ")";
-            String sql2 = "insert into acc_admin (username) values ('" + username + "'";
-            db.stm.executeUpdate(sql1);
-            db.stm.executeUpdate(sql2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+    public Admin() {
+    }
+
+    public Admin(String username) {
+        super(username);
     }
     
-    public void createManager(String username, String password) {
+    /*---Manager Management---*/
+    
+    public static ArrayList<Integer> getManagerIDList() {
+        ArrayList<Integer> ret = new ArrayList<>();
+
         try {
             DataQuery db = new DataQuery();
-            String sql1 = "insert into acc_covid values ('" + username + "','" + password + "'," + 2 + ")";
-            String sql2 = "insert into acc_manager (username) values ('" + username + "'";
-            db.stm.executeUpdate(sql1);
-            db.stm.executeUpdate(sql2);
+            String sql = "select * from acc_manager";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt("managerID"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getManagerNameList() {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_manager";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getString("username"));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+
+    public static String getManagerDetail(int managerID, String field) {
+        String ret = "";
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_manager where managerID = " + managerID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret = db.rs.getString(field);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<Integer> getManagerHistory(int managerID) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from history_manager where managerID = " + managerID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt("activity"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
     }
 }
