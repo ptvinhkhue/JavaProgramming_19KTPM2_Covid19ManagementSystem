@@ -245,12 +245,12 @@ public class Admin extends CovidAccount {
         return 0;
     }
     
-    public static void createPlace(String name, int capacity) {
+    public static void createPlace(String name, int capacity, int current) {
         try {
             // create place
             DataQuery db = new DataQuery();
             String sql = "insert into place (name, capacity, current) values ('"
-                    + name + "'," + capacity + ", " + 0 + ")";
+                    + name + "'," + capacity + ", " + current + ")";
             db.stm.executeUpdate(sql);
             
         } catch (Exception e) {
@@ -258,12 +258,12 @@ public class Admin extends CovidAccount {
         }
     }
 
-    public static void updatePlace(int placeID, String name, int capacity) {
+    public static void updatePlace(int placeID, String name, int capacity, int current) {
         try {
             // update place
             DataQuery db = new DataQuery();
             String sql = "update place "
-                    + "set name ='" + name + "', capacity =" + capacity + " where placeID =" + placeID;
+                    + "set name ='" + name + "', capacity =" + capacity + ", current =" + current + " where placeID =" + placeID;
             db.stm.executeUpdate(sql);
             
             // handle history

@@ -188,7 +188,7 @@ class PanePasswordManager extends JPanel {
                 tf_password.showHint(); // Show hint/error below if false
             }
         });
-        
+
         btn_return.addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
     }
 
@@ -333,9 +333,9 @@ class PanePatientList extends JPanel {
 
     void addAllActionListener() {
         for (JNeoButton tag : searchBar.filter_tags) {
-            
+
         }
-        
+
         searchBar.getTf().addActionListener(e -> {
             id = Manager.searchUserByName(searchBar.getTf().getText());
 
@@ -490,11 +490,16 @@ class PaneNecessityList extends JPanel {
         id = Manager.getNecessityIntList("necessityID");
 
         ArrayList<String> name = Manager.getNecessityStringList("name");
-        ArrayList<String> label = Manager.getNecessityStringList("price");
-        ArrayList<String> label_full = Manager.getNecessityStringList("price");
+
+        ArrayList<String> price = Manager.getNecessityStringList("price");
+        ArrayList<String> label = new ArrayList<>();
+        for (int i = 0; i < id.size(); i++) {
+            label.add("Price: " + price.get(i));
+        }
+        ArrayList<String> label_full = label;
 
         ArrayList<String> iconName = new ArrayList<>();
-        for (int i = 0; i < name.size(); i++) {
+        for (int i = 0; i < id.size(); i++) {
             iconName.add("sb_package");
         }
 
@@ -643,7 +648,7 @@ class PanePatientForm extends JPanel {
 
         tf_place = new JNeoTextField("Treatment location", 14, false, "account", "Location does not exist");
         tf_status = new JNeoTextField("Status", 14, false, "account", "Invalid status (0 -> 3)");
-        
+
         // button
         btn_add = new JNeoButton("Add", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
         btn_updatePlace = new JNeoButton("Update", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -752,7 +757,7 @@ class PanePatientForm extends JPanel {
                 valid = false;
                 tf_birthyear.showHint();
             }
-            
+
             // check ppersonalID
             if (tf_personalID.getText().matches("^[0-9]+$") && tf_personalID.getText().length() == 9) {
                 tf_personalID.hideHint();
@@ -869,7 +874,7 @@ class PanePatientForm extends JPanel {
 
     void assignID(int ID) {
         this.ID = ID;
-        
+
         this.tf_status.setText(Manager.getUserDetail(ID, "status"));
         this.tf_place.setText(Manager.getFullPlace(Integer.parseInt(Manager.getUserDetail(ID, "placeID"))));
     }
@@ -980,59 +985,66 @@ class PaneNecessityForm extends JPanel {
         btn_add.addActionListener(e -> {
             // add state
             if (isAdd == true) {
+                boolean valid = true;
+
                 // check valid price
                 if (tf_price.getText().matches("^[0-9]+$") && Integer.parseInt(tf_price.getText()) > 0) {
                     tf_price.hideHint();
                 } else {
+                    valid = false;
                     tf_price.showHint();
-                    return;
                 }
 
                 // check existed necessity
-                if (Manager.existedNecessity(tf_name.getText()) > 0) {
-                    lb_error.setForeground(Global.colError);
-                    return;
-                } else {
+                if (Manager.existedNecessity(tf_name.getText()) == 0) {
                     lb_error.setForeground(Color.WHITE);
+                } else {
+                    valid = false;
+                    lb_error.setForeground(Global.colError);
                 }
 
-                // create necessity
-                Manager.createNecessity(tf_name.getText(), Integer.parseInt(tf_price.getText()));
+                if (valid) {
+                    // create necessity
+                    Manager.createNecessity(tf_name.getText(), Integer.parseInt(tf_price.getText()));
 
-                // reset all text fields
-                PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
-                GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
-                lb_error.setForeground(Color.WHITE);
-                tf_name.setText("Necessity name");
-                tf_price.setText("Price");
+                    // reset all text fields
+                    PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
+                    GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
+                    lb_error.setForeground(Color.WHITE);
+                    tf_name.setText("Necessity name");
+                    tf_price.setText("Price");
+                }
             } // update state 
             else {
+                boolean valid = true;
+
                 // check valid price
                 if (tf_price.getText().matches("^[0-9]+$") && Integer.parseInt(tf_price.getText()) > 0) {
                     tf_price.hideHint();
                 } else {
+                    valid = false;
                     tf_price.showHint();
-                    return;
                 }
 
                 // check existed necessity
                 if (tf_name.getText().equals(Manager.getNecessityDetail(ID, "name")) || Manager.existedNecessity(tf_name.getText()) == 0) {
                     lb_error.setForeground(Color.WHITE);
                 } else {
+                    valid = false;
                     lb_error.setForeground(Global.colError);
-                    return;
                 }
 
-                // update necessity
-                //System.out.println(ID + tf_name.getText() + Integer.parseInt(tf_price.getText()));
-                Manager.updateNecessity(ID, tf_name.getText(), Integer.parseInt(tf_price.getText()));
+                if (valid) {
+                    // update necessity
+                    Manager.updateNecessity(ID, tf_name.getText(), Integer.parseInt(tf_price.getText()));
 
-                // reset all text fields
-                PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
-                GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
-                lb_error.setForeground(Color.WHITE);
-                tf_name.setText("Necessity name");
-                tf_price.setText("Price");
+                    // reset all text fields
+                    PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
+                    GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
+                    lb_error.setForeground(Color.WHITE);
+                    tf_name.setText("Necessity name");
+                    tf_price.setText("Price");
+                }
             }
         });
 
@@ -1211,35 +1223,33 @@ class PanePatientInfo extends JPanel {
             GUI_Manager.getPPatientEdit().assignID(ID);
             GUI_Master.changePanel(GUI_Manager.getPPatientEdit());
         });
-        
+
         list.getBtnAdd().addActionListener(e -> {
             ArrayList<Integer> userID = Manager.getUserIntList("userID");
             int inputID = Manager.getUserID(tf_add.getText());
-            
+
             if (inputID != 0 && !relatedID.contains(inputID)) {
                 // add new relation
                 Manager.addRelatedID(ID, inputID);
                 Manager.addRelatedID(inputID, ID);
-                
+
                 // update status
                 if (Integer.parseInt(Manager.getUserDetail(ID, "status")) < Integer.parseInt(Manager.getUserDetail(inputID, "status")) - 1) {
                     ArrayList<Integer> arr = new ArrayList<>();
                     Manager.updateUserStatus(inputID, Integer.parseInt(Manager.getUserDetail(inputID, "status")) - 1, arr);
-                }
-                else if (Integer.parseInt(Manager.getUserDetail(ID, "status")) - 1 > Integer.parseInt(Manager.getUserDetail(inputID, "status"))) {
+                } else if (Integer.parseInt(Manager.getUserDetail(ID, "status")) - 1 > Integer.parseInt(Manager.getUserDetail(inputID, "status"))) {
                     ArrayList<Integer> arr = new ArrayList<>();
                     Manager.updateUserStatus(ID, Integer.parseInt(Manager.getUserDetail(ID, "status")) - 1, arr);
                 }
-                
+
                 GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientInfo());
                 tf_add.setText("Add related patient ID");
-            }
-            else {
+            } else {
                 tf_add.showHint();
                 return;
             }
         });
-        
+
         addListActionListener();
     }
 

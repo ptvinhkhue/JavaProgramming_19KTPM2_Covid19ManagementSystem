@@ -60,9 +60,13 @@ public class GUI_Admin {
     public static PanePlaceForm getPPlaceEdit() {
         return pPlaceEdit;
     }
-    
+
     public static PaneManagerList getUpdatedPManagerList() {
         return pManagerList = new PaneManagerList();
+    }
+
+    public static PanePlaceList getUpdatedPPlaceList() {
+        return pPlaceList = new PanePlaceList();
     }
 }
 
@@ -408,38 +412,35 @@ class PaneManagerForm extends JPanel {
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
             boolean valid = true;
-            
+
             // check username
             if (!"".equals(tf_username.getText())) {
                 tf_username.hideHint();
-            }
-            else {
+            } else {
                 valid = false;
                 tf_username.showHint();
             }
-            
+
             // check password
             if (!"".equals(tf_password.getText())) {
                 tf_password.hideHint();
-            }
-            else {
+            } else {
                 valid = false;
                 tf_password.showHint();
             }
-            
+
             // check existed manager
             if (Admin.existedManager(tf_username.getText()) == 0) {
                 lb_error_add.setForeground(Color.WHITE);
-            }
-            else {
+            } else {
                 valid = false;
                 lb_error_add.setForeground(Global.colError);
             }
-            
+
             if (valid) {
                 // create manager
                 Admin.createManager(tf_username.getText(), tf_password.getText());
-                
+
                 // reset panel
                 PaneManagerList.id = Admin.getManagerIDList();
                 GUI_Master.changePanel(GUI_Admin.getUpdatedPManagerList());
@@ -466,7 +467,7 @@ class PaneManagerForm extends JPanel {
 }
 
 class PaneManagerInfo extends JPanel {
-    
+
     static int ID = 1;
 
     private JSideBar sideBar;
@@ -511,12 +512,11 @@ class PaneManagerInfo extends JPanel {
         btn_lock = new JNeoButton("Lock", Global.colPrimary, Color.WHITE,
                 Global.btnRadius, 8, Global.fntButton, false);
         lb_lock = new JNeoLabel("Status: Unlocked", Global.fntButton, Global.colDark);
-        
+
         if (Integer.parseInt(Admin.getManagerDetail(ID, "locked")) == 0) {
             btn_lock.setText("Lock");
             lb_lock.setText("Status: Unlocked");
-        }
-        else {
+        } else {
             btn_lock.setText("Unlock");
             lb_lock.setText("Status: Locked");
         }
@@ -589,8 +589,7 @@ class PaneManagerInfo extends JPanel {
                 Admin.lockManager(ID);
                 btn_lock.setText("Unlock");
                 lb_lock.setText("Status: Locked");
-            } 
-            else {
+            } else {
                 // unlock manager
                 Admin.unlockManager(ID);
                 btn_lock.setText("Lock");
@@ -652,42 +651,22 @@ class PanePlaceList extends JPanel {
         title = new JNeoLabel("Treatment location list", Global.fntHeader, Global.colDark);
 
         // list
-        /*
-        String[] iconName = { "male" , "male", "female", "male", "female", "male", "female", "female",
-                "male" , "male", "female", "female"};
-        String[] name = { "Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                    "Trinh Xuan F", "Le G", "Vo Lien H", "Nguyen Van A", "Tran Thanh B", "Le G", "Vo Lien H"};
-        String[] label = { "2001 | District 1", "1995 | District 7","1987 | District 4","1999 | District 6",
-                "2003 | District 1","1980 | District 3","1970 | District 4", "2001 | District 1", "1995 | District 7","1987 | District 4","1999 | District 6",
-                "2003 | District 1"};
-         */
-        id = Manager.getUserIntList("userID");
-        ArrayList<String> name = Manager.getUserStringList("fullname");
+        id = Admin.getPlaceIntList("placeID");
 
-        ArrayList<String> yob = Manager.getUserStringList("yob");
-        ArrayList<String> pID = Manager.getUserStringList("personalID");
-        ArrayList<String> address = Manager.getUserStringList("addressID");
-        ArrayList<String> status = Manager.getUserStringList("status");
-        ArrayList<String> place = Manager.getUserStringList("placeID");
-        //ArrayList<String> debt = Manager.getUserStringList("debt");
+        ArrayList<String> name = Admin.getPlaceStringList("name");
 
+        ArrayList<String> capacity = Admin.getPlaceStringList("capacity");
+        ArrayList<String> current = Admin.getPlaceStringList("current");
         ArrayList<String> label = new ArrayList<>();
         for (int i = 0; i < id.size(); i++) {
-            label.add(yob.get(i) + " | " + pID.get(i));
+            label.add("Capacity: " + current.get(i) + "/" + capacity.get(i));
         }
 
-        ArrayList<String> label_full = new ArrayList<>();
-        for (int i = 0; i < id.size(); i++) {
-            label_full.add(label.get(i) + " | " + address.get(i) + " | F" + status.get(i) + " | " + place.get(i));
-        }
+        ArrayList<String> label_full = label;
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < id.size(); i++) {
-            if (i % 2 == 0) {
-                iconName.add("male");
-            } else {
-                iconName.add("female");
-            }
+            iconName.add("sb_package");
         }
 
         list = new JNeoList(iconName, name, label, label_full);
@@ -746,69 +725,7 @@ class PanePlaceList extends JPanel {
 
         for (JNeoListItem i : item) {
             i.getBtnInfo().addActionListener(e -> {
-                /*
-                String[] iconName = {"male", "male", "female", "male", "female", "male"};
-                String[] name = {"Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                    "Trinh Xuan F"};
-                String[] label = {"2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
-                    "2003 | District 1", "1980 | District 3"};
-
-                String[][] related = new String[3][iconName.size()];
-                related[0] = iconName.get(0);
-                related[1] = name;
-                related[2] = label;
-                 */
-                ArrayList<Integer> relatedID = Manager.getUserRelation(i.getID());
-
-                ArrayList<String> name = new ArrayList<>();
-                ArrayList<String> yob = new ArrayList<>();
-                ArrayList<String> pID = new ArrayList<>();
-                ArrayList<String> address = new ArrayList<>();
-                ArrayList<String> status = new ArrayList<>();
-                ArrayList<String> place = new ArrayList<>();
-
-                for (int k = 0; k < relatedID.size(); k++) {
-                    name.add(Manager.getUserDetail(relatedID.get(k), "fullname"));
-                    yob.add(Manager.getUserDetail(relatedID.get(k), "yob"));
-                    pID.add(Manager.getUserDetail(relatedID.get(k), "personalID"));
-                    address.add(Manager.getUserDetail(relatedID.get(k), "addressID"));
-                    status.add(Manager.getUserDetail(relatedID.get(k), "status"));
-                    place.add(Manager.getUserDetail(relatedID.get(k), "placeID"));
-                }
-
-                ArrayList<String> label = new ArrayList<>();
-                for (int k = 0; k < relatedID.size(); k++) {
-                    label.add(yob.get(k) + " | " + pID.get(k));
-                }
-
-                ArrayList<String> label_full = new ArrayList<>();
-                for (int k = 0; k < relatedID.size(); k++) {
-                    label_full.add(label.get(k) + " | " + address.get(k) + " | F" + status.get(k) + " | " + place.get(k));
-                }
-
-                ArrayList<String> iconName = new ArrayList<>();
-                for (int k = 0; k < relatedID.size(); k++) {
-                    if (k % 2 == 0) {
-                        iconName.add("male");
-                    } else {
-                        iconName.add("female");
-                    }
-                }
-
-                /*
-                ArrayList name = new ArrayList<>(Arrays.asList("Nguyen Van A", "Tran Thanh B", "Phan Thi C", "Dinh Ba D", "Bui Kim E",
-                        "Trinh Xuan F"));
-                ArrayList label = new ArrayList<>(Arrays.asList("2001 | District 1", "1995 | District 7", "1987 | District 4", "1999 | District 6",
-                        "2003 | District 1", "1980 | District 3"));
-                ArrayList iconName = new ArrayList<>(Arrays.asList("male", "male", "female", "male", "female", "male"));
-                 */
-                ArrayList<ArrayList<String>> related = new ArrayList<>(4);
-                related.add(iconName);
-                related.add(name);
-                related.add(label);
-                related.add(label_full);
-
-                GUI_Manager.getPPatientInfo().setInfo(i.getID(), i.getLbName().getText(), i.getLbSubFull(), i.getLbSubFull(), relatedID, related);
+                GUI_Admin.getPPlaceEdit().assignID(i.getID());
                 GUI_Master.changePanel(GUI_Admin.getPPlaceEdit());
             });
         }
@@ -858,7 +775,7 @@ class PanePlaceForm extends JPanel {
         // text fields
         tf_name = new JNeoTextField("Location name", 14, false, "account", "!NULL");
         tf_capacity = new JNeoTextField("Maximum capacity", 14, false, "account", "Must be a positive number.");
-        tf_current = new JNeoTextField("Current capacity", 14, false, "account", "Must be a positive number.");
+        tf_current = new JNeoTextField("Current capacity", 14, false, "account", "Must be lower than Maximum capacity.");
 
         // button
         btn_add = new JNeoButton(str_btn, Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -916,15 +833,89 @@ class PanePlaceForm extends JPanel {
 
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
+            if (isAdd) {
+                boolean valid = true;
 
-            // capacity must be number
-            if (tf_capacity.getText().matches("^[0-9]+$") && Integer.parseInt(tf_capacity.getText()) < 0) {
-                tf_capacity.hideHint();
-            } else {
-                tf_capacity.showHint();
-                GUI_Master.changePanel(GUI_Admin.getPPlaceList());
+                // capacity must be number
+                if (tf_capacity.getText().matches("^[0-9]+$") && Integer.parseInt(tf_capacity.getText()) > 0) {
+                    tf_capacity.hideHint();
+                } else {
+                    valid = false;
+                    tf_capacity.showHint();
+                    GUI_Master.changePanel(GUI_Admin.getPPlaceList());
+                }
+
+                // current validation
+                if (tf_current.getText().matches("^[0-9]+$") && Integer.parseInt(tf_current.getText()) > 0 && tf_capacity.getText().matches("^[0-9]+$")
+                        && Integer.parseInt(tf_current.getText()) <= Integer.parseInt(tf_capacity.getText())) {
+                    tf_current.hideHint();
+                } else {
+                    valid = false;
+                    tf_current.showHint();
+                }
+
+                // existed place
+                if (Admin.existedPlace(tf_name.getText()) == 0) {
+                    lb_error_add.setForeground(Color.WHITE);
+                } else {
+                    valid = false;
+                    lb_error_add.setForeground(Global.colError);
+                }
+
+                if (valid) {
+                    // create a place in DB
+                    Admin.createPlace(tf_name.getText(), Integer.parseInt(tf_capacity.getText()), Integer.parseInt(tf_current.getText()));
+
+                    // reset panel
+                    PanePlaceList.id = Admin.getPlaceIntList("placeID");
+                    GUI_Master.changePanel(GUI_Admin.getUpdatedPPlaceList());
+                    lb_error_add.setForeground(Color.WHITE);
+                    tf_name.setText("Location name");
+                    tf_capacity.setText("Maximum capacity");
+                    tf_current.setText("Current capacity");
+                }
             }
+            else {
+                boolean valid = true;
 
+                // capacity must be number
+                if (tf_capacity.getText().matches("^[0-9]+$") && Integer.parseInt(tf_capacity.getText()) > 0) {
+                    tf_capacity.hideHint();
+                } else {
+                    valid = false;
+                    tf_capacity.showHint();
+                }
+
+                // current validation
+                if (tf_current.getText().matches("^[0-9]+$") && Integer.parseInt(tf_current.getText()) > 0 && tf_capacity.getText().matches("^[0-9]+$")
+                        && Integer.parseInt(tf_current.getText()) <= Integer.parseInt(tf_capacity.getText())) {
+                    tf_current.hideHint();
+                } else {
+                    valid = false;
+                    tf_current.showHint();
+                }
+
+                // existed place
+                if (tf_name.getText().equals(Admin.getPlaceDetail(ID, "name")) || Admin.existedPlace(tf_name.getText()) == 0) {
+                    lb_error_add.setForeground(Color.WHITE);
+                } else {
+                    valid = false;
+                    lb_error_add.setForeground(Global.colError);
+                }
+
+                if (valid) {
+                    // create a place in DB
+                    Admin.updatePlace(ID, tf_name.getText(), Integer.parseInt(tf_capacity.getText()), Integer.parseInt(tf_current.getText()));
+
+                    // reset panel
+                    PanePlaceList.id = Admin.getPlaceIntList("placeID");
+                    GUI_Master.changePanel(GUI_Admin.getUpdatedPPlaceList());
+                    lb_error_add.setForeground(Color.WHITE);
+                    tf_name.setText("Location name");
+                    tf_capacity.setText("Maximum capacity");
+                    tf_current.setText("Current capacity");
+                }
+            }
         });
     }
 
@@ -938,5 +929,10 @@ class PanePlaceForm extends JPanel {
 
     void assignID(int ID) {
         this.ID = ID;
+        
+        // set text
+        tf_name.setText(Admin.getPlaceDetail(ID, "name"));
+        tf_capacity.setText(Admin.getPlaceDetail(ID, "capacity"));
+        tf_current.setText(Admin.getPlaceDetail(ID, "current"));
     }
 }
