@@ -240,6 +240,22 @@ public class Manager extends CovidAccount {
 
         return 0;
     }
+    
+    public static boolean overloadedPlace(String name) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from place where name = '" + name + "'";
+            db.rs = db.stm.executeQuery(sql);
+
+            db.rs.next();
+            if (db.rs.getInt("current") == db.rs.getInt("capacity")) return true;
+            else return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
 
     public static int existedUser(String personalID) {
         try {

@@ -784,12 +784,19 @@ class PanePatientForm extends JPanel {
             }
 
             // check placeID
-            if (Manager.existedPlace(tf_place.getText()) > 0) {
+            if (Manager.existedPlace(tf_place.getText()) == 0) {
+                valid = false;
+                tf_place.setHint("Location does not exist");
+                tf_place.showHint();
+            } 
+            else if (Manager.overloadedPlace(tf_place.getText())) {
+                valid = false;
+                tf_place.setHint("This place is currently overload");
+                tf_place.showHint();
+            }
+            else {
                 placeID = Manager.existedPlace(tf_place.getText());
                 tf_place.hideHint();
-            } else {
-                valid = false;
-                tf_place.showHint();
             }
 
             // check existed User
@@ -839,7 +846,15 @@ class PanePatientForm extends JPanel {
 
         btn_updatePlace.addActionListener(e -> {
             // check place
-            if (Manager.existedPlace(tf_place.getText()) > 0) {
+            if (Manager.existedPlace(tf_place.getText()) == 0) {
+                tf_place.setHint("Location does not exist");
+                tf_place.showHint();
+            } 
+            else if (Manager.overloadedPlace(tf_place.getText())) {
+                tf_place.setHint("This place is currently overload");
+                tf_place.showHint();
+            }
+            else {
                 // update DB
                 Manager.updateUserPlace(ID, Manager.existedPlace(tf_place.getText()));
                 tf_place.hideHint();
@@ -849,9 +864,6 @@ class PanePatientForm extends JPanel {
                 GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientInfo());
                 lb_error_add.setForeground(Color.WHITE);
                 tf_place.setText("Treatment location");
-            } else {
-                tf_place.showHint();
-                return;
             }
         });
     }
