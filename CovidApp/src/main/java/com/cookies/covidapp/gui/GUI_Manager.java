@@ -638,7 +638,7 @@ class PanePatientForm extends JPanel {
         // text fields
         tf_fullname = new JNeoTextField("Full name", 14, false, "account", "!NULL");
         tf_birthyear = new JNeoTextField("Birth year", 14, false, "account", "Format must be 'yyyy'");
-        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "Personal ID already exists");
+        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "Personal ID is not valid");
         tf_addressID = new JNeoTextField("Address ID", 14, false, "account", "Address does not exist");
 
         tf_place = new JNeoTextField("Treatment location", 14, false, "account", "Location does not exist");
@@ -742,14 +742,23 @@ class PanePatientForm extends JPanel {
 
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
-            int addressID, placeID;
+            boolean valid = true;
+            int addressID = 0, placeID = 0;
 
             // check birthyear
             if (tf_birthyear.getText().matches("^[0-9]+$") && tf_birthyear.getText().length() == 4 && Integer.parseInt(tf_birthyear.getText()) < 2022) {
                 tf_birthyear.hideHint();
             } else {
+                valid = false;
                 tf_birthyear.showHint();
-                return;
+            }
+            
+            // check ppersonalID
+            if (tf_personalID.getText().matches("^[0-9]+$") && tf_birthyear.getText().length() == 9) {
+                tf_personalID.hideHint();
+            } else {
+                valid = false;
+                tf_personalID.showHint();
             }
 
             // check addressID
@@ -757,16 +766,16 @@ class PanePatientForm extends JPanel {
                 addressID = Manager.existedAddress(tf_addressID.getText());
                 tf_addressID.hideHint();
             } else {
+                valid = false;
                 tf_addressID.showHint();
-                return;
             }
 
             // check status
             if (!"".equals(tf_status.getText()) && Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4) {
                 tf_status.hideHint();
             } else {
+                valid = false;
                 tf_status.showHint();
-                return;
             }
 
             // check placeID
@@ -774,32 +783,33 @@ class PanePatientForm extends JPanel {
                 placeID = Manager.existedPlace(tf_place.getText());
                 tf_place.hideHint();
             } else {
+                valid = false;
                 tf_place.showHint();
-                return;
             }
 
             // check existed User
             if (Manager.existedUser(tf_personalID.getText()) == 0) {
                 lb_error_add.setForeground(Color.WHITE);
             } else {
-                tf_personalID.showHint();
+                valid = false;
                 lb_error_add.setForeground(Global.colError);
-                return;
             }
 
-            // create a user in database
-            Manager.createUser(tf_fullname.getText(), tf_personalID.getText(), Integer.parseInt(tf_birthyear.getText()), addressID, Integer.parseInt(tf_status.getText()), placeID);
+            if (valid) {
+                // create a user in database
+                Manager.createUser(tf_fullname.getText(), tf_personalID.getText(), Integer.parseInt(tf_birthyear.getText()), addressID, Integer.parseInt(tf_status.getText()), placeID);
 
-            // reset all text fields
-            PanePatientList.id = Manager.getUserIntList("userID");
-            GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientList());
-            lb_error_add.setForeground(Color.WHITE);
-            tf_fullname.setText("Full name");
-            tf_birthyear.setText("Birth year (yyyy)");
-            tf_personalID.setText("Personal ID");
-            tf_addressID.setText("Address ID");
-            tf_status.setText("Status");
-            tf_place.setText("Treatment location");
+                // reset all text fields
+                PanePatientList.id = Manager.getUserIntList("userID");
+                GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientList());
+                lb_error_add.setForeground(Color.WHITE);
+                tf_fullname.setText("Full name");
+                tf_birthyear.setText("Birth year (yyyy)");
+                tf_personalID.setText("Personal ID");
+                tf_addressID.setText("Address ID");
+                tf_status.setText("Status");
+                tf_place.setText("Treatment location");
+            }
         });
 
         btn_updateStatus.addActionListener(e -> {
