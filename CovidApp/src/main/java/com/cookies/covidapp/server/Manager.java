@@ -203,6 +203,43 @@ public class Manager extends CovidAccount {
         
         return ret;
     }
+    
+    public static ArrayList<Integer> sortSearchedUser(String key, String citeria) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        
+        try {
+            DataQuery db = new DataQuery();
+            
+            // select citeria
+            if ("ID".equals(citeria)) {
+                citeria = "userID";
+            }
+            else if ("Name".equals(citeria)) {
+                citeria = "fullname";
+            }
+            else if ("Age".equals(citeria)) {
+                citeria = "yob";
+            }
+            else if ("Status".equals(citeria)) {
+                citeria = "status";
+            }
+            else if ("Place".equals(citeria)) {
+                citeria = "placeID";
+            }
+            
+            String sql = "select * from acc_user where fullname like '%" + key + "%'"
+                    + "order by " + citeria + " ASC";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt("userID"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return ret;
+    }
 
     public static int existedAddress(String address) {
         try {
@@ -471,6 +508,37 @@ public class Manager extends CovidAccount {
         try {
             DataQuery db = new DataQuery();
             String sql = "select * from necessity where name like '%" + key + "%'";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt("necessityID"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return ret;
+    }
+    
+    public static ArrayList<Integer> sortSearchedNecessity(String key, String citeria) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        
+        try {
+            DataQuery db = new DataQuery();
+            
+            // select citeria
+            if ("ID".equals(citeria)) {
+                citeria = "necessityID";
+            }
+            else if ("Name".equals(citeria)) {
+                citeria = "name";
+            }
+            else if ("Price".equals(citeria)) {
+                citeria = "price";
+            }
+            
+            String sql = "select * from necessity where name like '%" + key + "%'"
+                    + "order by " + citeria + " ASC";
             db.rs = db.stm.executeQuery(sql);
 
             while (db.rs.next()) {

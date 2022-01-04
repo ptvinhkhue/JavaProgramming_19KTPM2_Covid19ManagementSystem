@@ -1,8 +1,6 @@
 Database: thêm data sample
 
 Manager:
-- Check Validation (Code)
-- Sắp xếp theo tiêu chí (Code)
 * Thống kê (Code, UI)
 
 User: 

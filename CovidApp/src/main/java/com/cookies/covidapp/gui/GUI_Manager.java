@@ -213,6 +213,7 @@ class PanePasswordManager extends JPanel {
 class PanePatientList extends JPanel {
 
     static ArrayList<Integer> id;
+    String order = "ID";
 
     private JSideBar sideBar;
     private JNeoList list;
@@ -238,8 +239,8 @@ class PanePatientList extends JPanel {
         title = new JNeoLabel("Patient list", Global.fntHeader, Global.colDark);
 
         // search bar
-        String[] filter_names = {"Name", "Birthyear", "Personal ID", "Address ID"};
-        searchBar = new JNeoSearchBar("Search...", 15, filter_names);
+        String[] filter_names = {"Name", "Age", "Status", "Place"};
+        searchBar = new JNeoSearchBar("", 15, filter_names);
 
         // list
         /*
@@ -332,12 +333,8 @@ class PanePatientList extends JPanel {
     }
 
     void addAllActionListener() {
-        for (JNeoButton tag : searchBar.filter_tags) {
-
-        }
-
         searchBar.getTf().addActionListener(e -> {
-            id = Manager.searchUserByName(searchBar.getTf().getText());
+            id = Manager.sortSearchedUser(searchBar.getTf().getText(), order);
 
             ArrayList<String> name = new ArrayList<>();
             ArrayList<String> yob = new ArrayList<>();
@@ -378,6 +375,57 @@ class PanePatientList extends JPanel {
 
             addListActionListener();
         });
+
+        for (JNeoButton tag : searchBar.filter_tags) {
+            tag.addActionListener(e -> {
+                if (!tag.enabled) {
+                    id = Manager.sortSearchedUser(searchBar.getTf().getText(), tag.getContent());
+                    order = tag.getContent();
+                } else {
+                    id = Manager.sortSearchedUser(searchBar.getTf().getText(), "ID");
+                    order = "ID";
+                }
+
+                ArrayList<String> name = new ArrayList<>();
+                ArrayList<String> yob = new ArrayList<>();
+                ArrayList<String> pID = new ArrayList<>();
+                ArrayList<String> address = new ArrayList<>();
+                ArrayList<String> status = new ArrayList<>();
+                ArrayList<String> place = new ArrayList<>();
+
+                for (int k = 0; k < id.size(); k++) {
+                    name.add(Manager.getUserDetail(id.get(k), "fullname"));
+                    yob.add(Manager.getUserDetail(id.get(k), "yob"));
+                    pID.add(Manager.getUserDetail(id.get(k), "personalID"));
+                    address.add(Manager.getFullAddress(Integer.parseInt(Manager.getUserDetail(id.get(k), "addressID"))));
+                    status.add(Manager.getUserDetail(id.get(k), "status"));
+                    place.add(Manager.getFullPlace(Integer.parseInt(Manager.getUserDetail(id.get(k), "placeID"))));
+                }
+
+                ArrayList<String> label = new ArrayList<>();
+                for (int k = 0; k < id.size(); k++) {
+                    label.add(yob.get(k) + " | " + pID.get(k));
+                }
+
+                ArrayList<String> label_full = new ArrayList<>();
+                for (int k = 0; k < id.size(); k++) {
+                    label_full.add(label.get(k) + " | " + address.get(k) + "\nF" + status.get(k) + " | " + place.get(k));
+                }
+
+                ArrayList<String> iconName = new ArrayList<>();
+                for (int k = 0; k < id.size(); k++) {
+                    if (k % 2 == 0) {
+                        iconName.add("male");
+                    } else {
+                        iconName.add("female");
+                    }
+                }
+
+                list.setNewList(iconName, name, label, label_full);
+
+                addListActionListener();
+            });
+        }
 
         list.getBtnAdd().addActionListener(e -> {
             GUI_Master.changePanel(GUI_Manager.getPPatientAdd());
@@ -458,6 +506,7 @@ class PanePatientList extends JPanel {
 class PaneNecessityList extends JPanel {
 
     static ArrayList<Integer> id;
+    String order = "ID";
 
     JSideBar sideBar;
     JNeoList list;
@@ -483,8 +532,8 @@ class PaneNecessityList extends JPanel {
         title = new JNeoLabel("Necessity list", Global.fntHeader, Global.colDark);
 
         // search bar
-        String[] filter_names = {"Name", "Limit", "Price"};
-        searchBar = new JNeoSearchBar("Search...", 15, filter_names);
+        String[] filter_names = {"Name", "Price"};
+        searchBar = new JNeoSearchBar("", 15, filter_names);
 
         // list
         id = Manager.getNecessityIntList("necessityID");
@@ -551,7 +600,8 @@ class PaneNecessityList extends JPanel {
 
     void addAllActionListener() {
         searchBar.getTf().addActionListener(e -> {
-            id = Manager.searchNecessityByName(searchBar.getTf().getText());
+            //id = Manager.searchNecessityByName(searchBar.getTf().getText());
+            id = Manager.sortSearchedNecessity(searchBar.getTf().getText(), order);
 
             ArrayList<String> name = new ArrayList<>();
             ArrayList<String> label = new ArrayList<>();
@@ -559,8 +609,8 @@ class PaneNecessityList extends JPanel {
 
             for (int i = 0; i < id.size(); i++) {
                 name.add(Manager.getNecessityDetail(id.get(i), "name"));
-                label.add(Manager.getNecessityDetail(id.get(i), "price"));
-                label_full.add(Manager.getNecessityDetail(id.get(i), "price"));
+                label.add("Price: " + Manager.getNecessityDetail(id.get(i), "price"));
+                label_full.add("Price: " + Manager.getNecessityDetail(id.get(i), "price"));
             }
 
             ArrayList<String> iconName = new ArrayList<>();
@@ -572,6 +622,37 @@ class PaneNecessityList extends JPanel {
 
             addListActionListener();
         });
+
+        for (JNeoButton tag : searchBar.filter_tags) {
+            tag.addActionListener(e -> {
+                if (!tag.enabled) {
+                    id = Manager.sortSearchedNecessity(searchBar.getTf().getText(), tag.getContent());
+                    order = tag.getContent();
+                } else {
+                    id = Manager.sortSearchedNecessity(searchBar.getTf().getText(), "ID");
+                    order = "ID";
+                }
+
+                ArrayList<String> name = new ArrayList<>();
+                ArrayList<String> label = new ArrayList<>();
+                ArrayList<String> label_full = new ArrayList<>();
+
+                for (int i = 0; i < id.size(); i++) {
+                    name.add(Manager.getNecessityDetail(id.get(i), "name"));
+                    label.add("Price: " + Manager.getNecessityDetail(id.get(i), "price"));
+                    label_full.add("Price: " + Manager.getNecessityDetail(id.get(i), "price"));
+                }
+
+                ArrayList<String> iconName = new ArrayList<>();
+                for (int i = 0; i < id.size(); i++) {
+                    iconName.add("sb_package");
+                }
+
+                list.setNewList(iconName, name, label, label_full);
+
+                addListActionListener();
+            });
+        }
 
         list.getBtnAdd().addActionListener(e -> {
             GUI_Master.changePanel(GUI_Manager.getPNecessityAdd());
@@ -788,13 +869,11 @@ class PanePatientForm extends JPanel {
                 valid = false;
                 tf_place.setHint("Location does not exist");
                 tf_place.showHint();
-            } 
-            else if (Manager.overloadedPlace(tf_place.getText())) {
+            } else if (Manager.overloadedPlace(tf_place.getText())) {
                 valid = false;
                 tf_place.setHint("This place is currently overload");
                 tf_place.showHint();
-            }
-            else {
+            } else {
                 placeID = Manager.existedPlace(tf_place.getText());
                 tf_place.hideHint();
             }
@@ -849,12 +928,10 @@ class PanePatientForm extends JPanel {
             if (Manager.existedPlace(tf_place.getText()) == 0) {
                 tf_place.setHint("Location does not exist");
                 tf_place.showHint();
-            } 
-            else if (Manager.overloadedPlace(tf_place.getText())) {
+            } else if (Manager.overloadedPlace(tf_place.getText())) {
                 tf_place.setHint("This place is currently overload");
                 tf_place.showHint();
-            }
-            else {
+            } else {
                 // update DB
                 Manager.updateUserPlace(ID, Manager.existedPlace(tf_place.getText()));
                 tf_place.hideHint();

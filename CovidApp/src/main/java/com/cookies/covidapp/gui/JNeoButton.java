@@ -11,12 +11,14 @@ import java.util.Objects;
 
 public class JNeoButton extends JButton {
 
+    String content;
     boolean isTag, enabled;
     Color colBack;
     JNeoSearchBar master;
 
     JNeoButton(String label, Color colBack, Color colFront, int radius, int insets, Font fnt, boolean isTag) {
         super(label);
+        this.content = label;
         this.isTag = isTag;
         this.enabled = false;
         this.colBack = colBack;
@@ -89,6 +91,10 @@ public class JNeoButton extends JButton {
     void turnOff() {
         enabled = false;
         changeState();
+    }
+    
+    String getContent() {
+        return content;
     }
 }
 
