@@ -416,6 +416,11 @@ public class User extends CovidAccount {
         return ret;
     }
     
+    public static String sendInfo(String money) {
+        String ret = username + "&" + money;
+        return ret;
+    }
+    
     public static void tranfer(int money) {
         try {
             DataQuery db = new DataQuery();

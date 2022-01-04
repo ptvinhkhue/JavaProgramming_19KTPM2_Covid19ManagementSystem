@@ -47,6 +47,62 @@ public class PaymentServer {
         }
         return ret;
     }
+    
+    public static void setDebt(String username, int money) {
+        try {
+            DataQuery db = new DataQuery();
+            int newDebt = getUserDebt(username) - money;
+            String sql = "update acc_user "
+                    + "set debt = " + newDebt + " where username = "  + username;
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void tranfer(String username, int money) {
+        try {
+            DataQuery db = new DataQuery();
+            int newBalance = getUserBalance(username) - money;
+            String sql = "update acc_bank "
+                    + "set balance = " + newBalance + " where personalID = "  + username;
+            db.stm.executeUpdate(sql);
+            setDebt(username, money);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static int getUserDebt(String username) {
+        int ret = 0;
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_user where username = '" + username + "'";
+            db.rs = db.stm.executeQuery(sql);
+            while (db.rs.next()) {
+                ret = db.rs.getInt("debt");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+    
+    public static int getUserBalance(String username) {
+        int ret = 0;
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_bank where personalID = '" + username + "'";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret = db.rs.getInt("balance");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
 
     public static void main(String[] args) {
 
@@ -62,11 +118,9 @@ public class PaymentServer {
             System.exit(1);
         }
         System.out.println("ServerSocket is created " + server);
-
         while (true) {
             try {
                 System.out.println("Waiting for connect request...");
-
                 Socket client = server.accept();
                 clientList.add(client);
                 System.out.println("Connect request is accepted...");
@@ -90,11 +144,13 @@ public class PaymentServer {
                                     } else if (s.equals(client)) {
                                         PrintWriter out = new PrintWriter(s.getOutputStream(), true);
                                         if (!msgFromClient.isEmpty()) {
-                                            receive(Integer.parseInt(msgFromClient));
-                                            out.println("Tranfer successfully");
+                                            String info[] = msgFromClient.split("&");
+                                            receive(Integer.parseInt(info[1]));
+                                            tranfer(info[0] ,Integer.parseInt(info[1]));
+                                            out.print("Tranfer successfully");
                                             System.out.println(msgFromClient);
                                         }
-                                        out.println("Tranfer error");
+                                        else out.println("Tranfer error");
                                     }
                                 }
                             }

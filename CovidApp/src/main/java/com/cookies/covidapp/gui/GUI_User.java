@@ -5,6 +5,7 @@ import com.cookies.covidapp.server.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -78,6 +79,12 @@ public class GUI_User {
     }
 
     public static PanePayment getPPayment() {
+        return pPayment;
+    }
+
+    public static PanePayment getUpdatedPPayment() {
+        pPayment = new PanePayment();
+        pPayment.setInfo(Integer.toString(User.getDebt()), Integer.toString(User.getCurrentBalance()));
         return pPayment;
     }
 
@@ -231,11 +238,11 @@ class PanePasswordUser extends JPanel {
                     related.add(iconName);
                     related.add(name);
                     related.add(label);
-                    
+
                     GUI_User.getPPayment().setInfo(Integer.toString(User.getDebt()), Integer.toString(User.getCurrentBalance()));
                     GUI_User.getPPersonalInfo().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), subtitle, subtitle2, related);
                     GUI_Master.changePanel(GUI_User.getPPersonalInfo());
-                    
+
                 } else {
                     tf_password.showHint(); // Show hint/error below if false
                 }
@@ -282,7 +289,7 @@ class PanePasswordUser extends JPanel {
                 related.add(iconName);
                 related.add(name);
                 related.add(label);
-                
+
                 GUI_User.getPPayment().setInfo(Integer.toString(User.getDebt()), Integer.toString(User.getCurrentBalance()));
                 GUI_User.getPPersonalInfo().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), subtitle, subtitle2, related);
                 GUI_Master.changePanel(GUI_User.getPPersonalInfo());
@@ -954,7 +961,7 @@ class PanePayment extends JPanel {
         lb_title = new JNeoLabel("Payment", Global.fntHeader, Global.colDark);
         lb_balance = new JNeoLabel("Balance: 0", Global.fntButton, Global.colSecond);
         lb_debt = new JNeoLabel("Debt: 0", Global.fntButton, Global.colSecond);
-        
+
         // labels container
         ctn_lb = new JPanel();
         ctn_lb.setBackground(Color.WHITE);
@@ -1009,15 +1016,36 @@ class PanePayment extends JPanel {
     void addAllActionListener() {
         btn_transfer.addActionListener(e -> {
             try {
-                if (Integer.parseInt(tf_amount.getText()) < 0 || Integer.parseInt(tf_amount.getText()) > User.getDebt())
+                if (Integer.parseInt(tf_amount.getText()) < 0 || Integer.parseInt(tf_amount.getText()) > User.getDebt()) {
                     tf_amount.showHint();
-                else {
+                } else {
                     tf_amount.hideHint();
-                    User.tranfer(Integer.parseInt(tf_amount.getText()));
+                    //User.tranfer(Integer.parseInt(tf_amount.getText()));
                     GUI_User.pw = new PrintWriter(GUI_User.socket.getOutputStream(), true);
-                    GUI_User.pw.println(tf_amount.getText());
+                    GUI_User.pw.println(GUI_User.user.sendInfo(tf_amount.getText()));
                     GUI_User.pw.flush();
-                    this.setInfo(Integer.toString(User.getDebt()), Integer.toString(User.getCurrentBalance()));
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (GUI_User.socket != null) {
+                                    String msg = "";
+                                    GUI_User.br = new BufferedReader(new InputStreamReader(GUI_User.socket.getInputStream()));
+                                    while ((msg = GUI_User.br.readLine()) != null) {
+
+                                        if ("Tranfer successfully".equals(msg)) {
+                                            System.out.println(msg);
+                                            GUI_Master.changePanel(GUI_User.getUpdatedPPayment());
+                                        }
+                                    }
+                                    System.out.println(User.getDebt());
+                                }
+                            } catch (Exception ex) {
+
+                            }
+                        }
+                    }).start();;
+                    
                 }
             } catch (Exception ex) {
 
@@ -1033,7 +1061,8 @@ class PanePayment extends JPanel {
         add(btn_transfer);
     }
 
-    void setInfo(String debt, String balance) {
+    void setInfo(String debt, String balance
+    ) {
         // info
         lb_debt.setText("Debt: " + debt);
         lb_debt.repaint();
