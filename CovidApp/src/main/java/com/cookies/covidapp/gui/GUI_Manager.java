@@ -754,7 +754,7 @@ class PanePatientForm extends JPanel {
             }
             
             // check ppersonalID
-            if (tf_personalID.getText().matches("^[0-9]+$") && tf_birthyear.getText().length() == 9) {
+            if (tf_personalID.getText().matches("^[0-9]+$") && tf_personalID.getText().length() == 9) {
                 tf_personalID.hideHint();
             } else {
                 valid = false;
