@@ -828,7 +828,7 @@ class PanePlaceForm extends JPanel {
 
     JSideBar sideBar;
     JNeoLabel title;
-    JNeoTextField tf_name, tf_capacity;
+    JNeoTextField tf_name, tf_capacity, tf_current;
     Container ctn_tf;
     JNeoButton btn_add;
     JLabel lb_error_add;
@@ -857,7 +857,9 @@ class PanePlaceForm extends JPanel {
 
         // text fields
         tf_name = new JNeoTextField("Location name", 14, false, "account", "!NULL");
-        tf_capacity = new JNeoTextField("Capacity", 14, false, "lock_hl", "Must be a positive number.");
+        tf_capacity = new JNeoTextField("Maximum capacity", 14, false, "account", "Must be a positive number.");
+        tf_current = new JNeoTextField("Current capacity", 14, false, "account", "Must be a positive number.");
+
         // button
         btn_add = new JNeoButton(str_btn, Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
 
@@ -891,6 +893,8 @@ class PanePlaceForm extends JPanel {
         ctn_tf.add(tf_name);
         ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
         ctn_tf.add(tf_capacity);
+        ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
+        ctn_tf.add(tf_current);
 
         layout.putConstraint(SpringLayout.WEST, ctn_tf, 0,
                 SpringLayout.WEST, title);
