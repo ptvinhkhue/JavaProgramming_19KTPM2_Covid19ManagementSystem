@@ -26,7 +26,6 @@ public class Admin extends CovidAccount {
     }
     
     /*---Manager Management---*/
-    
     public static ArrayList<Integer> getManagerIDList() {
         ArrayList<Integer> ret = new ArrayList<>();
 
@@ -168,6 +167,106 @@ public class Admin extends CovidAccount {
             
             sql = "insert into acc_manager (username, locked) values ('" + username + "', " + 0 + ")";
             db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /*---Place Management---*/
+    public static ArrayList<Integer> getPlaceIntList(String field) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from place";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt(field));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getPlaceStringList(String field) {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from place";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getString(field));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static String getPlaceDetail(int placeID, String field) {
+        String ret = "";
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from place where placeID = " + placeID;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret = db.rs.getString(field);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static int existedPlace(String name) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from place";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                if (db.rs.getString("name") == null ? name == null : db.rs.getString("name").equals(name)) {
+                    return db.rs.getInt("placeID");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+    
+    public static void createPlace(String name, int capacity) {
+        try {
+            // create place
+            DataQuery db = new DataQuery();
+            String sql = "insert into place (name, capacity, current) values ('"
+                    + name + "'," + capacity + ", " + 0 + ")";
+            db.stm.executeUpdate(sql);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updatePlace(int placeID, String name, int capacity) {
+        try {
+            // update place
+            DataQuery db = new DataQuery();
+            String sql = "update place "
+                    + "set name ='" + name + "', capacity =" + capacity + " where placeID =" + placeID;
+            db.stm.executeUpdate(sql);
+            
+            // handle history
         } catch (Exception e) {
             e.printStackTrace();
         }
