@@ -1,29 +1,14 @@
-Auth:
-- Hash password (User)
+Database: thêm data sample
 
 Manager:
-- Tạo lịch sử cho Admin (Code) 
+- Check Validation (Code)
 - Sắp xếp theo tiêu chí (Code)
 * Thống kê (Code, UI)
 
 User: 
-- Xem lịch sử trạng thái (Code, UI)
-- Xem lịch sử mua hàng (Code, UI)
 - Sắp xếp (Code)
 
-[[Admin: (Code, UI)]]
-- Tạo tài khoản Manager
-- Khóa tài khoản
-- Xem lịch sử Manager
-- Thêm, Sửa place
+Admin: Testing
 
 Hệ thống thanh toán (Code, UI)
-- Tạo server class 
-	+ Server
-	+ Multithread
-- Tích hợp GUI_Master với Client
-	+ Client
-
- 
-
-
+- Thêm thông báo thanh toán thành công/thất bại (Code, UI)
