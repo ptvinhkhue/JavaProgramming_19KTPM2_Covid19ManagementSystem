@@ -377,18 +377,72 @@ public class User extends CovidAccount {
         return ret;
     }
 
-    public void displayDebt(String username) {
+    public static void setDebt(int money) {
         try {
             DataQuery db = new DataQuery();
-            String sql = "select debt from acc_user where username = " + username;
+            int newDebt = getDebt() - money;
+            String sql = "update acc_user "
+                    + "set debt = " + newDebt + " where username = "  + username;
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void setDebtOrder(int money) {
+        try {
+            DataQuery db = new DataQuery();
+            int newDebt = getDebt() + money;
+            String sql = "update acc_user "
+                    + "set debt = " + newDebt + " where username = "  + username;
+            db.stm.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static int getDebt() {
+        int ret = 0;
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_user where username = '" + username + "'";
             db.rs = db.stm.executeQuery(sql);
-
             while (db.rs.next()) {
-                System.out.println("Debt: " + db.rs.getInt("debt"));
+                ret = db.rs.getInt("debt");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return ret;
+    }
+    
+    public static void tranfer(int money) {
+        try {
+            DataQuery db = new DataQuery();
+            int newBalance = getCurrentBalance() - money;
+            String sql = "update acc_bank "
+                    + "set balance = " + newBalance + " where personalID = "  + username;
+            db.stm.executeUpdate(sql);
+            setDebt(money);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static int getCurrentBalance() {
+        int ret = 0;
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from acc_bank where personalID = '" + username + "'";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret = db.rs.getInt("balance");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
     }
 
     public static ArrayList<String> displayNecessityList(String field) {

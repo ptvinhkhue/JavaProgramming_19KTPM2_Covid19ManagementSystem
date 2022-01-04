@@ -4,9 +4,16 @@ import Necessity.Necessity;
 import com.cookies.covidapp.server.*;
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GUI_User {
 
@@ -19,6 +26,13 @@ public class GUI_User {
     static PanePayment pPayment;
     static PaneCart pCart;
     static PaneHistory pHistory;
+
+    public static Socket socket = null;
+    public static String ip = "";
+    public static int port = 0;
+    public static String name = "";
+    public static BufferedReader br = null;
+    public static PrintWriter pw = null;
 
     void initPane() {
         cart = new ArrayList<>();
@@ -33,6 +47,18 @@ public class GUI_User {
 
     void init() {
         initPane();
+        initSocket();
+    }
+
+    void initSocket() {
+        try {
+            socket = new Socket(InetAddress.getLocalHost(), 1235);
+            if (socket == null) {
+                throw new Exception("Null Socket");
+            }
+        } catch (Exception e) {
+
+        }
     }
 
     public static PanePasswordUser getPPasswordUser() {
@@ -205,9 +231,11 @@ class PanePasswordUser extends JPanel {
                     related.add(iconName);
                     related.add(name);
                     related.add(label);
-
+                    
+                    GUI_User.getPPayment().setInfo(Integer.toString(User.getDebt()), Integer.toString(User.getCurrentBalance()));
                     GUI_User.getPPersonalInfo().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), subtitle, subtitle2, related);
                     GUI_Master.changePanel(GUI_User.getPPersonalInfo());
+                    
                 } else {
                     tf_password.showHint(); // Show hint/error below if false
                 }
@@ -216,48 +244,49 @@ class PanePasswordUser extends JPanel {
                 User.setLoggedIn(username);
                 GUI_User.user = new User(username);
                 ArrayList<Integer> relatedID = User.getUserRelation(GUI_User.user.getID());
-                    ArrayList<String> name = new ArrayList<>();
-                    ArrayList<String> yob = new ArrayList<>();
-                    ArrayList<String> pID = new ArrayList<>();
-                    ArrayList<String> address = new ArrayList<>();
-                    ArrayList<String> status = new ArrayList<>();
-                    ArrayList<String> place = new ArrayList<>();
+                ArrayList<String> name = new ArrayList<>();
+                ArrayList<String> yob = new ArrayList<>();
+                ArrayList<String> pID = new ArrayList<>();
+                ArrayList<String> address = new ArrayList<>();
+                ArrayList<String> status = new ArrayList<>();
+                ArrayList<String> place = new ArrayList<>();
 
-                    for (int i = 0; i < relatedID.size(); i++) {
-                        name.add(User.getUserDetail(relatedID.get(i), "fullname"));
-                        yob.add(User.getUserDetail(relatedID.get(i), "yob"));
-                        pID.add(User.getUserDetail(relatedID.get(i), "personalID"));
-                        address.add(User.getUserDetail(relatedID.get(i), "addressID"));
-                        status.add(User.getUserDetail(relatedID.get(i), "status"));
-                        place.add(User.getUserDetail(relatedID.get(i), "placeID"));
+                for (int i = 0; i < relatedID.size(); i++) {
+                    name.add(User.getUserDetail(relatedID.get(i), "fullname"));
+                    yob.add(User.getUserDetail(relatedID.get(i), "yob"));
+                    pID.add(User.getUserDetail(relatedID.get(i), "personalID"));
+                    address.add(User.getUserDetail(relatedID.get(i), "addressID"));
+                    status.add(User.getUserDetail(relatedID.get(i), "status"));
+                    place.add(User.getUserDetail(relatedID.get(i), "placeID"));
+                }
+
+                ArrayList<String> label = new ArrayList<>();
+                for (int i = 0; i < relatedID.size(); i++) {
+                    label.add(yob.get(i) + " | " + pID.get(i));
+                }
+
+                ArrayList<String> iconName = new ArrayList<>();
+                for (int k = 0; k < relatedID.size(); k++) {
+                    if (k % 2 == 0) {
+                        iconName.add("male");
+                    } else {
+                        iconName.add("female");
                     }
+                }
+                int uID = GUI_User.user.getID();
+                String subtitle = User.getUserDetail(uID, "yob") + " | " + User.getUserDetail(uID, "personalID")
+                        + " | " + User.getUserAddress(uID);
+                String subtitle2 = "Status: F" + User.getUserDetail(uID, "status") + " | " + User.getUserPlace(uID);
 
-                    ArrayList<String> label = new ArrayList<>();
-                    for (int i = 0; i < relatedID.size(); i++) {
-                        label.add(yob.get(i) + " | " + pID.get(i));
-                    }
-
-                    ArrayList<String> iconName = new ArrayList<>();
-                    for (int k = 0; k < relatedID.size(); k++) {
-                        if (k % 2 == 0) {
-                            iconName.add("male");
-                        } else {
-                            iconName.add("female");
-                        }
-                    }
-                    int uID = GUI_User.user.getID();
-                    String subtitle = User.getUserDetail(uID, "yob") + " | " + User.getUserDetail(uID, "personalID")
-                            + " | " + User.getUserAddress(uID);
-                    String subtitle2 = "Status: F" + User.getUserDetail(uID, "status") + " | " + User.getUserPlace(uID);
-
-                    ArrayList<ArrayList<String>> related = new ArrayList<>(3);
-                    related.add(iconName);
-                    related.add(name);
-                    related.add(label);
-
-                    GUI_User.getPPersonalInfo().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), subtitle, subtitle2, related);
-                    GUI_Master.changePanel(GUI_User.getPPersonalInfo());
+                ArrayList<ArrayList<String>> related = new ArrayList<>(3);
+                related.add(iconName);
+                related.add(name);
+                related.add(label);
                 
+                GUI_User.getPPayment().setInfo(Integer.toString(User.getDebt()), Integer.toString(User.getCurrentBalance()));
+                GUI_User.getPPersonalInfo().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), subtitle, subtitle2, related);
+                GUI_Master.changePanel(GUI_User.getPPersonalInfo());
+
                 //resetSubtitle(username, false);
                 //GUI_Master.changePanel(GUI_User.getPPasswordUser());
             }
@@ -389,11 +418,11 @@ class PanePersonalInfo extends JPanel {
 
             ArrayList<ArrayList<String>> related = new ArrayList<>();
             ArrayList<String> iconName = new ArrayList<>();
-            
+
             //ArrayList<String> name = User.displayNecessityList("name");
             ArrayList<String> title = User.displayStatusHistory(GUI_User.user.getID());
             ArrayList<String> subtitle = User.getTimeStatusHistory(GUI_User.user.getID());
-            
+
             for (int k = 0; k < title.size(); k++) {
                 iconName.add("sb_package");
             }
@@ -532,7 +561,7 @@ class PaneHistory extends JPanel {
 
             ArrayList<ArrayList<String>> related = new ArrayList<>();
             ArrayList<String> iconName = new ArrayList<>();
-            
+
             //ArrayList<String> name = User.displayNecessityList("name");
             ArrayList<String> title = User.getNewPlaceList(GUI_User.user.getID());
             ArrayList<String> subtitle = User.getOldPlaceList(GUI_User.user.getID());
@@ -541,7 +570,7 @@ class PaneHistory extends JPanel {
             for (int k = 0; k < title.size(); k++) {
                 subtitle.add("27/12/2021");
             }
-            */
+             */
             for (int k = 0; k < title.size(); k++) {
                 iconName.add("sb_package");
             }
@@ -609,16 +638,15 @@ class PaneHistory extends JPanel {
         for (JNeoListItem i : item) {
             i.getBtnInfo().addActionListener(e -> {
 
-
                 ArrayList<ArrayList<String>> related = new ArrayList<>();
-                
+
                 ArrayList<String> title = GUI_User.user.getOrderDetail(i.getID(), "necessityID");
                 //for (int k = 0; k < 1; k++) {
-                    //title.add("Rice");
+                //title.add("Rice");
                 //}
                 ArrayList<String> subtitle = GUI_User.user.getOrderDetail(i.getID(), "amount");
                 //for (int k = 0; k < 1; k++) {
-                    //subtitle.add("Amount: 1");
+                //subtitle.add("Amount: 1");
                 //}
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < title.size(); k++) {
@@ -638,7 +666,7 @@ class PaneHistory extends JPanel {
 }
 
 class PaneBuyNecessity extends JPanel {
-    
+
     static ArrayList<Integer> id;
     JSideBar sideBar;
     JNeoList list;
@@ -926,7 +954,7 @@ class PanePayment extends JPanel {
         lb_title = new JNeoLabel("Payment", Global.fntHeader, Global.colDark);
         lb_balance = new JNeoLabel("Balance: 0", Global.fntButton, Global.colSecond);
         lb_debt = new JNeoLabel("Debt: 0", Global.fntButton, Global.colSecond);
-
+        
         // labels container
         ctn_lb = new JPanel();
         ctn_lb.setBackground(Color.WHITE);
@@ -979,7 +1007,22 @@ class PanePayment extends JPanel {
     }
 
     void addAllActionListener() {
+        btn_transfer.addActionListener(e -> {
+            try {
+                if (Integer.parseInt(tf_amount.getText()) < 0 || Integer.parseInt(tf_amount.getText()) > User.getDebt())
+                    tf_amount.showHint();
+                else {
+                    tf_amount.hideHint();
+                    User.tranfer(Integer.parseInt(tf_amount.getText()));
+                    GUI_User.pw = new PrintWriter(GUI_User.socket.getOutputStream(), true);
+                    GUI_User.pw.println(tf_amount.getText());
+                    GUI_User.pw.flush();
+                    this.setInfo(Integer.toString(User.getDebt()), Integer.toString(User.getCurrentBalance()));
+                }
+            } catch (Exception ex) {
 
+            }
+        });
     }
 
     void addAll() {
@@ -1107,19 +1150,19 @@ class PaneCart extends JPanel {
         layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_success, 0,
                 SpringLayout.VERTICAL_CENTER, btn_buy);
 
-
     }
 
     void addAllActionListener() {
         btn_buy.addActionListener(e -> {
-            int sum =0;
+            int sum = 0;
             for (int i = 0; i < GUI_User.cart.size(); i++) {
                 sum += GUI_User.cart.get(i).amount * GUI_User.cart.get(i).price;
             }
-            if (sum != 0)
-            {
+            if (sum != 0) {
                 GUI_User.user.createOrder(GUI_User.user.getID(), sum);
                 GUI_User.user.buyNecessity(GUI_User.user.getID(), GUI_User.cart);
+                GUI_User.user.setDebtOrder(sum);
+                GUI_User.getPPayment().setInfo(Integer.toString(User.getDebt()), Integer.toString(User.getCurrentBalance()));
                 lb_success.setSuccess();
             }
             GUI_User.cart.clear();
@@ -1128,18 +1171,17 @@ class PaneCart extends JPanel {
 
         btn_history.addActionListener(e -> {
 
-
             ArrayList<ArrayList<String>> related = new ArrayList<>();
-            
+
             ArrayList<String> title = GUI_User.user.getOrderInfo(GUI_User.user.getID(), "orderID");
             //ArrayList<String> title = new ArrayList<>();
             //for (int k = 0; k < 1; k++) {
-                //title.add("Trần Thanh Tùng");
+            //title.add("Trần Thanh Tùng");
             //}
             //ArrayList<String> subtitle = User.getSumOrder();
             ArrayList<String> subtitle = GUI_User.user.getOrderInfo(GUI_User.user.getID(), "sum");;
             //for (int k = 0; k < title.size(); k++) {
-                //subtitle.add("001 | 27/12/2021");
+            //subtitle.add("001 | 27/12/2021");
             //}
             ArrayList<String> iconName = new ArrayList<>();
             for (int k = 0; k < title.size(); k++) {
