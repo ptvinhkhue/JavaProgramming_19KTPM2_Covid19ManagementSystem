@@ -1470,10 +1470,10 @@ class PaneChart extends JPanel {
         cb_type.setEditable(true);
 
         cb_input = new JNeoComboBox();
-        String[] sample_list = {"F0", "F1", "F2"};
-        ArrayList<String> cb_input_list = new ArrayList<>();
-        Collections.addAll(cb_input_list, sample_list);
-        cb_input.addItemList(cb_input_list);
+        String[] sample_input = {"F0", "F1", "F2"};
+        ArrayList<String> cb_input_input = new ArrayList<>();
+        Collections.addAll(cb_input_input, sample_input);
+        cb_input.addItemList(cb_input_input);
         cb_input.setEditable(true);
     }
 
@@ -1525,7 +1525,34 @@ class PaneChart extends JPanel {
 
     void addAllActionListener() {
         cb_type.addActionListener(e -> {
-            System.out.println(cb_type.getSelectedItem());
+            ArrayList<String> cb_input_list = new ArrayList<>();
+            switch (cb_type.getSelectedIndex()) {
+                case 0:
+                    String[] sample_list_0 = {"F0", "F1", "F2"}; // example
+                    Collections.addAll(cb_input_list, sample_list_0);
+                    cb_input.removeAllItems();
+                    cb_input.addItemList(cb_input_list);
+                    lb_result.setText("Number of F0 patients: 1000");
+                    break;
+                case 1:
+                    String[] sample_list_1 = {"Gạo (1kg)", "Dầu ăn (1l)"}; // example
+                    Collections.addAll(cb_input_list, sample_list_1);
+                    cb_input.removeAllItems();
+                    cb_input.addItemList(cb_input_list);
+                    lb_result.setText("Total Rice (1kg) bought: 500");
+                    break;
+                case 2:
+                    String[] sample_list_2 = {"Trần Thanh Tùng", "Phạm Trọng Vinh Khuê", "Trần Đại Hoàng Trung"}; // example
+                    Collections.addAll(cb_input_list, sample_list_2);
+                    cb_input.removeAllItems();
+                    cb_input.addItemList(cb_input_list);
+                    lb_result.setText("Trần Thanh Tùng's Debt: 200000");
+                    break;
+            }
+        });
+
+        cb_input.addActionListener(e -> {
+            lb_result.setText("Query gì đó r đặt text mới ở đây!");
         });
     }
 
