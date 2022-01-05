@@ -725,7 +725,7 @@ class PanePatientForm extends JPanel {
         // text fields
         tf_fullname = new JNeoTextField("Full name", 14, false, "account", "!NULL");
         tf_birthyear = new JNeoTextField("Birth year", 14, false, "account", "Format must be 'yyyy'");
-        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "Personal ID already exists");
+        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "Personal ID is not valid");
         tf_addressID = new JNeoTextField("Address ID", 14, false, "account", "Address does not exist");
 
         tf_place = new JNeoTextField("Treatment location", 14, false, "account", "Location does not exist");
