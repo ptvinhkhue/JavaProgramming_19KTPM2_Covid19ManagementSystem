@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 
 import org.jfree.chart.ChartFactory;
@@ -1431,9 +1432,10 @@ class PaneChart extends JPanel {
 
     JSideBar sideBar;
     JNeoLabel title;
-    Container ctn_btn;
-    JNeoButton btn_count, btn_status, btn_necessity, btn_debt;
-    JLabel chart;
+    JNeoLabel lb_result, lb_type, lb_input;
+    JNeoComboBox cb_type; // statistics type
+    JNeoComboBox cb_input;
+
     SpringLayout layout;
 
     PaneChart() {
@@ -1452,24 +1454,27 @@ class PaneChart extends JPanel {
         sideBar = new JSideBar(Global.itemIcon_Manager, 1, 2);
 
         // title
-        title = new JNeoLabel("Chart", Global.fntHeader, Global.colDark);
+        title = new JNeoLabel("Statistics", Global.fntHeader, Global.colDark);
 
-        // buttons
-        btn_count = new JNeoButton("Count", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
-        btn_status = new JNeoButton("Status", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
-        btn_necessity = new JNeoButton("Necessity", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
-        btn_debt = new JNeoButton("Debt", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
-        ctn_btn = new Container();
-        ctn_btn.setLayout(new FlowLayout());
-        ctn_btn.add(btn_count);
-        ctn_btn.add(btn_status);
-        ctn_btn.add(btn_necessity);
-        ctn_btn.add(btn_debt);
+        // text field & label
+        lb_type = new JNeoLabel("Type", Global.fntButton, Global.colDark);
+        lb_input = new JNeoLabel("Status", Global.fntButton, Global.colDark);
+        lb_result = new JNeoLabel("Result: 0", Global.fntButton, Global.colDark);
 
-        // chart
-        createChart(0);
-        chart = new JLabel();
-        getChart(0);
+        // combo box
+        cb_type = new JNeoComboBox();
+        String[] sample_type = {"Patient status", "Necessity", "Debt"};
+        ArrayList<String> cb_type_list = new ArrayList<>();
+        Collections.addAll(cb_type_list, sample_type);
+        cb_type.addItemList(cb_type_list);
+        cb_type.setEditable(true);
+
+        cb_input = new JNeoComboBox();
+        String[] sample_list = {"F0", "F1", "F2"};
+        ArrayList<String> cb_input_list = new ArrayList<>();
+        Collections.addAll(cb_input_list, sample_list);
+        cb_input.addItemList(cb_input_list);
+        cb_input.setEditable(true);
     }
 
     void organize() {
@@ -1492,103 +1497,42 @@ class PaneChart extends JPanel {
         layout.putConstraint(SpringLayout.NORTH, title, 32,
                 SpringLayout.NORTH, this);
 
-        // buttons
-        layout.putConstraint(SpringLayout.WEST, ctn_btn, 8,
-                SpringLayout.EAST, title);
-        layout.putConstraint(SpringLayout.VERTICAL_CENTER, ctn_btn, -4,
-                SpringLayout.VERTICAL_CENTER, title);
-
-        // chart
-        layout.putConstraint(SpringLayout.WEST, chart, 48,
-                SpringLayout.EAST, sideBar);
-        layout.putConstraint(SpringLayout.NORTH, chart, 4,
+        // labels
+        layout.putConstraint(SpringLayout.WEST, lb_type, 0,
+                SpringLayout.WEST, title);
+        layout.putConstraint(SpringLayout.NORTH, lb_type, 48,
                 SpringLayout.SOUTH, title);
+        layout.putConstraint(SpringLayout.WEST, lb_input, 0,
+                SpringLayout.WEST, title);
+        layout.putConstraint(SpringLayout.NORTH, lb_input, 48,
+                SpringLayout.SOUTH, lb_type);
+        layout.putConstraint(SpringLayout.WEST, lb_result, 0,
+                SpringLayout.WEST, title);
+        layout.putConstraint(SpringLayout.NORTH, lb_result, 48,
+                SpringLayout.SOUTH, lb_input);
+
+        // combo boxes
+        layout.putConstraint(SpringLayout.WEST, cb_type, 48,
+                SpringLayout.EAST, lb_type);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, cb_type, 0,
+                SpringLayout.VERTICAL_CENTER, lb_type);
+        layout.putConstraint(SpringLayout.WEST, cb_input, 0,
+                SpringLayout.WEST, cb_type);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, cb_input, 0,
+                SpringLayout.VERTICAL_CENTER, lb_input);
+
     }
 
     void addAllActionListener() {
-        btn_count.addActionListener(e -> {
-            System.out.println("Chart 0");
-            createChart(0);
-            getChart(0);
-        });
-        btn_status.addActionListener(e -> {
-            System.out.println("Chart 1");
-            createChart(1);
-            getChart(1);
+        cb_type.addActionListener(e -> {
+            System.out.println(cb_type.getSelectedItem());
         });
     }
 
     void addAll() {
         add(sideBar);
         add(title);
-        add(ctn_btn);
-        add(chart);
-    }
-
-    void createChart(int type) {
-
-        // Create dataset here
-        DefaultCategoryDataset data = new DefaultCategoryDataset();
-        switch (type) {
-            case 0 -> {
-                data.addValue(300, "Patient count", "26/12");
-                data.addValue(295, "Patient count", "27/12");
-                data.addValue(142, "Patient count", "28/12");
-                data.addValue(357, "Patient count", "29/12");
-                data.addValue(324, "Patient count", "30/12");
-            }
-            case 1 -> {
-                data.addValue(300, "F0", "26/12");
-                data.addValue(295, "F0", "27/12");
-                data.addValue(142, "F0", "28/12");
-                data.addValue(357, "F0", "29/12");
-                data.addValue(324, "F0", "30/12");
-                data.addValue(251, "F1", "26/12");
-                data.addValue(312, "F1", "27/12");
-                data.addValue(111, "F1", "28/12");
-                data.addValue(751, "F1", "29/12");
-                data.addValue(231, "F1", "30/12");
-            }
-        }
-
-        // Chart information
-        String title = "", category = "", value = "";
-        switch (type) {
-            case 0:
-                title = "Patient count by Date";
-                category = "Date";
-                value = "Patient count";
-                break;
-            case 1:
-                title = "Status change by Date";
-                category = "Date";
-                value = "Status count";
-                break;
-        }
-
-        // Create chart
-        JFreeChart lineChart = ChartFactory.createLineChart(
-                title, category, value,
-                data, PlotOrientation.VERTICAL,
-                true, true, false);
-
-        // Save to file
-        try {
-            ChartUtilities.saveChartAsPNG(new File(System.getProperty("user.dir") + Global.pathImage + "LineChart-" + type + ".png"),
-                    lineChart, Global.chartW, Global.chartH);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    void getChart(int type) {
-        try {
-            BufferedImage img = ImageIO.read(
-                    new File(System.getProperty("user.dir")
-                            + Global.pathImage + "LineChart-" + type + ".png"));
-            chart.setIcon(new ImageIcon(img));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        add(cb_type); add(cb_input);
+        add(lb_type); add(lb_input); add(lb_result);
     }
 }
