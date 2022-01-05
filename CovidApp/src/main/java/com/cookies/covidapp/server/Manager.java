@@ -42,6 +42,43 @@ public class Manager extends CovidAccount {
         return 0;
     }
     
+    /*---Get Data from Database---*/
+    public static ArrayList<Integer> getIntField(String table, String field) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from " + table;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt(field));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getStringField(String table, String field) {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from " + table;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getString(field));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
     /*---Authentication---*/
     public static boolean locked(String username) {
         try {
