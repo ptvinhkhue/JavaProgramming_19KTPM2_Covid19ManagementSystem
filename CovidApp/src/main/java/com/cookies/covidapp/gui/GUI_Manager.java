@@ -699,8 +699,6 @@ class PanePatientForm extends JPanel {
     Container ctn_tf, ctn_tf_2;
     JNeoButton btn_add, btn_updatePlace, btn_updateStatus;
     JLabel lb_error_add, lb_error_place, lb_error_status;
-    JNeoLabel lb_place, lb_status;
-    JNeoComboBox cb_place, cb_status;
     boolean isAdd;
 
     PanePatientForm(boolean isAdd) {
@@ -727,22 +725,12 @@ class PanePatientForm extends JPanel {
         // text fields
         tf_fullname = new JNeoTextField("Full name", 14, false, "account", "!NULL");
         tf_birthyear = new JNeoTextField("Birth year", 14, false, "account", "Format must be 'yyyy'");
-        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "Personal ID is not valid");
+        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "Personal ID already exists");
         tf_addressID = new JNeoTextField("Address ID", 14, false, "account", "Address does not exist");
 
         tf_place = new JNeoTextField("Treatment location", 14, false, "account", "Location does not exist");
         tf_status = new JNeoTextField("Status", 14, false, "account", "Invalid status (0 -> 3)");
-
-        // combo boxes
-        lb_place = new JNeoLabel("Location", Global.fntButton, Global.colDark);
-        lb_status = new JNeoLabel("Status", Global.fntButton, Global.colDark);
-        cb_place = new JNeoComboBox();
-        queryComboBox(cb_place); // insert data into combo boxes
-        cb_place.setEditable(true);
-        cb_status = new JNeoComboBox();
-        queryComboBox(cb_status); // insert data into combo boxes
-        cb_status.setEditable(true);
-
+        
         // button
         btn_add = new JNeoButton("Add", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
         btn_updatePlace = new JNeoButton("Update", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -777,8 +765,9 @@ class PanePatientForm extends JPanel {
         // text fields
         ctn_tf = new Container();
         ctn_tf_2 = new Container();
+        ctn_tf.setLayout(new BoxLayout(ctn_tf, BoxLayout.Y_AXIS));
+        ctn_tf_2.setLayout(new BoxLayout(ctn_tf_2, BoxLayout.Y_AXIS));
         if (isAdd) {
-            ctn_tf.setLayout(new BoxLayout(ctn_tf, BoxLayout.Y_AXIS));
             ctn_tf.add(tf_fullname);
             ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
             ctn_tf.add(tf_birthyear);
@@ -786,18 +775,12 @@ class PanePatientForm extends JPanel {
             ctn_tf.add(tf_personalID);
             ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
             ctn_tf.add(tf_addressID);
-            ctn_tf_2.setLayout(new GridLayout(5, 1));
-            ctn_tf_2.add(lb_place);
-            ctn_tf_2.add(cb_place);
-            ctn_tf_2.add(new JLabel(""));
+            ctn_tf_2.add(tf_place);
+            ctn_tf_2.add(Box.createRigidArea(new Dimension(0, 4)));
         } else {
-            ctn_tf.setLayout(new GridLayout(2, 1));
-            ctn_tf.add(lb_place);
-            ctn_tf.add(cb_place);
-            ctn_tf_2.setLayout(new GridLayout(2, 1));
+            ctn_tf.add(tf_place);
         }
-        ctn_tf_2.add(lb_status);
-        ctn_tf_2.add(cb_status);
+        ctn_tf_2.add(tf_status);
 
         layout.putConstraint(SpringLayout.WEST, ctn_tf, 0,
                 SpringLayout.WEST, title);
@@ -809,22 +792,22 @@ class PanePatientForm extends JPanel {
                     SpringLayout.WEST, title);
             layout.putConstraint(SpringLayout.NORTH, btn_add, 16,
                     SpringLayout.SOUTH, ctn_tf);
-            layout.putConstraint(SpringLayout.WEST, ctn_tf_2, 32,
+            layout.putConstraint(SpringLayout.WEST, ctn_tf_2, 8,
                     SpringLayout.EAST, ctn_tf);
             layout.putConstraint(SpringLayout.NORTH, ctn_tf_2, 0,
                     SpringLayout.NORTH, ctn_tf);
         } else {
             layout.putConstraint(SpringLayout.WEST, btn_updatePlace, 0,
                     SpringLayout.WEST, title);
-            layout.putConstraint(SpringLayout.NORTH, btn_updatePlace, 16,
-                    SpringLayout.SOUTH, ctn_tf);
-            layout.putConstraint(SpringLayout.WEST, ctn_tf_2, 0,
-                    SpringLayout.WEST, title);
-            layout.putConstraint(SpringLayout.NORTH, ctn_tf_2, 48,
-                    SpringLayout.SOUTH, btn_updatePlace);
             layout.putConstraint(SpringLayout.WEST, btn_updateStatus, 0,
                     SpringLayout.WEST, title);
-            layout.putConstraint(SpringLayout.NORTH, btn_updateStatus, 16,
+            layout.putConstraint(SpringLayout.NORTH, btn_updatePlace, 8,
+                    SpringLayout.SOUTH, ctn_tf);
+            layout.putConstraint(SpringLayout.WEST, ctn_tf_2, 0,
+                    SpringLayout.WEST, ctn_tf);
+            layout.putConstraint(SpringLayout.NORTH, ctn_tf_2, 32,
+                    SpringLayout.SOUTH, btn_updatePlace);
+            layout.putConstraint(SpringLayout.NORTH, btn_updateStatus, 8,
                     SpringLayout.SOUTH, ctn_tf_2);
         }
 
@@ -846,23 +829,14 @@ class PanePatientForm extends JPanel {
 
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
-            boolean valid = true;
-            int addressID = 0, placeID = 0;
+            int addressID, placeID;
 
             // check birthyear
             if (tf_birthyear.getText().matches("^[0-9]+$") && tf_birthyear.getText().length() == 4 && Integer.parseInt(tf_birthyear.getText()) < 2022) {
                 tf_birthyear.hideHint();
             } else {
-                valid = false;
                 tf_birthyear.showHint();
-            }
-
-            // check ppersonalID
-            if (tf_personalID.getText().matches("^[0-9]+$") && tf_personalID.getText().length() == 9) {
-                tf_personalID.hideHint();
-            } else {
-                valid = false;
-                tf_personalID.showHint();
+                return;
             }
 
             // check addressID
@@ -870,55 +844,49 @@ class PanePatientForm extends JPanel {
                 addressID = Manager.existedAddress(tf_addressID.getText());
                 tf_addressID.hideHint();
             } else {
-                valid = false;
                 tf_addressID.showHint();
+                return;
             }
 
             // check status
             if (!"".equals(tf_status.getText()) && Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4) {
                 tf_status.hideHint();
             } else {
-                valid = false;
                 tf_status.showHint();
+                return;
             }
 
             // check placeID
-            if (Manager.existedPlace(tf_place.getText()) == 0) {
-                valid = false;
-                tf_place.setHint("Location does not exist");
-                tf_place.showHint();
-            } else if (Manager.overloadedPlace(tf_place.getText())) {
-                valid = false;
-                tf_place.setHint("This place is currently overload");
-                tf_place.showHint();
-            } else {
+            if (Manager.existedPlace(tf_place.getText()) > 0) {
                 placeID = Manager.existedPlace(tf_place.getText());
                 tf_place.hideHint();
+            } else {
+                tf_place.showHint();
+                return;
             }
 
             // check existed User
             if (Manager.existedUser(tf_personalID.getText()) == 0) {
                 lb_error_add.setForeground(Color.WHITE);
             } else {
-                valid = false;
+                tf_personalID.showHint();
                 lb_error_add.setForeground(Global.colError);
+                return;
             }
 
-            if (valid) {
-                // create a user in database
-                Manager.createUser(tf_fullname.getText(), tf_personalID.getText(), Integer.parseInt(tf_birthyear.getText()), addressID, Integer.parseInt(tf_status.getText()), placeID);
+            // create a user in database
+            Manager.createUser(tf_fullname.getText(), tf_personalID.getText(), Integer.parseInt(tf_birthyear.getText()), addressID, Integer.parseInt(tf_status.getText()), placeID);
 
-                // reset all text fields
-                PanePatientList.id = Manager.getUserIntList("userID");
-                GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientList());
-                lb_error_add.setForeground(Color.WHITE);
-                tf_fullname.setText("Full name");
-                tf_birthyear.setText("Birth year (yyyy)");
-                tf_personalID.setText("Personal ID");
-                tf_addressID.setText("Address ID");
-                tf_status.setText("Status");
-                tf_place.setText("Treatment location");
-            }
+            // reset all text fields
+            PanePatientList.id = Manager.getUserIntList("userID");
+            GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientList());
+            lb_error_add.setForeground(Color.WHITE);
+            tf_fullname.setText("Full name");
+            tf_birthyear.setText("Birth year (yyyy)");
+            tf_personalID.setText("Personal ID");
+            tf_addressID.setText("Address ID");
+            tf_status.setText("Status");
+            tf_place.setText("Treatment location");
         });
 
         btn_updateStatus.addActionListener(e -> {
@@ -943,13 +911,7 @@ class PanePatientForm extends JPanel {
 
         btn_updatePlace.addActionListener(e -> {
             // check place
-            if (Manager.existedPlace(tf_place.getText()) == 0) {
-                tf_place.setHint("Location does not exist");
-                tf_place.showHint();
-            } else if (Manager.overloadedPlace(tf_place.getText())) {
-                tf_place.setHint("This place is currently overload");
-                tf_place.showHint();
-            } else {
+            if (Manager.existedPlace(tf_place.getText()) > 0) {
                 // update DB
                 Manager.updateUserPlace(ID, Manager.existedPlace(tf_place.getText()));
                 tf_place.hideHint();
@@ -959,6 +921,9 @@ class PanePatientForm extends JPanel {
                 GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientInfo());
                 lb_error_add.setForeground(Color.WHITE);
                 tf_place.setText("Treatment location");
+            } else {
+                tf_place.showHint();
+                return;
             }
         });
     }
@@ -979,20 +944,13 @@ class PanePatientForm extends JPanel {
         }
     }
 
-    void queryComboBox(JNeoComboBox cb) {
-        String[] sample = {"Patient status", "Necessity", "Debt"};
-        ArrayList<String> item_list = new ArrayList<>();
-        Collections.addAll(item_list, sample);
-        cb.removeAllItems();
-        cb.addItemList(item_list);
-    }
-
     void assignID(int ID) {
         this.ID = ID;
-
+        
         this.tf_status.setText(Manager.getUserDetail(ID, "status"));
         this.tf_place.setText(Manager.getFullPlace(Integer.parseInt(Manager.getUserDetail(ID, "placeID"))));
     }
+
 }
 
 class PaneNecessityForm extends JPanel {
