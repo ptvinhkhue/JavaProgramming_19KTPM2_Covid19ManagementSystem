@@ -39,9 +39,9 @@ public class Global {
     public static int sb_height;
 
     // String - Side bar items
-    public static String[] itemIcon_Manager = {"list", "package", "chart", "logout"};
+    public static String[] itemIcon_Manager = {"account", "package", "chart", "logout"};
     public static String[] itemIcon_User = {"info", "package", "wallet", "logout"};
-    public static String[] itemIcon_Admin = {"list", "list", "logout"};
+    public static String[] itemIcon_Admin = {"account", "location", "logout"};
 
     Global() {
         init();

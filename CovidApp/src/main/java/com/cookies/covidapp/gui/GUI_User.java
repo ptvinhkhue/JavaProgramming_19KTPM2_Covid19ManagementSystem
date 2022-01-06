@@ -130,7 +130,7 @@ class PanePasswordUser extends JPanel {
         btnContainer.add(btn_return);
 
         // text fields
-        tf_password = new JNeoTextField("Password", 16, true, "lock", "Password does not match.");
+        tf_password = new JNeoTextField("Password", 16, true, "lock_hl", "Password does not match.");
 
         // labels
         lb_credit = new JNeoLabel("Developed by Cookies", Global.fntSecond, Global.colSecond);
@@ -223,11 +223,7 @@ class PanePasswordUser extends JPanel {
 
                     ArrayList<String> iconName = new ArrayList<>();
                     for (int k = 0; k < relatedID.size(); k++) {
-                        if (k % 2 == 0) {
-                            iconName.add("male");
-                        } else {
-                            iconName.add("female");
-                        }
+                        iconName.add("account");
                     }
                     int uID = GUI_User.user.getID();
                     String subtitle = User.getUserDetail(uID, "yob") + " | " + User.getUserDetail(uID, "personalID")
@@ -274,11 +270,7 @@ class PanePasswordUser extends JPanel {
 
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < relatedID.size(); k++) {
-                    if (k % 2 == 0) {
-                        iconName.add("male");
-                    } else {
-                        iconName.add("female");
-                    }
+                                        iconName.add("account");
                 }
                 int uID = GUI_User.user.getID();
                 String subtitle = User.getUserDetail(uID, "yob") + " | " + User.getUserDetail(uID, "personalID")
@@ -375,7 +367,7 @@ class PanePersonalInfo extends JPanel {
         ArrayList<String> label = new ArrayList<>(Arrays.asList("2001 | District 1"));
         ArrayList<String> label_full = new ArrayList<>(Arrays.asList("2001"));
 
-        ArrayList<String> iconName = new ArrayList<>(Arrays.asList("male"));
+        ArrayList<String> iconName = new ArrayList<>(Arrays.asList("account"));
 
         list = new JNeoList(iconName, name, label, label_full);
         list.removeBtnAdd();
@@ -431,7 +423,7 @@ class PanePersonalInfo extends JPanel {
             ArrayList<String> subtitle = User.getTimeStatusHistory(GUI_User.user.getID());
 
             for (int k = 0; k < title.size(); k++) {
-                iconName.add("sb_package");
+                iconName.add("package");
             }
             related.add(iconName);
             related.add(title);
@@ -518,7 +510,7 @@ class PaneHistory extends JPanel {
         ArrayList<String> label = new ArrayList<>(Arrays.asList("2001 | District 1"));
         ArrayList<String> label_full = new ArrayList<>(Arrays.asList("2001"));
 
-        ArrayList<String> iconName = new ArrayList<>(Arrays.asList("male"));
+        ArrayList<String> iconName = new ArrayList<>(Arrays.asList("account"));
 
         list = new JNeoList(iconName, name, label, label_full);
         list.removeBtnAdd();
@@ -579,7 +571,7 @@ class PaneHistory extends JPanel {
             }
              */
             for (int k = 0; k < title.size(); k++) {
-                iconName.add("sb_package");
+                iconName.add("name");
             }
             related.add(iconName);
             related.add(title);
@@ -657,7 +649,7 @@ class PaneHistory extends JPanel {
                 //}
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < title.size(); k++) {
-                    iconName.add("sb_package");
+                    iconName.add("package");
                 }
 
                 related.add(iconName);
@@ -710,7 +702,7 @@ class PaneBuyNecessity extends JPanel {
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
-            iconName.add("sb_package");
+            iconName.add("package");
         }
 
         list = new JNeoList(iconName, name, label, label_full);
@@ -786,7 +778,7 @@ class PaneBuyNecessity extends JPanel {
 
             ArrayList<String> iconName = new ArrayList<>();
             for (int i = 0; i < id.size(); i++) {
-                iconName.add("sb_package");
+                iconName.add("package");
             }
 
             list.setNewList(iconName, name, label, label_full);
@@ -856,7 +848,7 @@ class PaneNecessityInfo extends JPanel {
         ctn_lb.add(lb_subtitle);
 
         // text field
-        tf_count = new JNeoTextField("Necessity count", 16, false, "account", "Must be a positive number");
+        tf_count = new JNeoTextField("Necessity count", 16, false, "package", "Must be a positive number");
 
         // button
         btn_add = new JNeoButton("Add to cart", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -939,7 +931,7 @@ class PanePayment extends JPanel {
     private JSideBar sideBar;
     private JPanel ctn_lb;
     private JNeoLabel lb_title, lb_debt, lb_balance;
-    private JNeoTextField tf_account, tf_amount;
+    private JNeoTextField tf_amount;
     private JNeoButton btn_transfer;
 
     PanePayment() {
@@ -973,8 +965,7 @@ class PanePayment extends JPanel {
         ctn_lb.add(lb_debt);
 
         // text fields & button
-        tf_account = new JNeoTextField("Account to transfer", 16, false, "account", "Account does not exist");
-        tf_amount = new JNeoTextField("Amount to transfer", 16, false, "account", "Must be a positive number");
+        tf_amount = new JNeoTextField("Amount to transfer", 16, false, "cash_hl", "Must be a positive number");
         btn_transfer = new JNeoButton("Transfer", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
     }
 
@@ -999,14 +990,10 @@ class PanePayment extends JPanel {
                 SpringLayout.NORTH, this);
 
         // text fields & buttons
-        layout.putConstraint(SpringLayout.WEST, tf_account, 48,
-                SpringLayout.EAST, sideBar);
-        layout.putConstraint(SpringLayout.NORTH, tf_account, 32,
-                SpringLayout.SOUTH, ctn_lb);
         layout.putConstraint(SpringLayout.WEST, tf_amount, 48,
                 SpringLayout.EAST, sideBar);
         layout.putConstraint(SpringLayout.NORTH, tf_amount, 16,
-                SpringLayout.SOUTH, tf_account);
+                SpringLayout.SOUTH, ctn_lb);
         layout.putConstraint(SpringLayout.WEST, btn_transfer, 48,
                 SpringLayout.EAST, sideBar);
         layout.putConstraint(SpringLayout.NORTH, btn_transfer, 24,
@@ -1056,7 +1043,6 @@ class PanePayment extends JPanel {
     void addAll() {
         add(sideBar);
         add(ctn_lb);
-        add(tf_account);
         add(tf_amount);
         add(btn_transfer);
     }
@@ -1112,7 +1098,7 @@ class PaneCart extends JPanel {
         /*
         String[] iconName = new String[7];
         for (int i = 0; i < 7; i++) {
-            iconName[i] = "sb_package";
+            iconName[i] = "package";
         }
         String[] name = {"Rice", "Bleach", "Shampoo", "Noodle", "Perfume", "Drugs", "Panadol"};
         String[] label = {"$5", "$15", "$2", "$2", "$4", "$6", "$8",};
@@ -1123,7 +1109,7 @@ class PaneCart extends JPanel {
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
-            iconName.add("sb_package");
+            iconName.add("package");
         }
 
         list = new JNeoList(iconName, name, label, label_full);
@@ -1214,7 +1200,7 @@ class PaneCart extends JPanel {
             //}
             ArrayList<String> iconName = new ArrayList<>();
             for (int k = 0; k < title.size(); k++) {
-                iconName.add("sb_package");
+                iconName.add("package");
             }
             related.add(iconName);
             related.add(title);
@@ -1252,7 +1238,7 @@ class PaneCart extends JPanel {
         }
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < name.size(); i++) {
-            iconName.add("sb_package");
+            iconName.add("package");
         }
 
         list.setNewList(iconName, name, label, label_full);

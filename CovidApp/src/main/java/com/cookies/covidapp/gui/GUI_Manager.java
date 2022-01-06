@@ -281,11 +281,7 @@ class PanePatientList extends JPanel {
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < id.size(); i++) {
-            if (i % 2 == 0) {
-                iconName.add("male");
-            } else {
-                iconName.add("female");
-            }
+            iconName.add("account");
         }
 
         list = new JNeoList(iconName, name, label, label_full);
@@ -415,11 +411,7 @@ class PanePatientList extends JPanel {
 
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < id.size(); k++) {
-                    if (k % 2 == 0) {
-                        iconName.add("male");
-                    } else {
-                        iconName.add("female");
-                    }
+                                        iconName.add("account");
                 }
 
                 list.setNewList(iconName, name, label, label_full);
@@ -476,11 +468,7 @@ class PanePatientList extends JPanel {
 
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < relatedID.size(); k++) {
-                    if (k % 2 == 0) {
-                        iconName.add("male");
-                    } else {
-                        iconName.add("female");
-                    }
+                                        iconName.add("account");
                 }
 
                 ArrayList<ArrayList<String>> related = new ArrayList<>(4);
@@ -550,7 +538,7 @@ class PaneNecessityList extends JPanel {
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < id.size(); i++) {
-            iconName.add("sb_package");
+            iconName.add("package");
         }
 
         list = new JNeoList(iconName, name, label, label_full);
@@ -616,7 +604,7 @@ class PaneNecessityList extends JPanel {
 
             ArrayList<String> iconName = new ArrayList<>();
             for (int i = 0; i < id.size(); i++) {
-                iconName.add("sb_package");
+                iconName.add("package");
             }
 
             list.setNewList(iconName, name, label, label_full);
@@ -646,7 +634,7 @@ class PaneNecessityList extends JPanel {
 
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int i = 0; i < id.size(); i++) {
-                    iconName.add("sb_package");
+                    iconName.add("package");
                 }
 
                 list.setNewList(iconName, name, label, label_full);
@@ -724,16 +712,16 @@ class PanePatientForm extends JPanel {
         title = new JNeoLabel(str_btn + str_title + "patient", Global.fntHeader, Global.colDark);
 
         // text fields
-        tf_fullname = new JNeoTextField("Full name", 14, false, "account", "!NULL");
-        tf_birthyear = new JNeoTextField("Birth year", 14, false, "account", "Format must be 'yyyy'");
-        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account", "Personal ID is not valid");
-        tf_addressID = new JNeoTextField("Address ID", 14, false, "account", "Address does not exist");
+        tf_fullname = new JNeoTextField("Full name", 14, false, "name_hl", "!NULL");
+        tf_birthyear = new JNeoTextField("Birth year", 14, false, "calendar_hl", "Format must be 'yyyy'");
+        tf_personalID = new JNeoTextField("Personal ID", 14, false, "account_hl", "Personal ID is not valid");
+        tf_addressID = new JNeoTextField("Address ID", 14, false, "address_hl", "Address does not exist");
 
-        tf_place = new JNeoTextField("Treatment location", 14, false, "account", "Location does not exist");
-        tf_status = new JNeoTextField("Status", 14, false, "account", "Invalid status (0 -> 3)");
+        tf_place = new JNeoTextField("Treatment location", 14, false, "location_hl", "Location does not exist");
+        tf_status = new JNeoTextField("Status", 14, false, "status_hl", "Invalid status (0 -> 3)");
 
         // combo box
-        cb_place = new JNeoComboBox("account");
+        cb_place = new JNeoComboBox("location_hl");
         queryComboBox(cb_place);
         cb_place.setEditable(true);
 
@@ -1008,8 +996,8 @@ class PaneNecessityForm extends JPanel {
         title = new JNeoLabel(str_btn + str_title + "necessity", Global.fntHeader, Global.colDark);
 
         // text fields
-        tf_name = new JNeoTextField("Necessity name", 20, false, "account", "!NULL");
-        tf_price = new JNeoTextField("Price", 20, false, "account", "Must be a positive number");
+        tf_name = new JNeoTextField("Necessity name", 20, false, "package_hl", "!NULL");
+        tf_price = new JNeoTextField("Price", 20, false, "cash_hl", "Must be a positive number");
 
         // button
         btn_add = new JNeoButton(str_btn, Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -1252,11 +1240,7 @@ class PanePatientInfo extends JPanel {
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int k = 0; k < relatedID.size(); k++) {
-            if (k % 2 == 0) {
-                iconName.add("male");
-            } else {
-                iconName.add("female");
-            }
+            iconName.add("account");
         }
 
         list = new JNeoList(iconName, name, label, label_full);
@@ -1388,11 +1372,7 @@ class PanePatientInfo extends JPanel {
 
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < relatedID.size(); k++) {
-                    if (k % 2 == 0) {
-                        iconName.add("male");
-                    } else {
-                        iconName.add("female");
-                    }
+                                        iconName.add("account");
                 }
 
                 ArrayList<ArrayList<String>> related = new ArrayList<>(4);

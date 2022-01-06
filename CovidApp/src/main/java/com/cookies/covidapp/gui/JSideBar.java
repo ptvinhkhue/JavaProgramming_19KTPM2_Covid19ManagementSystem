@@ -33,7 +33,7 @@ public class JSideBar extends JPanel {
                     add(new JLabel(""));
             JNeoButton i = new JNeoButton("", getBackground(), Color.WHITE, 0, 8, Global.fntButton, false);
 
-            String iconPath = "sb_" + itemIcon[k];
+            String iconPath = itemIcon[k];
             if (k == highlight) {
                 iconPath += "_hl";
                 i.setBackground(i.getBackground().darker());

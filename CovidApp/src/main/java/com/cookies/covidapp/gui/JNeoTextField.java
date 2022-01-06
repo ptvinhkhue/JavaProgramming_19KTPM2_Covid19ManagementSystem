@@ -87,7 +87,7 @@ class JNeoSearchBar extends Container {
 
         // icon & search bar
         JLabel lb_icon = new JLabel("");
-        lb_icon.setIcon(new ImageIcon(Objects.requireNonNull(Global.getIcon("search"))));
+        lb_icon.setIcon(new ImageIcon(Objects.requireNonNull(Global.getIcon("search_st"))));
 
         tf = new JTextField(str, col);
         tf.setFont(Global.fntPrimary);

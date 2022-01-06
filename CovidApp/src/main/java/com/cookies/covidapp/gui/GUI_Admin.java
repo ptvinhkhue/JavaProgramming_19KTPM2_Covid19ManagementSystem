@@ -221,11 +221,7 @@ class PaneManagerList extends JPanel {
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < id.size(); i++) {
-            if (i % 2 == 0) {
-                iconName.add("male");
-            } else {
-                iconName.add("female");
-            }
+            iconName.add("account");
         }
 
         list = new JNeoList(iconName, name, label, label_full);
@@ -290,11 +286,7 @@ class PaneManagerList extends JPanel {
 
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < historyID.size(); k++) {
-                    if (k % 2 == 0) {
-                        iconName.add("male");
-                    } else {
-                        iconName.add("female");
-                    }
+                                        iconName.add("account");
                 }
 
                 ArrayList<ArrayList<String>> related = new ArrayList<>(4);
@@ -351,7 +343,7 @@ class PaneManagerForm extends JPanel {
         title = new JNeoLabel(str_btn + str_title + "manager", Global.fntHeader, Global.colDark);
 
         // text fields
-        tf_username = new JNeoTextField("Username", 14, false, "account", "!NULL");
+        tf_username = new JNeoTextField("Username", 14, false, "account_hl", "!NULL");
         tf_password = new JNeoTextField("Password", 14, false, "lock_hl", "!NULL");
         // button
         btn_add = new JNeoButton("Add", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -529,11 +521,7 @@ class PaneManagerInfo extends JPanel {
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int k = 0; k < historyID.size(); k++) {
-            if (k % 2 == 0) {
-                iconName.add("male");
-            } else {
-                iconName.add("female");
-            }
+            iconName.add("account");
         }
 
         list = new JNeoList(iconName, name, label, label_full);
@@ -666,7 +654,7 @@ class PanePlaceList extends JPanel {
 
         ArrayList<String> iconName = new ArrayList<>();
         for (int i = 0; i < id.size(); i++) {
-            iconName.add("sb_package");
+            iconName.add("location");
         }
 
         list = new JNeoList(iconName, name, label, label_full);
@@ -773,9 +761,9 @@ class PanePlaceForm extends JPanel {
         title = new JNeoLabel(str_btn + str_title + "treatment location", Global.fntHeader, Global.colDark);
 
         // text fields
-        tf_name = new JNeoTextField("Location name", 14, false, "account", "!NULL");
-        tf_capacity = new JNeoTextField("Maximum capacity", 14, false, "account", "Must be a positive number.");
-        tf_current = new JNeoTextField("Current capacity", 14, false, "account", "Must be lower than Maximum capacity.");
+        tf_name = new JNeoTextField("Location name", 20, false, "location_hl", "!NULL");
+        tf_capacity = new JNeoTextField("Maximum capacity", 20, false, "capacity_max_hl", "Must be a positive number.");
+        tf_current = new JNeoTextField("Current capacity", 20, false, "capacity_hl", "Must be lower than Maximum capacity.");
 
         // button
         btn_add = new JNeoButton(str_btn, Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
