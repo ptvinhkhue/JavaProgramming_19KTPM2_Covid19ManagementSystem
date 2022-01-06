@@ -4,15 +4,86 @@ import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class JNeoComboBox extends JComboBox {
-    private DefaultComboBoxModel model;
+public class JNeoComboBox extends Container {
 
-    public JNeoComboBox() {
+    private JNeoComboBoxSelector selector;
+
+    JNeoComboBox(String iconName) {
+        super();
+        SpringLayout layout = new SpringLayout();
+        setLayout(layout);
+
+        // icon
+        JLabel lb_icon = new JLabel("");
+        if (!iconName.equals(""))
+            lb_icon.setIcon(new ImageIcon(Objects.requireNonNull(Global.getIcon(iconName))));
+
+        // selector
+        selector = new JNeoComboBoxSelector();
+
+        // layout
+        layout.putConstraint(SpringLayout.WEST, lb_icon, 0,
+                SpringLayout.WEST, this);
+        layout.putConstraint(SpringLayout.NORTH, lb_icon, 0,
+                SpringLayout.NORTH, this);
+
+        layout.putConstraint(SpringLayout.WEST, selector, (Objects.equals(iconName, "")) ? 0 : 4,
+                SpringLayout.EAST, lb_icon);
+        if (!iconName.equals(""))
+            layout.putConstraint(SpringLayout.VERTICAL_CENTER, selector, 0,
+                SpringLayout.VERTICAL_CENTER, lb_icon);
+        else
+            layout.putConstraint(SpringLayout.NORTH, selector, 0,
+                    SpringLayout.NORTH, lb_icon);
+
+        layout.putConstraint(SpringLayout.EAST, this, 0,
+                SpringLayout.EAST, selector);
+        layout.putConstraint(SpringLayout.SOUTH, this, 0,
+                SpringLayout.SOUTH, selector);
+
+        add(lb_icon); add(selector);
+    }
+
+    JNeoComboBoxSelector getSelector() {
+        return selector;
+    }
+
+    void removeAllItems() {
+        selector.removeAllItems();
+    }
+
+    void addItemList(ArrayList<String> item_list) {
+        selector.addItemList(item_list);
+    }
+
+    void setEditable(boolean editable) {
+        selector.setEditable(editable);
+    }
+
+    int getSelectedIndex() {
+        return selector.getSelectedIndex();
+    }
+
+    public void repaintAll() {
+        repaint();
+        this.getSelector().repaint();
+        this.getSelector().getRender().repaint();
+        this.getSelector().getEdit().getPanel().repaint();
+    }
+}
+
+class JNeoComboBoxSelector extends JComboBox {
+    private final DefaultComboBoxModel model;
+    private final JNeoComboBoxRender render = new JNeoComboBoxRender();
+    private final JNeoComboBoxEditor editor = new JNeoComboBoxEditor();
+
+    public JNeoComboBoxSelector() {
         model = new DefaultComboBoxModel();
         setModel(model);
-        setRenderer(new JNeoComboBoxRender());
-        setEditor(new JNeoComboBoxEditor());
+        setRenderer(render);
+        setEditor(editor);
     }
 
     public void addItemList(ArrayList<String> item) {
@@ -21,7 +92,13 @@ public class JNeoComboBox extends JComboBox {
         }
     }
 
+    JNeoComboBoxRender getRender() {
+        return render;
+    }
 
+    JNeoComboBoxEditor getEdit() {
+        return editor;
+    }
 }
 
 class JNeoComboBoxRender extends JPanel implements ListCellRenderer {
@@ -96,4 +173,6 @@ class JNeoComboBoxEditor extends BasicComboBoxEditor {
         selectedValue = item_list;
         lb.setText(selectedValue);
     }
+
+    JPanel getPanel() { return panel; }
 }

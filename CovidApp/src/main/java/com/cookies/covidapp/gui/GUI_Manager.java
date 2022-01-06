@@ -699,6 +699,7 @@ class PanePatientForm extends JPanel {
     Container ctn_tf, ctn_tf_2;
     JNeoButton btn_add, btn_updatePlace, btn_updateStatus;
     JLabel lb_error_add, lb_error_place, lb_error_status;
+    JNeoComboBox cb_place;
     boolean isAdd;
 
     PanePatientForm(boolean isAdd) {
@@ -730,7 +731,12 @@ class PanePatientForm extends JPanel {
 
         tf_place = new JNeoTextField("Treatment location", 14, false, "account", "Location does not exist");
         tf_status = new JNeoTextField("Status", 14, false, "account", "Invalid status (0 -> 3)");
-        
+
+        // combo box
+        cb_place = new JNeoComboBox("account");
+        queryComboBox(cb_place);
+        cb_place.setEditable(true);
+
         // button
         btn_add = new JNeoButton("Add", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
         btn_updatePlace = new JNeoButton("Update", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
@@ -773,9 +779,8 @@ class PanePatientForm extends JPanel {
             ctn_tf.add(tf_birthyear);
             ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
             ctn_tf.add(tf_personalID);
-            ctn_tf.add(Box.createRigidArea(new Dimension(0, 4)));
-            ctn_tf.add(tf_addressID);
-            ctn_tf_2.add(tf_place);
+
+            ctn_tf_2.add(tf_addressID);
             ctn_tf_2.add(Box.createRigidArea(new Dimension(0, 4)));
         } else {
             ctn_tf.add(tf_place);
@@ -786,12 +791,19 @@ class PanePatientForm extends JPanel {
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, ctn_tf, 24,
                 SpringLayout.SOUTH, title);
+        if (isAdd) {
+            // cb
+            layout.putConstraint(SpringLayout.WEST, cb_place, 0,
+                    SpringLayout.WEST, title);
+            layout.putConstraint(SpringLayout.NORTH, cb_place, 4,
+                    SpringLayout.SOUTH, ctn_tf);
+        }
 
         if (isAdd) {
             layout.putConstraint(SpringLayout.WEST, btn_add, 0,
                     SpringLayout.WEST, title);
-            layout.putConstraint(SpringLayout.NORTH, btn_add, 16,
-                    SpringLayout.SOUTH, ctn_tf);
+            layout.putConstraint(SpringLayout.NORTH, btn_add, 32,
+                    SpringLayout.SOUTH, cb_place);
             layout.putConstraint(SpringLayout.WEST, ctn_tf_2, 8,
                     SpringLayout.EAST, ctn_tf);
             layout.putConstraint(SpringLayout.NORTH, ctn_tf_2, 0,
@@ -936,6 +948,7 @@ class PanePatientForm extends JPanel {
         if (isAdd) {
             add(lb_error_add);
             add(btn_add);
+            add(cb_place);
         } else {
             add(lb_error_place);
             add(lb_error_status);
@@ -951,6 +964,14 @@ class PanePatientForm extends JPanel {
         this.tf_place.setText(Manager.getFullPlace(Integer.parseInt(Manager.getUserDetail(ID, "placeID"))));
     }
 
+    // there's only 1 type so no need for 'int type'
+    void queryComboBox(JNeoComboBox cb) {
+        String[] sample = {"Bệnh viện đa khoa Bình Thuận", "Trường THPT chuyên Trần Hưng Đạo", "Kí túc xá ĐHQG TP. Hồ Chí Minh"}; // example
+        ArrayList<String> item_list = new ArrayList<>();
+        Collections.addAll(item_list, sample); // example
+        cb.removeAllItems();
+        cb.addItemList(item_list);
+    }
 }
 
 class PaneNecessityForm extends JPanel {
@@ -1445,14 +1466,14 @@ class PaneChart extends JPanel {
         lb_result = new JNeoLabel("Result: 0", Global.fntButton, Global.colDark);
 
         // combo box
-        cb_type = new JNeoComboBox();
+        cb_type = new JNeoComboBox("");
         String[] sample_type = {"Patient status", "Necessity", "Debt"};
         ArrayList<String> cb_type_list = new ArrayList<>();
         Collections.addAll(cb_type_list, sample_type);
         cb_type.addItemList(cb_type_list);
         cb_type.setEditable(true);
 
-        cb_input = new JNeoComboBox();
+        cb_input = new JNeoComboBox("");
         String[] sample_input = {"F0", "F1", "F2"};
         ArrayList<String> cb_input_input = new ArrayList<>();
         Collections.addAll(cb_input_input, sample_input);
@@ -1507,7 +1528,7 @@ class PaneChart extends JPanel {
     }
 
     void addAllActionListener() {
-        cb_type.addActionListener(e -> {
+        cb_type.getSelector().addActionListener(e -> {
             ArrayList<String> cb_input_list = new ArrayList<>();
             switch (cb_type.getSelectedIndex()) {
                 case 0:
@@ -1532,9 +1553,10 @@ class PaneChart extends JPanel {
                     lb_result.setText("Trần Thanh Tùng's Debt: 200000");
                     break;
             }
+            cb_input.repaintAll();
         });
 
-        cb_input.addActionListener(e -> {
+        cb_input.getSelector().addActionListener(e -> {
             lb_result.setText("Query gì đó r đặt text mới ở đây!");
         });
     }
