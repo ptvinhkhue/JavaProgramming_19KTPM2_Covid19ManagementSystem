@@ -411,7 +411,7 @@ class PanePatientList extends JPanel {
 
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < id.size(); k++) {
-                                        iconName.add("account");
+                    iconName.add("account");
                 }
 
                 list.setNewList(iconName, name, label, label_full);
@@ -468,7 +468,7 @@ class PanePatientList extends JPanel {
 
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < relatedID.size(); k++) {
-                                        iconName.add("account");
+                    iconName.add("account");
                 }
 
                 ArrayList<ArrayList<String>> related = new ArrayList<>(4);
@@ -733,7 +733,7 @@ class PanePatientForm extends JPanel {
         // label
         lb_error_add = new JNeoLabel("Patient already exists", Global.fntSecond, Color.WHITE);
         lb_error_place = new JNeoLabel("Location does not exist", Global.fntSecond, Color.WHITE);
-        lb_error_status = new JNeoLabel("Must be a positive number", Global.fntSecond, Color.WHITE);
+        lb_error_status = new JNeoLabel("Invalid status (0 -> 3)", Global.fntSecond, Color.WHITE);
     }
 
     void organize() {
@@ -829,14 +829,23 @@ class PanePatientForm extends JPanel {
 
     void addAllActionListener() {
         btn_add.addActionListener(e -> {
-            int addressID, placeID;
+            boolean valid = true;
+            int addressID = 0, placeID = 0;
 
             // check birthyear
             if (tf_birthyear.getText().matches("^[0-9]+$") && tf_birthyear.getText().length() == 4 && Integer.parseInt(tf_birthyear.getText()) < 2022) {
                 tf_birthyear.hideHint();
             } else {
+                valid = false;
                 tf_birthyear.showHint();
-                return;
+            }
+
+            // check personalID
+            if (tf_personalID.getText().matches("^[0-9]+$") && tf_personalID.getText().length() == 9) {
+                tf_personalID.hideHint();
+            } else {
+                valid = false;
+                tf_personalID.showHint();
             }
 
             // check addressID
@@ -844,49 +853,63 @@ class PanePatientForm extends JPanel {
                 addressID = Manager.existedAddress(tf_addressID.getText());
                 tf_addressID.hideHint();
             } else {
+                valid = false;
                 tf_addressID.showHint();
-                return;
             }
 
             // check status
             if (!"".equals(tf_status.getText()) && Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4) {
                 tf_status.hideHint();
             } else {
+                valid = false;
                 tf_status.showHint();
-                return;
             }
 
+            /*
             // check placeID
-            if (Manager.existedPlace(tf_place.getText()) > 0) {
+            if (Manager.existedPlace(tf_place.getText()) == 0) {
+                valid = false;
+                tf_place.setHint("Location does not exist");
+                tf_place.showHint();
+            } else if (Manager.overloadedPlace(tf_place.getText())) {
+                valid = false;
+                tf_place.setHint("This place is currently overload");
+                tf_place.showHint();
+            } else {
                 placeID = Manager.existedPlace(tf_place.getText());
                 tf_place.hideHint();
-            } else {
-                tf_place.showHint();
-                return;
+            }
+             */
+            if (cb_place.getSelectedIndex() > 0) {
+                placeID = Manager.existedPlace(cb_place.getSelectedItem());
+            }
+            else {
+                valid = false;
             }
 
             // check existed User
             if (Manager.existedUser(tf_personalID.getText()) == 0) {
                 lb_error_add.setForeground(Color.WHITE);
             } else {
-                tf_personalID.showHint();
+                valid = false;
                 lb_error_add.setForeground(Global.colError);
-                return;
             }
 
-            // create a user in database
-            Manager.createUser(tf_fullname.getText(), tf_personalID.getText(), Integer.parseInt(tf_birthyear.getText()), addressID, Integer.parseInt(tf_status.getText()), placeID);
+            if (valid) {
+                // create a user in database
+                Manager.createUser(tf_fullname.getText(), tf_personalID.getText(), Integer.parseInt(tf_birthyear.getText()), addressID, Integer.parseInt(tf_status.getText()), placeID);
 
-            // reset all text fields
-            PanePatientList.id = Manager.getUserIntList("userID");
-            GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientList());
-            lb_error_add.setForeground(Color.WHITE);
-            tf_fullname.setText("Full name");
-            tf_birthyear.setText("Birth year (yyyy)");
-            tf_personalID.setText("Personal ID");
-            tf_addressID.setText("Address ID");
-            tf_status.setText("Status");
-            tf_place.setText("Treatment location");
+                // reset all text fields
+                PanePatientList.id = Manager.getUserIntList("userID");
+                GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientList());
+                lb_error_add.setForeground(Color.WHITE);
+                tf_fullname.setText("Full name");
+                tf_birthyear.setText("Birth year (yyyy)");
+                tf_personalID.setText("Personal ID");
+                tf_addressID.setText("Address ID");
+                tf_status.setText("Status");
+                tf_place.setText("Treatment location");
+            }
         });
 
         btn_updateStatus.addActionListener(e -> {
@@ -911,7 +934,13 @@ class PanePatientForm extends JPanel {
 
         btn_updatePlace.addActionListener(e -> {
             // check place
-            if (Manager.existedPlace(tf_place.getText()) > 0) {
+            if (Manager.existedPlace(tf_place.getText()) == 0) {
+                tf_place.setHint("Location does not exist");
+                tf_place.showHint();
+            } else if (Manager.overloadedPlace(tf_place.getText())) {
+                tf_place.setHint("This place is currently overload");
+                tf_place.showHint();
+            } else {
                 // update DB
                 Manager.updateUserPlace(ID, Manager.existedPlace(tf_place.getText()));
                 tf_place.hideHint();
@@ -921,9 +950,6 @@ class PanePatientForm extends JPanel {
                 GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientInfo());
                 lb_error_add.setForeground(Color.WHITE);
                 tf_place.setText("Treatment location");
-            } else {
-                tf_place.showHint();
-                return;
             }
         });
     }
@@ -947,16 +973,18 @@ class PanePatientForm extends JPanel {
 
     void assignID(int ID) {
         this.ID = ID;
-        
+
         this.tf_status.setText(Manager.getUserDetail(ID, "status"));
         this.tf_place.setText(Manager.getFullPlace(Integer.parseInt(Manager.getUserDetail(ID, "placeID"))));
     }
 
     // there's only 1 type so no need for 'int type'
     void queryComboBox(JNeoComboBox cb) {
-        String[] sample = {"Bệnh viện đa khoa Bình Thuận", "Trường THPT chuyên Trần Hưng Đạo", "Kí túc xá ĐHQG TP. Hồ Chí Minh"}; // example
+        //String[] sample = {"Bệnh viện đa khoa Bình Thuận", "Trường THPT chuyên Trần Hưng Đạo", "Kí túc xá ĐHQG TP. Hồ Chí Minh"}; // example
         ArrayList<String> item_list = new ArrayList<>();
-        Collections.addAll(item_list, sample); // example
+        item_list = Manager.getStringField("place", "name");
+        item_list.add(0, "---");
+        //Collections.addAll(item_list, sample); // example
         cb.removeAllItems();
         cb.addItemList(item_list);
     }
@@ -1372,7 +1400,7 @@ class PanePatientInfo extends JPanel {
 
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < relatedID.size(); k++) {
-                                        iconName.add("account");
+                    iconName.add("account");
                 }
 
                 ArrayList<ArrayList<String>> related = new ArrayList<>(4);
@@ -1443,18 +1471,18 @@ class PaneChart extends JPanel {
         // text field & label
         lb_type = new JNeoLabel("Type", Global.fntButton, Global.colDark);
         lb_input = new JNeoLabel("Status", Global.fntButton, Global.colDark);
-        lb_result = new JNeoLabel("Result: 0", Global.fntButton, Global.colDark);
+        lb_result = new JNeoLabel("", Global.fntButton, Global.colDark);
 
         // combo box
         cb_type = new JNeoComboBox("");
-        String[] sample_type = {"Patient status", "Necessity", "Debt"};
+        String[] sample_type = {"---", "Patient status", "Necessity sales", "Debt by Treatment Location"};
         ArrayList<String> cb_type_list = new ArrayList<>();
         Collections.addAll(cb_type_list, sample_type);
         cb_type.addItemList(cb_type_list);
         cb_type.setEditable(true);
 
         cb_input = new JNeoComboBox("");
-        String[] sample_input = {"F0", "F1", "F2"};
+        String[] sample_input = {"---"};
         ArrayList<String> cb_input_input = new ArrayList<>();
         Collections.addAll(cb_input_input, sample_input);
         cb_input.addItemList(cb_input_input);
@@ -1511,33 +1539,49 @@ class PaneChart extends JPanel {
         cb_type.getSelector().addActionListener(e -> {
             ArrayList<String> cb_input_list = new ArrayList<>();
             switch (cb_type.getSelectedIndex()) {
-                case 0:
-                    String[] sample_list_0 = {"F0", "F1", "F2"}; // example
-                    Collections.addAll(cb_input_list, sample_list_0);
-                    cb_input.removeAllItems();
-                    cb_input.addItemList(cb_input_list);
-                    lb_result.setText("Number of F0 patients: 1000");
-                    break;
                 case 1:
-                    String[] sample_list_1 = {"Gạo (1kg)", "Dầu ăn (1l)"}; // example
-                    Collections.addAll(cb_input_list, sample_list_1);
+                    cb_input_list = new ArrayList<>(Arrays.asList("F0", "F1", "F2", "F3"));
+                    cb_input_list.add(0, "---");
                     cb_input.removeAllItems();
                     cb_input.addItemList(cb_input_list);
-                    lb_result.setText("Total Rice (1kg) bought: 500");
+                    lb_result.setText("");
                     break;
                 case 2:
-                    String[] sample_list_2 = {"Trần Thanh Tùng", "Phạm Trọng Vinh Khuê", "Trần Đại Hoàng Trung"}; // example
-                    Collections.addAll(cb_input_list, sample_list_2);
+                    cb_input_list = Manager.getStringField("necessity", "name");
+                    cb_input_list.add(0, "---");
                     cb_input.removeAllItems();
                     cb_input.addItemList(cb_input_list);
-                    lb_result.setText("Trần Thanh Tùng's Debt: 200000");
+                    lb_result.setText("");
+                    break;
+                case 3:
+                    cb_input_list = Manager.getStringField("place", "name");
+                    cb_input_list.add(0, "---");
+                    cb_input.removeAllItems();
+                    cb_input.addItemList(cb_input_list);
+                    lb_result.setText("");
+                    break;
+                case 0:
+                    cb_input_list.add(0, "---");
+                    cb_input.removeAllItems();
+                    cb_input.addItemList(cb_input_list);
+                    lb_result.setText("");
                     break;
             }
             cb_input.repaintAll();
         });
 
         cb_input.getSelector().addActionListener(e -> {
-            lb_result.setText("Query gì đó r đặt text mới ở đây!");
+            if (cb_type.getSelectedIndex() > 0 && cb_input.getSelectedIndex() > 0) {
+                if (cb_type.getSelectedIndex() == 1) {
+                    lb_result.setText("Number of F" + (cb_input.getSelectedIndex() - 1) + " patients: " + String.valueOf(Manager.countUserByStatus(cb_input.getSelectedIndex() - 1)));
+                } else if (cb_type.getSelectedIndex() == 2) {
+                    int necessityID = Manager.existedNecessity(cb_input.getSelectedItem());
+                    lb_result.setText("Sales of " + cb_input.getSelectedItem() + ": " + String.valueOf(Manager.countUserByStatus(necessityID)));
+                } else if (cb_type.getSelectedIndex() == 3) {
+                    int placeID = Manager.existedPlace(cb_input.getSelectedItem());
+                    lb_result.setText("Total debt of " + cb_input.getSelectedItem() + ": " + String.valueOf(Manager.sumDebtByPlace(placeID)));
+                }
+            }
         });
     }
 
@@ -1552,7 +1596,10 @@ class PaneChart extends JPanel {
     void addAll() {
         add(sideBar);
         add(title);
-        add(cb_type); add(cb_input);
-        add(lb_type); add(lb_input); add(lb_result);
+        add(cb_type);
+        add(cb_input);
+        add(lb_type);
+        add(lb_input);
+        add(lb_result);
     }
 }

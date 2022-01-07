@@ -1,7 +1,7 @@
 Database: thêm data sample
 
 Manager:
-* Thống kê (Code, UI)
+- Thống kê (Code)
 
 User: 
 - Sắp xếp (Code)
@@ -9,4 +9,4 @@ User:
 Admin: Testing
 
 Hệ thống thanh toán (Code, UI)
-- Thêm thông báo thanh toán thành công/thất bại (Code, UI)
+- Thêm thông báo thanh toán thành công/thất bại (Code) (Optional)

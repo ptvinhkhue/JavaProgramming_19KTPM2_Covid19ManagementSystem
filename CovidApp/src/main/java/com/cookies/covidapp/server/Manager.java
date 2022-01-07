@@ -485,6 +485,7 @@ public class Manager extends CovidAccount {
     }
     
     /*---Necessity Management---*/
+    
     public static ArrayList<Integer> getNecessityIntList(String field) {
         ArrayList<Integer> ret = new ArrayList<>();
 
@@ -648,6 +649,55 @@ public class Manager extends CovidAccount {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    /*---Statistics Management*/
+    public static int countUserByStatus(int status) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select count(*) as total from acc_user where status =" + status;
+            db.rs = db.stm.executeQuery(sql);
+            
+            if (db.rs.next()) {
+                return db.rs.getInt("total");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return -1;
+    }
+    
+    public static int countNecessitySales(int necessityID) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select count(*) as total from order_detail where necessityID =" + necessityID;
+            db.rs = db.stm.executeQuery(sql);
+            
+            if (db.rs.next()) {
+                return db.rs.getInt("total");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return -1;
+    }
+    
+    public static int sumDebtByPlace(int placeID) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select sum(debt) as total from acc_user where placeID =" + placeID;
+            db.rs = db.stm.executeQuery(sql);
+            
+            if (db.rs.next()) {
+                return db.rs.getInt("total");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return -1;
     }
 
     /*---History Management*/

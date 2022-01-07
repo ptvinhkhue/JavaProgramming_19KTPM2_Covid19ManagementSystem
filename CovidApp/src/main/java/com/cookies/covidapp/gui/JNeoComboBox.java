@@ -65,6 +65,14 @@ public class JNeoComboBox extends Container {
     int getSelectedIndex() {
         return selector.getSelectedIndex();
     }
+    
+    String getSelectedItem() {
+        return (String) selector.getSelectedItem();
+    }
+    
+    void setSelectedItem(String selected) {
+        selector.setSelectedItem(selected);
+    }
 
     public void repaintAll() {
         repaint();
