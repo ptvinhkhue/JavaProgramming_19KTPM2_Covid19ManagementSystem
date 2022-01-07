@@ -147,7 +147,7 @@ public class PaymentServer {
                                             String info[] = msgFromClient.split("&");
                                             receive(Integer.parseInt(info[1]));
                                             tranfer(info[0] ,Integer.parseInt(info[1]));
-                                            out.print("Tranfer successfully");
+                                            out.println("Tranfer successfully");
                                             System.out.println(msgFromClient);
                                         }
                                         else out.println("Tranfer error");

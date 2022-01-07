@@ -4,9 +4,7 @@ import Necessity.Necessity;
 import com.cookies.covidapp.server.*;
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -667,6 +665,7 @@ class PaneHistory extends JPanel {
 class PaneBuyNecessity extends JPanel {
 
     static ArrayList<Integer> id;
+    String order = "ID";
     JSideBar sideBar;
     JNeoList list;
     JNeoLabel title;
@@ -692,16 +691,17 @@ class PaneBuyNecessity extends JPanel {
         title = new JNeoLabel("Necessity list", Global.fntHeader, Global.colDark);
 
         // search bar
-        String[] filter_names = {"Name", "Limit", "Price"};
+        String[] filter_names = {"Name", "Price"};
         searchBar = new JNeoSearchBar("Search...", 15, filter_names);
 
         // list
+        id = User.getNecessityIntList("necessityID");
         ArrayList<String> name = User.displayNecessityList("name");
         ArrayList<String> label = User.displayNecessityList("price");
         ArrayList<String> label_full = User.displayNecessityList("price");
 
         ArrayList<String> iconName = new ArrayList<>();
-        for (int i = 0; i < name.size(); i++) {
+        for (int i = 0; i < id.size(); i++) {
             iconName.add("package");
         }
 
@@ -764,7 +764,8 @@ class PaneBuyNecessity extends JPanel {
 
     void addAllActionListener() {
         searchBar.getTf().addActionListener(e -> {
-            id = User.searchNecessityByName(searchBar.getTf().getText());
+            //id = User.searchNecessityByName(searchBar.getTf().getText());
+            id = User.sortSearchedNecessity(searchBar.getTf().getText(), order);
 
             ArrayList<String> name = new ArrayList<>();
             ArrayList<String> label = new ArrayList<>();
@@ -783,6 +784,35 @@ class PaneBuyNecessity extends JPanel {
 
             list.setNewList(iconName, name, label, label_full);
         });
+        for (JNeoButton tag : searchBar.filter_tags) {
+            tag.addActionListener(e -> {
+                if (!tag.enabled) {
+                    id = User.sortSearchedNecessity(searchBar.getTf().getText(), tag.getContent());
+                    order = tag.getContent();
+                } else {
+                    id = User.sortSearchedNecessity(searchBar.getTf().getText(), "ID");
+                    order = "ID";
+                }
+
+                ArrayList<String> name = new ArrayList<>();
+                ArrayList<String> label = new ArrayList<>();
+                ArrayList<String> label_full = new ArrayList<>();
+
+                for (int i = 0; i < id.size(); i++) {
+                    name.add(User.getNecessityDetail(id.get(i), "name"));
+                    label.add(User.getNecessityDetail(id.get(i), "price"));
+                    label_full.add(User.getNecessityDetail(id.get(i), "price"));
+                }
+
+                ArrayList<String> iconName = new ArrayList<>();
+                for (int i = 0; i < id.size(); i++) {
+                    iconName.add("package");
+                }
+
+                list.setNewList(iconName, name, label, label_full);
+
+            });
+        }
         list.getBtnAdd().addActionListener(e -> {
             GUI_Master.changePanel(GUI_Manager.getPNecessityAdd());
 
@@ -965,7 +995,7 @@ class PanePayment extends JPanel {
         ctn_lb.add(lb_debt);
 
         // text fields & button
-        tf_amount = new JNeoTextField("Amount to transfer", 16, false, "cash_hl", "Must be a positive number");
+        tf_amount = new JNeoTextField("Amount to transfer", 16, false, "cash_hl", "Number Error");
         btn_transfer = new JNeoButton("Transfer", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
     }
 
@@ -1019,19 +1049,18 @@ class PanePayment extends JPanel {
                                     String msg = "";
                                     GUI_User.br = new BufferedReader(new InputStreamReader(GUI_User.socket.getInputStream()));
                                     while ((msg = GUI_User.br.readLine()) != null) {
-
                                         if ("Tranfer successfully".equals(msg)) {
                                             System.out.println(msg);
                                             GUI_Master.changePanel(GUI_User.getUpdatedPPayment());
                                         }
+                                        break;
                                     }
-                                    System.out.println(User.getDebt());
                                 }
                             } catch (Exception ex) {
 
                             }
                         }
-                    }).start();;
+                    }).start();
                     
                 }
             } catch (Exception ex) {

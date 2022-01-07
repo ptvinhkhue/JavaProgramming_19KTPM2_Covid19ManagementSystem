@@ -270,23 +270,6 @@ public class User extends CovidAccount {
 
         return ret;
     }
-
-    public void displayNecessityHistory(int userID) {
-        try {
-            DataQuery db = new DataQuery();
-            String sql = "select * from order join order_detail on order.orderID = order_detail.orderID where userID =" + userID;
-            db.rs = db.stm.executeQuery(sql);
-
-            while (db.rs.next()) {
-                System.out.print("Order: " + db.rs.getInt("orderID") + ". ");
-                System.out.println("Sum: " + db.rs.getInt("sum"));
-                System.out.print("Necessity: " + db.rs.getString("nesscityID") + ". ");
-                System.out.println("Amount: " + db.rs.getString("amount"));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     
     public static ArrayList<Integer> getOrderIntList(int userID) {
         ArrayList<Integer> ret = new ArrayList<>();
@@ -449,6 +432,24 @@ public class User extends CovidAccount {
         }
         return ret;
     }
+    
+    public static ArrayList<Integer> getNecessityIntList(String field) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from necessity";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt(field));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
 
     public static ArrayList<String> displayNecessityList(String field) {
         ArrayList<String> ret = new ArrayList<>();
@@ -530,6 +531,37 @@ public class User extends CovidAccount {
         }
 
         return 0;
+    }
+    
+    public static ArrayList<Integer> sortSearchedNecessity(String key, String citeria) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        
+        try {
+            DataQuery db = new DataQuery();
+            
+            // select citeria
+            if ("ID".equals(citeria)) {
+                citeria = "necessityID";
+            }
+            else if ("Name".equals(citeria)) {
+                citeria = "name";
+            }
+            else if ("Price".equals(citeria)) {
+                citeria = "price";
+            }
+            
+            String sql = "select * from necessity where name like '%" + key + "%'"
+                    + "order by " + citeria + " ASC";
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt("necessityID"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return ret;
     }
     
     public static void createOrder(int userID, int sum) {
