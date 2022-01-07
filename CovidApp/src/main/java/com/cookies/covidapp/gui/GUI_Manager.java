@@ -713,12 +713,12 @@ class PanePatientForm extends JPanel {
 
         // text fields
         tf_fullname = new JNeoTextField("Full name", 14, false, "name_hl", "!NULL");
-        tf_birthyear = new JNeoTextField("Birth year", 14, false, "calendar_hl", "Format must be 'yyyy'");
+        tf_birthyear = new JNeoTextField("Birth year", 14, false, "calendar_hl", "Valid format: yyyy");
         tf_personalID = new JNeoTextField("Personal ID", 14, false, "account_hl", "Personal ID is not valid");
-        tf_addressID = new JNeoTextField("Address ID", 14, false, "address_hl", "Address does not exist");
+        tf_addressID = new JNeoTextField("Address", 14, false, "address_hl", "Valid format: P. A, Q. B, TP. C");
 
         tf_place = new JNeoTextField("Treatment location", 14, false, "location_hl", "Location does not exist");
-        tf_status = new JNeoTextField("Status", 14, false, "status_hl", "Invalid status (0 -> 3)");
+        tf_status = new JNeoTextField("Status", 14, false, "status_hl", "Valid status: 0 -> 3");
 
         // combo box
         cb_place = new JNeoComboBox("location_hl");

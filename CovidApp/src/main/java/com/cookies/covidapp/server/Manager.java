@@ -369,10 +369,17 @@ public class Manager extends CovidAccount {
 
             sql = "insert into acc_user (username, fullname, personalID, yob, addressID, status, placeID, debt, loggedIn) values ('"
                     + personalID + "','" + fullname + "','" + personalID + "'," + yob + "," + addressID + "," + status + "," + placeID + "," + 0 + "," + 0 + ")";
+            db.stm.executeUpdate(sql);
+            
+            // insert user's bak account
+            sql = "insert into acc_bank (personalID, balance, type) values ('" + personalID + "', " + 5000000 + ", " + 2 + ")";
+            db.stm.executeUpdate(sql);
+            
+            sql = "insert into acc_normal (bankID) values ('" + personalID + "')";
+            db.stm.executeUpdate(sql);
             
             // handle history
             Manager.logCreateUser(personalID);
-            db.stm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
