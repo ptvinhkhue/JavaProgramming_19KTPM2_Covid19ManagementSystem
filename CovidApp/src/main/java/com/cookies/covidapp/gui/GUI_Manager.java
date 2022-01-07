@@ -99,6 +99,10 @@ public class GUI_Manager {
     public static PaneChart getPChart() {
         return pChart;
     }
+    
+    public static PaneChart getUpdatedPChart() {
+        return pChart = new PaneChart();
+    }
 }
 
 class PanePasswordManager extends JPanel {
