@@ -771,7 +771,7 @@ class PanePatientForm extends JPanel {
             ctn_tf_2.add(tf_addressID);
             ctn_tf_2.add(Box.createRigidArea(new Dimension(0, 4)));
         } else {
-            ctn_tf.add(tf_place);
+            ctn_tf.add(cb_place);
         }
         ctn_tf_2.add(tf_status);
 
@@ -801,7 +801,7 @@ class PanePatientForm extends JPanel {
                     SpringLayout.WEST, title);
             layout.putConstraint(SpringLayout.WEST, btn_updateStatus, 0,
                     SpringLayout.WEST, title);
-            layout.putConstraint(SpringLayout.NORTH, btn_updatePlace, 8,
+            layout.putConstraint(SpringLayout.NORTH, btn_updatePlace, 32,
                     SpringLayout.SOUTH, ctn_tf);
             layout.putConstraint(SpringLayout.WEST, ctn_tf_2, 0,
                     SpringLayout.WEST, ctn_tf);
