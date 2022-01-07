@@ -858,7 +858,7 @@ class PanePatientForm extends JPanel {
             }
 
             // check status
-            if (!"".equals(tf_status.getText()) && Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4) {
+            if (!"".equals(tf_status.getText()) && tf_status.getText().matches("^[0-9]+$") && Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4) {
                 tf_status.hideHint();
             } else {
                 valid = false;
@@ -880,11 +880,23 @@ class PanePatientForm extends JPanel {
                 tf_place.hideHint();
             }
              */
-            if (cb_place.getSelectedIndex() > 0) {
-                placeID = Manager.existedPlace(cb_place.getSelectedItem());
+            if (cb_place.getSelectedIndex() <= 0) {
+                System.out.println(cb_place.getSelectedIndex());
+                valid = false;
+                lb_error_add.setText("Please select a treatment location!");
+                lb_error_add.setForeground(Global.colError);
+                lb_error_add.repaint();
+            }
+            else if (Manager.overloadedPlace(cb_place.getSelectedItem())) {
+                valid = false;
+                lb_error_add.setText("Selected treatment location is currently overload");
+                lb_error_add.setForeground(Global.colError);
+                lb_error_add.repaint();
             }
             else {
-                valid = false;
+                placeID = Manager.existedPlace(cb_place.getSelectedItem());
+                lb_error_add.setForeground(Color.WHITE);
+                lb_error_add.repaint();
             }
 
             // check existed User
@@ -892,6 +904,7 @@ class PanePatientForm extends JPanel {
                 lb_error_add.setForeground(Color.WHITE);
             } else {
                 valid = false;
+                lb_error_add.setText("Patient already exists");
                 lb_error_add.setForeground(Global.colError);
             }
 

@@ -1,7 +1,7 @@
 Database: thêm data sample
 
 Manager:
-- Thống kê (Code)
+- Validation hint bug
 
 User: 
 - Sắp xếp (Code)
