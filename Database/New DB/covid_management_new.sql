@@ -194,7 +194,9 @@ CREATE TABLE `acc_user` (
   PRIMARY KEY (`userID`),
   KEY `idx_fk_placeID` (`placeID`) /*!80000 INVISIBLE */,
   KEY `fk_acc_covid_username_acc_user_idx` (`username`) /*!80000 INVISIBLE */,
+  KEY `fk_address_addressID_acc_user_idx` (`addressID`),
   CONSTRAINT `fk_acc_covid_username_acc_user` FOREIGN KEY (`username`) REFERENCES `acc_covid` (`username`),
+  CONSTRAINT `fk_address_addressID_acc_user` FOREIGN KEY (`addressID`) REFERENCES `address` (`addressID`),
   CONSTRAINT `fk_place_placeID_acc_user` FOREIGN KEY (`placeID`) REFERENCES `place` (`placeID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -498,4 +500,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-07 21:08:30
+-- Dump completed on 2022-01-07 21:13:14
