@@ -801,7 +801,7 @@ class PanePatientForm extends JPanel {
                     SpringLayout.WEST, title);
             layout.putConstraint(SpringLayout.WEST, btn_updateStatus, 0,
                     SpringLayout.WEST, title);
-            layout.putConstraint(SpringLayout.NORTH, btn_updatePlace, 32,
+            layout.putConstraint(SpringLayout.NORTH, btn_updatePlace, (isAdd) ? 8 : 32,
                     SpringLayout.SOUTH, ctn_tf);
             layout.putConstraint(SpringLayout.WEST, ctn_tf_2, 0,
                     SpringLayout.WEST, ctn_tf);
