@@ -865,25 +865,19 @@ class PanePatientForm extends JPanel {
                 tf_status.showHint();
             }
 
-            /*
-            // check placeID
-            if (Manager.existedPlace(tf_place.getText()) == 0) {
+            
+            // check form validation
+            // check existed User
+            if (Manager.existedUser(tf_personalID.getText()) != 0) {
                 valid = false;
-                tf_place.setHint("Location does not exist");
-                tf_place.showHint();
-            } else if (Manager.overloadedPlace(tf_place.getText())) {
-                valid = false;
-                tf_place.setHint("This place is currently overload");
-                tf_place.showHint();
-            } else {
-                placeID = Manager.existedPlace(tf_place.getText());
-                tf_place.hideHint();
+                lb_error_add.setText("Patient already exists");
+                lb_error_add.setError();
             }
-             */
-            if (cb_place.getSelectedIndex() <= 0) {
+            // check valid Place
+            else if (cb_place.getSelectedIndex() <= 0) {
                 System.out.println(cb_place.getSelectedIndex());
                 valid = false;
-                lb_error_add.setText("Patient already exists.");
+                lb_error_add.setText("Please select a treatment location");
                 lb_error_add.setError();
             }
             else if (Manager.overloadedPlace(cb_place.getSelectedItem())) {
@@ -894,15 +888,6 @@ class PanePatientForm extends JPanel {
             else {
                 placeID = Manager.existedPlace(cb_place.getSelectedItem());
                 lb_error_add.setHide();
-            }
-
-            // check existed User
-            if (Manager.existedUser(tf_personalID.getText()) == 0) {
-                lb_error_add.setHide();
-            } else {
-                valid = false;
-                lb_error_add.setText("Patient already exists");
-                lb_error_add.setError();
             }
 
             if (valid) {
@@ -924,8 +909,15 @@ class PanePatientForm extends JPanel {
 
         btn_updateStatus.addActionListener(e -> {
             // check status
-            if (!"".equals(tf_status.getText()) && Integer.parseInt(tf_status.getText()) > -1 && Integer.parseInt(tf_status.getText()) < 4
-                    && Integer.parseInt(tf_status.getText()) < Integer.parseInt(Manager.getUserDetail(ID, "status"))) {
+            if ("".equals(tf_status.getText()) || !tf_status.getText().matches("^[0-9]+$") || Integer.parseInt(tf_status.getText()) < 0 && Integer.parseInt(tf_status.getText()) > 3) {
+                lb_error_status.setText("Valid status: 0 -> 3");
+                lb_error_status.setError();
+            }
+            else if (Integer.parseInt(tf_status.getText()) >= Integer.parseInt(Manager.getUserDetail(ID, "status"))) {
+                lb_error_status.setText("Updating status must be higher than current one");
+                lb_error_status.setError();
+            }
+            else {
                 // update DB
                 ArrayList<Integer> arr = new ArrayList<Integer>();
                 Manager.updateUserStatus(ID, Integer.parseInt(tf_status.getText()), arr);
@@ -936,24 +928,24 @@ class PanePatientForm extends JPanel {
                 GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientInfo());
                 lb_error_add.setForeground(Color.WHITE);
                 tf_status.setText("Status");
-            } else {
-                tf_status.showHint();
-                return;
             }
         });
 
         btn_updatePlace.addActionListener(e -> {
             // check place
-            if (Manager.existedPlace(tf_place.getText()) == 0) {
-                tf_place.setHint("Location does not exist");
-                tf_place.showHint();
-            } else if (Manager.overloadedPlace(tf_place.getText())) {
-                tf_place.setHint("This place is currently overload");
-                tf_place.showHint();
-            } else {
+            if (cb_place.getSelectedIndex() <= 0) {
+                //System.out.println(cb_place.getSelectedIndex());
+                lb_error_place.setText("Please select a treatment location");
+                lb_error_place.setError();
+            }
+            else if (Manager.overloadedPlace(cb_place.getSelectedItem())) {
+                lb_error_place.setText("Selected treatment location is currently overload");
+                lb_error_place.setError();
+            }
+            else {
                 // update DB
-                Manager.updateUserPlace(ID, Manager.existedPlace(tf_place.getText()));
-                tf_place.hideHint();
+                Manager.updateUserPlace(ID, Manager.existedPlace(cb_place.getSelectedItem()));
+                lb_error_place.setHide();
 
                 // reset panes
                 PanePatientInfo.ID = ID;
@@ -992,7 +984,7 @@ class PanePatientForm extends JPanel {
         //String[] sample = {"Bệnh viện đa khoa Bình Thuận", "Trường THPT chuyên Trần Hưng Đạo", "Kí túc xá ĐHQG TP. Hồ Chí Minh"}; // example
         ArrayList<String> item_list = new ArrayList<>();
         item_list = Manager.getStringField("place", "name");
-        item_list.add(0, "---");
+        item_list.add(0, "-Treatment Location-");
         //Collections.addAll(item_list, sample); // example
         cb.removeAllItems();
         cb.addItemList(item_list);

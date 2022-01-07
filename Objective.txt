@@ -1,7 +1,6 @@
 Database: thêm data sample
 
-Manager:
-- Validation hint bug
+Manager: Testing (bug in UI)
 
 User: 
 - Sắp xếp (Code)
