@@ -686,7 +686,7 @@ class PanePatientForm extends JPanel {
     JNeoTextField tf_place, tf_status;
     Container ctn_tf, ctn_tf_2;
     JNeoButton btn_add, btn_updatePlace, btn_updateStatus;
-    JLabel lb_error_add, lb_error_place, lb_error_status;
+    JNeoLabel lb_error_add, lb_error_place, lb_error_status;
     JNeoComboBox cb_place;
     boolean isAdd;
 
@@ -883,29 +883,26 @@ class PanePatientForm extends JPanel {
             if (cb_place.getSelectedIndex() <= 0) {
                 System.out.println(cb_place.getSelectedIndex());
                 valid = false;
-                lb_error_add.setText("Please select a treatment location!");
-                lb_error_add.setForeground(Global.colError);
-                lb_error_add.repaint();
+                lb_error_add.setText("Patient already exists.");
+                lb_error_add.setError();
             }
             else if (Manager.overloadedPlace(cb_place.getSelectedItem())) {
                 valid = false;
                 lb_error_add.setText("Selected treatment location is currently overload");
-                lb_error_add.setForeground(Global.colError);
-                lb_error_add.repaint();
+                lb_error_add.setError();
             }
             else {
                 placeID = Manager.existedPlace(cb_place.getSelectedItem());
-                lb_error_add.setForeground(Color.WHITE);
-                lb_error_add.repaint();
+                lb_error_add.setHide();
             }
 
             // check existed User
             if (Manager.existedUser(tf_personalID.getText()) == 0) {
-                lb_error_add.setForeground(Color.WHITE);
+                lb_error_add.setHide();
             } else {
                 valid = false;
                 lb_error_add.setText("Patient already exists");
-                lb_error_add.setForeground(Global.colError);
+                lb_error_add.setError();
             }
 
             if (valid) {
@@ -991,7 +988,6 @@ class PanePatientForm extends JPanel {
         this.tf_place.setText(Manager.getFullPlace(Integer.parseInt(Manager.getUserDetail(ID, "placeID"))));
     }
 
-    // there's only 1 type so no need for 'int type'
     void queryComboBox(JNeoComboBox cb) {
         //String[] sample = {"Bệnh viện đa khoa Bình Thuận", "Trường THPT chuyên Trần Hưng Đạo", "Kí túc xá ĐHQG TP. Hồ Chí Minh"}; // example
         ArrayList<String> item_list = new ArrayList<>();
