@@ -25,6 +25,43 @@ public class Admin extends CovidAccount {
         super(username);
     }
     
+    /*---Get Data from Database---*/
+    public static ArrayList<Integer> getIntField(String table, String field) {
+        ArrayList<Integer> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from " + table;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getInt(field));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
+    public static ArrayList<String> getStringField(String table, String field) {
+        ArrayList<String> ret = new ArrayList<>();
+
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select * from " + table;
+            db.rs = db.stm.executeQuery(sql);
+
+            while (db.rs.next()) {
+                ret.add(db.rs.getString(field));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ret;
+    }
+    
     /*---Manager Management---*/
     public static ArrayList<Integer> getManagerIDList() {
         ArrayList<Integer> ret = new ArrayList<>();
@@ -267,6 +304,36 @@ public class Admin extends CovidAccount {
             db.stm.executeUpdate(sql);
             
             // handle history
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static boolean occupiedPlace(int placeID) {
+        try {
+            DataQuery db = new DataQuery();
+            String sql = "select count(*) as total from acc_user where placeID =" + placeID;
+            db.rs = db.stm.executeQuery(sql);
+            
+            // check occupied
+            if (db.rs.next()) {
+                System.out.println(db.rs.getInt("total"));
+                if (db.rs.getInt("total") > 0) return true;
+                else return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+    
+    public static void deletePlace(int placeID) {
+        try {
+            // delete history
+            DataQuery db = new DataQuery();
+            String sql = "delete from place where placeID =" + placeID;
+            db.stm.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
