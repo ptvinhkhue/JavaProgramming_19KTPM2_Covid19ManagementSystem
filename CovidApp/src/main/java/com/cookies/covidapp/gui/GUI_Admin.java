@@ -735,8 +735,8 @@ class PanePlaceForm extends JPanel {
     JNeoLabel title;
     JNeoTextField tf_name, tf_capacity, tf_current;
     Container ctn_tf;
-    JNeoButton btn_add;
-    JLabel lb_error_add;
+    JNeoButton btn_add, btn_delete;
+    JLabel lb_error_add, lb_error_delete;
     boolean isAdd;
 
     PanePlaceForm(boolean isAdd) {
@@ -767,9 +767,11 @@ class PanePlaceForm extends JPanel {
 
         // button
         btn_add = new JNeoButton(str_btn, Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
+        btn_delete = new JNeoButton("Delete", Global.colPrimary, Color.WHITE, Global.btnRadius, 8, Global.fntButton, false);
 
         // label
         lb_error_add = new JNeoLabel("Location already exists", Global.fntSecond, Color.WHITE);
+        lb_error_delete = new JNeoLabel("Delete fail", Global.fntSecond, Color.WHITE);
     }
 
     void organize() {
@@ -810,12 +812,20 @@ class PanePlaceForm extends JPanel {
                 SpringLayout.WEST, title);
         layout.putConstraint(SpringLayout.NORTH, btn_add, 16,
                 SpringLayout.SOUTH, ctn_tf);
+        layout.putConstraint(SpringLayout.WEST, btn_delete, 0,
+                SpringLayout.WEST, btn_add);
+        layout.putConstraint(SpringLayout.NORTH, btn_delete, 32,
+                SpringLayout.SOUTH, btn_add);
 
         // label
         layout.putConstraint(SpringLayout.WEST, lb_error_add, 16,
                 SpringLayout.EAST, btn_add);
         layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_error_add, 0,
                 SpringLayout.VERTICAL_CENTER, btn_add);
+        layout.putConstraint(SpringLayout.WEST, lb_error_delete, 16,
+                SpringLayout.EAST, btn_delete);
+        layout.putConstraint(SpringLayout.VERTICAL_CENTER, lb_error_delete, 0,
+                SpringLayout.VERTICAL_CENTER, btn_delete);
 
     }
 
@@ -905,6 +915,15 @@ class PanePlaceForm extends JPanel {
                 }
             }
         });
+
+        btn_delete.addActionListener(e -> {
+            // delete necessity
+            Manager.deleteNecessity(ID);
+
+            // reset panel
+            PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
+            GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
+        });
     }
 
     void addAll() {
@@ -913,6 +932,10 @@ class PanePlaceForm extends JPanel {
         add(ctn_tf);
         add(lb_error_add);
         add(btn_add);
+        if (!isAdd) {
+            add(btn_delete);
+            add(lb_error_delete);
+        }
     }
 
     void assignID(int ID) {
