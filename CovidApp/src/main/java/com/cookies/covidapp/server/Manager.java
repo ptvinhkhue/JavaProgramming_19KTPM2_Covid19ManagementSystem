@@ -678,7 +678,7 @@ public class Manager extends CovidAccount {
     public static int countNecessitySales(int necessityID) {
         try {
             DataQuery db = new DataQuery();
-            String sql = "select count(*) as total from order_detail where necessityID =" + necessityID;
+            String sql = "select sum(amount) as total from order_detail where necessityID =" + necessityID;
             db.rs = db.stm.executeQuery(sql);
             
             if (db.rs.next()) {

@@ -1581,7 +1581,7 @@ class PaneChart extends JPanel {
                     lb_result.setText("Number of F" + (cb_input.getSelectedIndex() - 1) + " patients: " + String.valueOf(Manager.countUserByStatus(cb_input.getSelectedIndex() - 1)));
                 } else if (cb_type.getSelectedIndex() == 2) {
                     int necessityID = Manager.existedNecessity(cb_input.getSelectedItem());
-                    lb_result.setText("Sales of " + cb_input.getSelectedItem() + ": " + String.valueOf(Manager.countUserByStatus(necessityID)));
+                    lb_result.setText("Sales of " + cb_input.getSelectedItem() + ": " + String.valueOf(Manager.countNecessitySales(necessityID)));
                 } else if (cb_type.getSelectedIndex() == 3) {
                     int placeID = Manager.existedPlace(cb_input.getSelectedItem());
                     lb_result.setText("Total debt of " + cb_input.getSelectedItem() + ": " + String.valueOf(Manager.sumDebtByPlace(placeID)));
