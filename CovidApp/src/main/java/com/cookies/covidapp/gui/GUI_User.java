@@ -692,7 +692,7 @@ class PaneBuyNecessity extends JPanel {
 
         // search bar
         String[] filter_names = {"Name", "Price"};
-        searchBar = new JNeoSearchBar("Search...", 15, filter_names);
+        searchBar = new JNeoSearchBar("", 15, filter_names);
 
         // list
         id = User.getNecessityIntList("necessityID");
