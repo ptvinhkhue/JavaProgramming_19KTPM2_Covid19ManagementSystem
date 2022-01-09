@@ -95,6 +95,10 @@ public class GUI_Manager {
         pPatientList = new PanePatientList();
         return pPatientInfo = new PanePatientInfo();
     }
+    
+    public static PanePatientForm getUpdatedPPatientForm(boolean isAdd) {
+        return pPatientAdd = new PanePatientForm(isAdd);
+    }
 
     public static PaneChart getPChart() {
         return pChart;
@@ -188,6 +192,8 @@ class PanePasswordManager extends JPanel {
             if (Login.handlePassword(username, tf_password.getText())) {
                 GUI_Manager.manager = new Manager(username);
                 //System.out.println(username + " " + Manager.getID());
+                GUI_Manager.pPatientAdd = GUI_Manager.getUpdatedPPatientForm(true);
+                GUI_Manager.pPatientEdit = GUI_Manager.getUpdatedPPatientForm(false);
                 GUI_Master.changePanel(GUI_Manager.getPPatientList());
             } else {
                 tf_password.showHint(); // Show hint/error below if false

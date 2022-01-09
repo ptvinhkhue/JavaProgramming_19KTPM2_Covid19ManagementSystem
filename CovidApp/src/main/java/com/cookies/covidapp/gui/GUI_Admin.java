@@ -844,7 +844,7 @@ class PanePlaceForm extends JPanel {
                 }
 
                 // current validation
-                if (tf_current.getText().matches("^[0-9]+$") && Integer.parseInt(tf_current.getText()) > 0 && tf_capacity.getText().matches("^[0-9]+$")
+                if (tf_current.getText().matches("^[0-9]+$") && Integer.parseInt(tf_current.getText()) >= 0 && tf_capacity.getText().matches("^[0-9]+$")
                         && Integer.parseInt(tf_current.getText()) <= Integer.parseInt(tf_capacity.getText())) {
                     tf_current.hideHint();
                 } else {
