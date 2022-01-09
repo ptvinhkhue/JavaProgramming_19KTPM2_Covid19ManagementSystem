@@ -15,7 +15,7 @@ public class DataQuery {
     public DataQuery() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost/covid_management", "root", "vinhkhue191201");
+            con = DriverManager.getConnection("jdbc:mysql://localhost/covid_management", "root", "tdht27092001");
             stm = con.createStatement();
         } catch (ClassNotFoundException e) {
             System.out.println("Error: Unable to load driver class.");

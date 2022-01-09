@@ -71,6 +71,11 @@ public class GUI_User {
     public static PaneBuyNecessity getPBuyNecessity() {
         return pBuyNecessity;
     }
+    
+    public static PaneBuyNecessity getUpdatedPBuyNecessity() {
+        pBuyNecessity = new PaneBuyNecessity();
+        return pBuyNecessity;
+    }
 
     public static PaneNecessityInfo getPNecessityInfo() {
         return pNecessityInfo;
@@ -232,7 +237,8 @@ class PanePasswordUser extends JPanel {
                     related.add(iconName);
                     related.add(name);
                     related.add(label);
-
+                    
+                    GUI_User.getUpdatedPBuyNecessity();
                     GUI_User.getPPayment().setInfo(Integer.toString(User.getDebt()), Integer.toString(User.getCurrentBalance()));
                     GUI_User.getPPersonalInfo().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), subtitle, subtitle2, related);
                     GUI_Master.changePanel(GUI_User.getPPersonalInfo());
@@ -279,7 +285,8 @@ class PanePasswordUser extends JPanel {
                 related.add(iconName);
                 related.add(name);
                 related.add(label);
-
+                
+                GUI_User.getUpdatedPBuyNecessity();
                 GUI_User.getPPayment().setInfo(Integer.toString(User.getDebt()), Integer.toString(User.getCurrentBalance()));
                 GUI_User.getPPersonalInfo().setInfo(User.getUserDetail(GUI_User.user.getID(), "fullname"), subtitle, subtitle2, related);
                 GUI_Master.changePanel(GUI_User.getPPersonalInfo());
@@ -1033,7 +1040,7 @@ class PanePayment extends JPanel {
     void addAllActionListener() {
         btn_transfer.addActionListener(e -> {
             try {
-                if (Integer.parseInt(tf_amount.getText()) < 0 || Integer.parseInt(tf_amount.getText()) > User.getDebt()) {
+                if (Integer.parseInt(tf_amount.getText()) <= 0 || Integer.parseInt(tf_amount.getText()) > User.getDebt()) {
                     tf_amount.showHint();
                 } else {
                     tf_amount.hideHint();
