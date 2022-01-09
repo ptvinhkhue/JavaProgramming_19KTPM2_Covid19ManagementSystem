@@ -317,10 +317,40 @@ public class Admin extends CovidAccount {
             
             // check occupied
             if (db.rs.next()) {
-                System.out.println(db.rs.getInt("total"));
+                //System.out.println(db.rs.getInt("total"));
                 if (db.rs.getInt("total") > 0) return true;
                 else return false;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+    
+    public static boolean historicPlace(int placeID) {
+        try {
+            DataQuery db = new DataQuery();
+            boolean historic = false;
+            
+            // check old history
+            String sql = "select count(*) as total from history_place where placeOldID =" + placeID;
+            db.rs = db.stm.executeQuery(sql);
+            if (db.rs.next()) {
+                //System.out.println(db.rs.getInt("total"));
+                if (db.rs.getInt("total") > 0) historic = true;
+            }
+            
+            // check new history
+            sql = "select count(*) as total from history_place where placeNewID =" + placeID;
+            db.rs = db.stm.executeQuery(sql);
+            if (db.rs.next()) {
+                //System.out.println(db.rs.getInt("total"));
+                if (db.rs.getInt("total") > 0) historic = true;
+            }
+            
+            if (historic) return true;
+            else return false;
         } catch (Exception e) {
             e.printStackTrace();
         }

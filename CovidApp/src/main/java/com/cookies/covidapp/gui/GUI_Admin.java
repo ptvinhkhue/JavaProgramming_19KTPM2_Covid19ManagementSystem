@@ -771,7 +771,7 @@ class PanePlaceForm extends JPanel {
 
         // label
         lb_error_add = new JNeoLabel("Location already exists", Global.fntSecond, Color.WHITE);
-        lb_error_delete = new JNeoLabel("This place is still occupied bi active patient", Global.fntSecond, Color.WHITE);
+        lb_error_delete = new JNeoLabel("This place is still occupied by active patient", Global.fntSecond, Color.WHITE);
     }
 
     void organize() {
@@ -918,9 +918,14 @@ class PanePlaceForm extends JPanel {
         btn_delete.addActionListener(e -> {
             // delete necessity
             if (Admin.occupiedPlace(ID)) {
+                lb_error_delete.setText("This place is still occupied by active patient");
                 lb_error_delete.setForeground(Global.colError);
-                return;
-            } else {
+            } 
+            else if (Admin.historicPlace(ID)) {
+                lb_error_delete.setText("This place is still recorded in system history");
+                lb_error_delete.setForeground(Global.colError);
+            } 
+            else {
                 Admin.deletePlace(ID);
 
                 // reset panel

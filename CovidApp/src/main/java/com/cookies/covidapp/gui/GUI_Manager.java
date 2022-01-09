@@ -95,7 +95,7 @@ public class GUI_Manager {
         pPatientList = new PanePatientList();
         return pPatientInfo = new PanePatientInfo();
     }
-    
+
     public static PanePatientForm getUpdatedPPatientForm(boolean isAdd) {
         return pPatientAdd = new PanePatientForm(isAdd);
     }
@@ -103,7 +103,7 @@ public class GUI_Manager {
     public static PaneChart getPChart() {
         return pChart;
     }
-    
+
     public static PaneChart getUpdatedPChart() {
         return pChart = new PaneChart();
     }
@@ -871,27 +871,23 @@ class PanePatientForm extends JPanel {
                 tf_status.showHint();
             }
 
-            
             // check form validation
             // check existed User
             if (Manager.existedUser(tf_personalID.getText()) != 0) {
                 valid = false;
                 lb_error_add.setText("Patient already exists");
                 lb_error_add.setError();
-            }
-            // check valid Place
+            } // check valid Place
             else if (cb_place.getSelectedIndex() <= 0) {
-                System.out.println(cb_place.getSelectedIndex());
+                //System.out.println(cb_place.getSelectedIndex());
                 valid = false;
                 lb_error_add.setText("Please select a treatment location");
                 lb_error_add.setError();
-            }
-            else if (Manager.overloadedPlace(cb_place.getSelectedItem())) {
+            } else if (Manager.overloadedPlace(cb_place.getSelectedItem())) {
                 valid = false;
                 lb_error_add.setText("Selected treatment location is currently overload");
                 lb_error_add.setError();
-            }
-            else {
+            } else {
                 placeID = Manager.existedPlace(cb_place.getSelectedItem());
                 lb_error_add.setHide();
             }
@@ -918,12 +914,10 @@ class PanePatientForm extends JPanel {
             if ("".equals(tf_status.getText()) || !tf_status.getText().matches("^[0-9]+$") || Integer.parseInt(tf_status.getText()) < 0 && Integer.parseInt(tf_status.getText()) > 3) {
                 lb_error_status.setText("Valid status: 0 -> 3");
                 lb_error_status.setError();
-            }
-            else if (Integer.parseInt(tf_status.getText()) >= Integer.parseInt(Manager.getUserDetail(ID, "status"))) {
+            } else if (Integer.parseInt(tf_status.getText()) >= Integer.parseInt(Manager.getUserDetail(ID, "status"))) {
                 lb_error_status.setText("Updating status must be higher than current one");
                 lb_error_status.setError();
-            }
-            else {
+            } else {
                 // update DB
                 ArrayList<Integer> arr = new ArrayList<Integer>();
                 Manager.updateUserStatus(ID, Integer.parseInt(tf_status.getText()), arr);
@@ -943,12 +937,10 @@ class PanePatientForm extends JPanel {
                 //System.out.println(cb_place.getSelectedIndex());
                 lb_error_place.setText("Please select a treatment location");
                 lb_error_place.setError();
-            }
-            else if (Manager.overloadedPlace(cb_place.getSelectedItem())) {
+            } else if (Manager.overloadedPlace(cb_place.getSelectedItem())) {
                 lb_error_place.setText("Selected treatment location is currently overload");
                 lb_error_place.setError();
-            }
-            else {
+            } else {
                 // update DB
                 Manager.updateUserPlace(ID, Manager.existedPlace(cb_place.getSelectedItem()));
                 lb_error_place.setHide();
@@ -1117,6 +1109,7 @@ class PaneNecessityForm extends JPanel {
                     lb_error.setForeground(Color.WHITE);
                 } else {
                     valid = false;
+                    lb_error.setText("Necessity already exists");
                     lb_error.setForeground(Global.colError);
                 }
 
@@ -1145,6 +1138,7 @@ class PaneNecessityForm extends JPanel {
 
                 // check existed necessity
                 if (tf_name.getText().equals(Manager.getNecessityDetail(ID, "name")) || Manager.existedNecessity(tf_name.getText()) == 0) {
+                    lb_error.setText("Information matches with another necessity's");
                     lb_error.setForeground(Color.WHITE);
                 } else {
                     valid = false;
@@ -1167,11 +1161,17 @@ class PaneNecessityForm extends JPanel {
 
         btn_delete.addActionListener(e -> {
             // delete necessity
-            Manager.deleteNecessity(ID);
+            if (Manager.historicNecessity(ID)) {
+                lb_error.setText("This necessity is still recorded in system history");
+                lb_error.setForeground(Global.colError);
+            } else {
+                Manager.deleteNecessity(ID);
 
-            // reset panel
-            PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
-            GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
+                // reset panel
+                PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
+                GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
+                lb_error.setForeground(Color.WHITE);
+            }
         });
     }
 

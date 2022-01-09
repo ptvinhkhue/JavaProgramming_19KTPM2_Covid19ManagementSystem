@@ -644,6 +644,28 @@ public class Manager extends CovidAccount {
         }
     }
     
+    public static boolean historicNecessity(int necessityID) {
+        try {
+            DataQuery db = new DataQuery();
+            boolean historic = false;
+            
+            // check old history
+            String sql = "select count(*) as total from order_detail where necessityID =" + necessityID;
+            db.rs = db.stm.executeQuery(sql);
+            if (db.rs.next()) {
+                //System.out.println(db.rs.getInt("total"));
+                if (db.rs.getInt("total") > 0) historic = true;
+            }
+            
+            if (historic) return true;
+            else return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        return false;
+    }
+    
     public static void deleteNecessity(int necessityID) {
         try {
             // delete history
