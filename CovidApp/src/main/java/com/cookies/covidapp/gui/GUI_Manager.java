@@ -97,7 +97,8 @@ public class GUI_Manager {
     }
 
     public static PanePatientForm getUpdatedPPatientForm(boolean isAdd) {
-        return pPatientAdd = new PanePatientForm(isAdd);
+        if (isAdd) return pPatientAdd = new PanePatientForm(isAdd);
+        else return pPatientEdit = new PanePatientForm(isAdd);
     }
 
     public static PaneChart getPChart() {
