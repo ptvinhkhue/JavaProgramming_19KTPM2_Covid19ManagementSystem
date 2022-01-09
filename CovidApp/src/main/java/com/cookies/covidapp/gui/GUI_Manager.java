@@ -365,11 +365,7 @@ class PanePatientList extends JPanel {
 
             ArrayList<String> iconName = new ArrayList<>();
             for (int k = 0; k < id.size(); k++) {
-                if (k % 2 == 0) {
-                    iconName.add("male");
-                } else {
-                    iconName.add("female");
-                }
+                iconName.add("account");
             }
 
             list.setNewList(iconName, name, label, label_full);

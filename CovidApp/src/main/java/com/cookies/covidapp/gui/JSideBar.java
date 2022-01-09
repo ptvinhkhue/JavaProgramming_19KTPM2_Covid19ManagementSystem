@@ -48,18 +48,18 @@ public class JSideBar extends JPanel {
             case 0: // user
                 item.get(0).addActionListener(e -> GUI_Master.changePanel(GUI_User.getPPersonalInfo()));
                 item.get(1).addActionListener(e -> GUI_Master.changePanel(GUI_User.getPBuyNecessity()));
-                item.get(2).addActionListener(e -> GUI_Master.changePanel(GUI_User.getPPayment()));
+                item.get(2).addActionListener(e -> GUI_Master.changePanel(GUI_User.getUpdatedPPayment()));
                 item.get(3).addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
                 break;
             case 1: // manager
-                item.get(0).addActionListener(e -> GUI_Master.changePanel(GUI_Manager.getPPatientList()));
-                item.get(1).addActionListener(e -> GUI_Master.changePanel(GUI_Manager.getPNecessityList()));
-                item.get(2).addActionListener(e -> GUI_Master.changePanel(GUI_Manager.getPChart()));
+                item.get(0).addActionListener(e -> GUI_Master.changePanel(GUI_Manager.getUpdatedPPatientList()));
+                item.get(1).addActionListener(e -> GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList()));
+                item.get(2).addActionListener(e -> GUI_Master.changePanel(GUI_Manager.getUpdatedPChart()));
                 item.get(3).addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
                 break;
             case 2: // manager
                 item.get(0).addActionListener(e -> GUI_Master.changePanel(GUI_Admin.getPManagerList()));
-                item.get(1).addActionListener(e -> GUI_Master.changePanel(GUI_Admin.getPPlaceList()));
+                item.get(1).addActionListener(e -> GUI_Master.changePanel(GUI_Admin.getUpdatedPPlaceList()));
                 item.get(2).addActionListener(e -> GUI_Master.changePanel(GUI_Master.getPUsername()));
                 break;
         }

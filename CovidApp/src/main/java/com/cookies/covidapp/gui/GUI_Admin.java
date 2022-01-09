@@ -286,7 +286,7 @@ class PaneManagerList extends JPanel {
 
                 ArrayList<String> iconName = new ArrayList<>();
                 for (int k = 0; k < historyID.size(); k++) {
-                                        iconName.add("account");
+                    iconName.add("account");
                 }
 
                 ArrayList<ArrayList<String>> related = new ArrayList<>(4);
@@ -771,7 +771,7 @@ class PanePlaceForm extends JPanel {
 
         // label
         lb_error_add = new JNeoLabel("Location already exists", Global.fntSecond, Color.WHITE);
-        lb_error_delete = new JNeoLabel("Delete fail", Global.fntSecond, Color.WHITE);
+        lb_error_delete = new JNeoLabel("This place is still occupied bi active patient", Global.fntSecond, Color.WHITE);
     }
 
     void organize() {
@@ -872,8 +872,7 @@ class PanePlaceForm extends JPanel {
                     tf_capacity.setText("Maximum capacity");
                     tf_current.setText("Current capacity");
                 }
-            }
-            else {
+            } else {
                 boolean valid = true;
 
                 // capacity must be number
@@ -918,11 +917,17 @@ class PanePlaceForm extends JPanel {
 
         btn_delete.addActionListener(e -> {
             // delete necessity
-            Manager.deleteNecessity(ID);
+            if (Admin.occupiedPlace(ID)) {
+                lb_error_delete.setForeground(Global.colError);
+                return;
+            } else {
+                Admin.deletePlace(ID);
 
-            // reset panel
-            PaneNecessityList.id = Manager.getNecessityIntList("necessityID");
-            GUI_Master.changePanel(GUI_Manager.getUpdatedPNecessityList());
+                // reset panel
+                PanePlaceList.id = Admin.getIntField("place", "placeID");
+                GUI_Master.changePanel(GUI_Admin.getUpdatedPPlaceList());
+                lb_error_delete.setForeground(Color.WHITE);
+            }
         });
     }
 
@@ -940,7 +945,7 @@ class PanePlaceForm extends JPanel {
 
     void assignID(int ID) {
         this.ID = ID;
-        
+
         // set text
         tf_name.setText(Admin.getPlaceDetail(ID, "name"));
         tf_capacity.setText(Admin.getPlaceDetail(ID, "capacity"));
