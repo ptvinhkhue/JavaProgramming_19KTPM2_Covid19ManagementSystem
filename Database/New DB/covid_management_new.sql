@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `covid_management` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `covid_management`;
 -- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: covid_management
@@ -67,7 +65,7 @@ CREATE TABLE `acc_bank` (
 
 LOCK TABLES `acc_bank` WRITE;
 /*!40000 ALTER TABLE `acc_bank` DISABLE KEYS */;
-INSERT INTO `acc_bank` VALUES (261547286,1000000,2),(261547311,1500000,2),(261548596,500000,2),(261548924,2000000,2);
+INSERT INTO `acc_bank` VALUES (261547286,1000000,2),(261547311,1500000,2),(261547666,5000000,2),(261547777,5000000,2),(261547888,5000000,2),(261547969,5000000,2),(261547999,5000000,2),(261548596,500000,2),(261548924,2000000,2);
 /*!40000 ALTER TABLE `acc_bank` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +90,7 @@ CREATE TABLE `acc_covid` (
 
 LOCK TABLES `acc_covid` WRITE;
 /*!40000 ALTER TABLE `acc_covid` DISABLE KEYS */;
-INSERT INTO `acc_covid` VALUES ('261547286',NULL,3),('261547311','$2a$12$UD1mpW.t8ohvbqVwYO4WJuSQNcvnOBRW5J4Bjh4Na2O63qtphT6cC',3),('261548596',NULL,3),('261548924','$2a$12$cEbsvGJVuPVcwD.rGVBkGunkCtX7vNh4jfjSj6YjTbNc.SdfRDhbK',3),('admin','$2a$12$l4e8dlPMQ7NwFHtd1kbypeCqNRq58eMPA3C8N3/2dd8i7ipRXHyV6',1),('ptvkhue','$2a$12$rOw4WrsaHSQzNe50wBeiuea08/P9verFeYnoRs1KhfqfpdCsSA96G',2),('tdhtrung','$2a$12$hXDYVOVKeZTQwgfSyrWhh.arB9.dreB/o/eHPyALAb9QUpmnfpxYW',2),('test','123',2),('tttung','$2a$12$NvmBWTCzyfDUPUBpOI9SW.qek6K19uLo0unez57nbZizVAKkoe0Oi',2),('vhvy','$2a$12$mHUDyqVC6wGwhcDz2hK65.lxEmkBc7kw5UG7JJUjjPxd/bgRSlL96',2);
+INSERT INTO `acc_covid` VALUES ('261547286',NULL,3),('261547311','$2a$12$UD1mpW.t8ohvbqVwYO4WJuSQNcvnOBRW5J4Bjh4Na2O63qtphT6cC',3),('261547666',NULL,3),('261547777',NULL,3),('261547888',NULL,3),('261547969',NULL,3),('261547999',NULL,3),('261548596',NULL,3),('261548924','$2a$12$1okM./I5kkyIeg86.lmk0O29jZo7/aXYEy.qi6nYyh1VUR5mw0tEe',3),('admin','$2a$12$l4e8dlPMQ7NwFHtd1kbypeCqNRq58eMPA3C8N3/2dd8i7ipRXHyV6',1),('ptvkhue','$2a$12$rOw4WrsaHSQzNe50wBeiuea08/P9verFeYnoRs1KhfqfpdCsSA96G',2),('tdhtrung','$2a$12$hXDYVOVKeZTQwgfSyrWhh.arB9.dreB/o/eHPyALAb9QUpmnfpxYW',2),('test','123',2),('tttung','$2a$12$NvmBWTCzyfDUPUBpOI9SW.qek6K19uLo0unez57nbZizVAKkoe0Oi',2),('vhvy','$2a$12$mHUDyqVC6wGwhcDz2hK65.lxEmkBc7kw5UG7JJUjjPxd/bgRSlL96',2);
 /*!40000 ALTER TABLE `acc_covid` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -157,12 +155,12 @@ DROP TABLE IF EXISTS `acc_normal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `acc_normal` (
-  `normalID` int NOT NULL,
+  `normalID` int NOT NULL AUTO_INCREMENT,
   `bankID` int DEFAULT NULL,
   PRIMARY KEY (`normalID`),
   KEY `fk_acc_bank_bankID_acc_normal_idx` (`bankID`),
   CONSTRAINT `fk_acc_bank_bankID_acc_normal` FOREIGN KEY (`bankID`) REFERENCES `acc_bank` (`personalID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,7 +169,7 @@ CREATE TABLE `acc_normal` (
 
 LOCK TABLES `acc_normal` WRITE;
 /*!40000 ALTER TABLE `acc_normal` DISABLE KEYS */;
-INSERT INTO `acc_normal` VALUES (3,261547286),(4,261547311),(2,261548596),(1,261548924);
+INSERT INTO `acc_normal` VALUES (3,261547286),(4,261547311),(9,261547666),(8,261547777),(7,261547888),(10,261547969),(6,261547999),(2,261548596),(1,261548924);
 /*!40000 ALTER TABLE `acc_normal` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,7 +198,7 @@ CREATE TABLE `acc_user` (
   CONSTRAINT `fk_acc_covid_username_acc_user` FOREIGN KEY (`username`) REFERENCES `acc_covid` (`username`),
   CONSTRAINT `fk_address_addressID_acc_user` FOREIGN KEY (`addressID`) REFERENCES `address` (`addressID`),
   CONSTRAINT `fk_place_placeID_acc_user` FOREIGN KEY (`placeID`) REFERENCES `place` (`placeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -209,7 +207,7 @@ CREATE TABLE `acc_user` (
 
 LOCK TABLES `acc_user` WRITE;
 /*!40000 ALTER TABLE `acc_user` DISABLE KEYS */;
-INSERT INTO `acc_user` VALUES (1,'261548924','Phạm Trọng Vinh Khuê','261548924',2001,1,1,1,0,0),(2,'261548596','Phạm Hoàng Anh','261548596',1996,1,2,3,0,0),(3,'261547286','Trần Đại Hoàng Trung','261547286',2001,1,2,2,0,0),(4,'261547311','Trần Thanh Tùng','261547311',2001,2,2,4,0,1);
+INSERT INTO `acc_user` VALUES (1,'261548924','Phạm Trọng Vinh Khuê','261548924',2001,7306,1,1,0,1),(2,'261548596','Phạm Hoàng Anh','261548596',1996,1,2,3,0,0),(3,'261547286','Trần Đại Hoàng Trung','261547286',2001,1,2,2,0,0),(4,'261547311','Trần Thanh Tùng','261547311',2001,2,2,4,0,1),(20,'261547999','Nguyễn Văn An','261547999',2000,1,0,1,0,0),(21,'261547888','Nguyễn Thái Bình','261547888',1995,1,0,2,0,0),(22,'261547777','Trần Thị Chi','261547777',1997,2,0,3,0,0),(23,'261547666','Phan Kiều Duyên','261547666',1990,3,0,5,0,0),(24,'261547969','Đinh Thanh Liên','261547969',2010,12,1,3,0,0);
 /*!40000 ALTER TABLE `acc_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -255,7 +253,7 @@ CREATE TABLE `history_manager` (
   PRIMARY KEY (`historyID`),
   KEY `fk_acc_manager_managerID_history_manager_idx` (`managerID`),
   CONSTRAINT `fk_acc_manager_managerID_history_manager` FOREIGN KEY (`managerID`) REFERENCES `acc_manager` (`managerID`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -264,7 +262,7 @@ CREATE TABLE `history_manager` (
 
 LOCK TABLES `history_manager` WRITE;
 /*!40000 ALTER TABLE `history_manager` DISABLE KEYS */;
-INSERT INTO `history_manager` VALUES (19,1,'Update UserID = 1 status: F2 -> F1','2022-01-03 00:07:22'),(20,1,'Update UserID = 3 status: F3 -> F2','2022-01-03 00:07:23'),(21,1,'Update UserID = 4 status: F3 -> F2','2022-01-03 00:07:23'),(22,1,'Update UserID = 2 placeID: 1 -> 3','2022-01-03 00:07:56');
+INSERT INTO `history_manager` VALUES (19,1,'Update UserID = 1 status: F2 -> F1','2022-01-03 00:07:22'),(20,1,'Update UserID = 3 status: F3 -> F2','2022-01-03 00:07:23'),(21,1,'Update UserID = 4 status: F3 -> F2','2022-01-03 00:07:23'),(22,1,'Update UserID = 2 placeID: 1 -> 3','2022-01-03 00:07:56'),(23,1,'Create User: 123456789','2022-01-07 22:35:39'),(24,3,'Create User: 261547999','2022-01-09 23:05:06'),(25,3,'Create User: 261547888','2022-01-09 23:14:48'),(26,3,'Create User: 261547777','2022-01-09 23:19:51'),(27,3,'Create User: 261547666','2022-01-09 23:21:00'),(28,3,'Create User: 261547969','2022-01-09 23:21:44');
 /*!40000 ALTER TABLE `history_manager` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -462,7 +460,7 @@ CREATE TABLE `place` (
 
 LOCK TABLES `place` WRITE;
 /*!40000 ALTER TABLE `place` DISABLE KEYS */;
-INSERT INTO `place` VALUES (1,'Bệnh viện đa khoa tỉnh Bình Thuận',1000,499),(2,'Trường THPT chuyên Trần Hưng Đạo',100,30),(3,'Bệnh viện 7A',1500,701),(4,'Nhà thi đấu Phú Thọ',300,75),(5,'Kí túc xá ĐHQG TP. Hồ Chí Minh',5000,3000);
+INSERT INTO `place` VALUES (1,'Bệnh viện đa khoa tỉnh Bình Thuận',1000,500),(2,'Trường THPT chuyên Trần Hưng Đạo',100,31),(3,'Bệnh viện 7A',1500,705),(4,'Nhà thi đấu Phú Thọ',300,75),(5,'Kí túc xá ĐHQG TP. Hồ Chí Minh',5000,3001);
 /*!40000 ALTER TABLE `place` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -502,4 +500,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-01-07 21:49:57
+-- Dump completed on 2022-01-09 23:22:19
